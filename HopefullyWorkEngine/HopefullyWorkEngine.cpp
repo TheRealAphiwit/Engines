@@ -11,15 +11,18 @@ int main()
         std::cout << "Failed to initialize GLFW\n";
         return -1;
     }
+
     GLFWwindow* NewWindow;
     NewWindow = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     glfwMakeContextCurrent(NewWindow);
+
     if (!NewWindow)
     {
         std::cout << "Failed to create window\n";
         glfwTerminate();
         return -1;
     }
+
     while (!glfwWindowShouldClose(NewWindow))
     {
         glClear(GL_COLOR_BUFFER_BIT);
