@@ -1,6 +1,6 @@
 #pragma once
 
-namespace HopefullyWork
+namespace HopefullyWorkGraphics
 {
 	/*class Graphics
 	{
