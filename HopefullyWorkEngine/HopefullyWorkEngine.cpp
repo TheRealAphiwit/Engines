@@ -3,43 +3,15 @@
 
 #include <iostream>
 #include <GLFW\glfw3.h>
+#include "HopefullyWorkGraphics.h"
 
 int main()
 {
-    if (!glfwInit())
-    {
-        std::cout << "Failed to initialize GLFW\n";
-        return -1;
-    }
+    // use the namespace to call the functions
+    HopefullyWorkGraphics::Initialize(800, 600);
+    HopefullyWorkGraphics::Render();
+    HopefullyWorkGraphics::ShouldClose();
 
-    GLFWwindow* NewWindow;
-    NewWindow = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    glfwMakeContextCurrent(NewWindow);
-
-    if (!NewWindow)
-    {
-        std::cout << "Failed to create window\n";
-        glfwTerminate();
-        return -1;
-    }
-
-    while (!glfwWindowShouldClose(NewWindow))
-    {
-        glClear(GL_COLOR_BUFFER_BIT);
-
-
-        glClearColor(1.0f, 0.5f, 0.f, 1.f);
-
-        glBegin(GL_TRIANGLES);
-
-        glVertex2f(0.5f, 0.0f);
-        glVertex2f(0.0f, 0.5f);
-        glVertex2f(-0.5f, 0.5);
-
-        glEnd();
-    }
-
-    glfwTerminate();
     return 0;
 }
 

@@ -19,17 +19,17 @@ void HopefullyWorkGraphics::Initialize(int Width, int Height)
 	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 
-	window = glfwCreateWindow(640, 480, "Hopefully This Works", NULL, NULL);
-	glfwMakeContextCurrent(window);
-
+	window = glfwCreateWindow(Width, Height, "Hopefully This Works", NULL, NULL);
 	if (window == NULL)
 	{
-		std::cout << "Failed to initialize window" << std::endl; 
+		std::cout << "Failed to initialize window" << std::endl;
 		return;
 	}
+
+	glfwMakeContextCurrent(window);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -43,8 +43,8 @@ void HopefullyWorkGraphics::Initialize(int Width, int Height)
 
 	myShader = new Shader();
 
-	myShader->Initialize("C:/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/HopefullyWorkEngine/shaders/fragment_shader.txt",
-						 "C:/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/HopefullyWorkEngine/shaders/vertex_shader.txt");
+	myShader->Initialize("C:/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/HopefullyWorkEngine/shaders/fragment_shader",
+						 "C:/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/HopefullyWorkEngine/shaders/vertex_shader");
 }
 
 void HopefullyWorkGraphics::Render()

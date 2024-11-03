@@ -59,7 +59,7 @@ unsigned int Shader::LoadFragmentShader(const char* Path)
 
 	unsigned int shaderObject;
 
-	shaderObject = glCreateShader(GL_VERTEX_SHADER);
+	shaderObject = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(shaderObject, 1, &shaderCode, NULL);
 	glCompileShader(shaderObject);
 

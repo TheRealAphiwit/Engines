@@ -54,7 +54,4 @@
   <ItemGroup>
     <Library Include="Dependencies\lib\glfw3.lib" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="shaders\vertex_shader.glsl" />
-  </ItemGroup>
 </Project>
