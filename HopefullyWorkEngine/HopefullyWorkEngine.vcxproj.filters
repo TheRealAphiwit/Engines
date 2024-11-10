@@ -54,4 +54,12 @@
   <ItemGroup>
     <Library Include="Dependencies\lib\glfw3.lib" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="shaders\fragment_shader.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="shaders\vertex_shader.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

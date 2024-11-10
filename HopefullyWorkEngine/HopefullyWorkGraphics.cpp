@@ -23,6 +23,7 @@ void HopefullyWorkGraphics::Initialize(int Width, int Height)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 
 	window = glfwCreateWindow(Width, Height, "Hopefully This Works", NULL, NULL);
+	
 	if (window == NULL)
 	{
 		std::cout << "Failed to initialize window" << std::endl;
@@ -43,8 +44,8 @@ void HopefullyWorkGraphics::Initialize(int Width, int Height)
 
 	myShader = new Shader();
 
-	myShader->Initialize("C:/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/HopefullyWorkEngine/shaders/fragment_shader",
-						 "C:/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/HopefullyWorkEngine/shaders/vertex_shader");
+	myShader->Initialize("C:/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/HopefullyWorkEngine/shaders/vertex_shader.txt",
+					     "C:/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/HopefullyWorkEngine/shaders/fragment_shader.txt");
 }
 
 void HopefullyWorkGraphics::Render()
@@ -70,7 +71,10 @@ void HopefullyWorkGraphics::Render()
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(0));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 
 	myShader->Use();

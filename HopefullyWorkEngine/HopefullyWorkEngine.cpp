@@ -9,8 +9,11 @@ int main()
 {
     // use the namespace to call the functions
     HopefullyWorkGraphics::Initialize(800, 600);
-    HopefullyWorkGraphics::Render();
-    HopefullyWorkGraphics::ShouldClose();
+
+    while (!HopefullyWorkGraphics::ShouldClose())
+    {
+        HopefullyWorkGraphics::Render();
+    }
 
     return 0;
 }

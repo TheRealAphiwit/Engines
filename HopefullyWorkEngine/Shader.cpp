@@ -68,7 +68,7 @@ unsigned int Shader::LoadFragmentShader(const char* Path)
 	if (!result)
 	{
 		glGetShaderInfoLog(shaderObject, 512, NULL, Log);
-		std::cout << "Failed to compile a vertex shader \n" << Log << std::endl;
+		std::cout << "Failed to compile a fragment shader \n" << Log << std::endl;
 	}
 
 	return shaderObject;
