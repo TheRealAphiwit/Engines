@@ -140,9 +140,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
-    <ClCompile Include="HopefullyWorkEngine.cpp" />
-    <ClCompile Include="HopefullyWorkGame.cpp" />
-    <ClCompile Include="HopefullyWorkGraphics.cpp" />
+    <ClCompile Include="Engine\HopefullyWorkEngine.cpp" />
+    <ClCompile Include="Engine\HopefullyWorkGame.cpp" />
+    <ClCompile Include="Graphics\HopefullyWorkGraphics.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +150,7 @@
     <ClInclude Include="Dependencies\include\GLFW\glfw3.h" />
     <ClInclude Include="Dependencies\include\GLFW\glfw3native.h" />
     <ClInclude Include="Dependencies\include\KHR\khrplatform.h" />
-    <ClInclude Include="HopefullyWorkGraphics.h" />
+    <ClInclude Include="Graphics\HopefullyWorkGraphics.h" />
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
