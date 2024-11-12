@@ -21,18 +21,18 @@
     <ClCompile Include="Engine\HopefullyWorkGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\HopefullyWorkGraphics.cpp">
+    <ClCompile Include="Graphics\Source Files\HopefullyWorkGraphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Shader.cpp">
+    <ClCompile Include="Graphics\Source Files\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Graphics\HopefullyWorkGraphics.h">
+    <ClInclude Include="Graphics\Header Files\HopefullyWorkGraphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\include\KHR\khrplatform.h">
@@ -47,7 +47,7 @@
     <ClInclude Include="Dependencies\include\glad\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Shader.h">
+    <ClInclude Include="Graphics\Header Files\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

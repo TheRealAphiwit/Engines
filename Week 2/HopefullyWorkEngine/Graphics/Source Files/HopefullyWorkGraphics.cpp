@@ -3,9 +3,9 @@
 #include <glad/glad.h>
 #include <GLFW\glfw3.h>
 #include <direct.h>
-#include "/Users/lekph/OneDrive/Dokument/GitHub/HopefullyWorkEngine/Week 2/HopefullyWorkEngine/Graphics/Shader.h"
 #include <Windows.h>
 #include <stdio.h>
+#include "Shader.h"
 
 GLFWwindow* window;
 Shader* myShader;
