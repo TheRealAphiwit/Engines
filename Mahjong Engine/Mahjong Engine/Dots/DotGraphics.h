@@ -23,12 +23,8 @@ namespace Gorilla
 	void End();
 	bool ShouldClose();
 
-	// I straight up don't know
-	std::string LoadObjRaw(const char* path);
-
-
-
 	void Input(GLFWwindow* window);
 
 	std::vector<VirtualObject> GetObjects();
+	std::string LoadObjRaw(const char* path);
 }
