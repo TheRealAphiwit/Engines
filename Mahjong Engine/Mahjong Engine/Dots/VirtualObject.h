@@ -1,17 +1,14 @@
 #pragma once
-#include <Math/glm/glm.hpp>
+#include <glm.hpp>
 
 class Mesh;
 class Texture;
 class Shader;
 
-// Wierd namespace
-/*
-namespace Gorilla
+namespace DotsRendering
 {
 	class Camera;
 }
-*/
 
 class VirtualObject
 {
@@ -22,7 +19,7 @@ public:
 	void SetTexture(Texture* texture);
 	void SetShader(Shader* shader);
 
-	// void Draw(Gorilla::Camera* camera);
+	void Draw(DotsRendering::Camera* camera);
 
 	glm::vec3 Position;
 	glm::vec3 Scale;
