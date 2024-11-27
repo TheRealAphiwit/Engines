@@ -7,7 +7,7 @@ struct  GLFWwindow;
 class VirtualObject;
 
 // Wierd namespace (again)
-namespace Gorilla
+namespace DotsRendering
 {
 	// Self created camera class
 	class Camera;
