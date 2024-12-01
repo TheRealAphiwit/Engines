@@ -161,6 +161,13 @@
     <ClCompile Include="DotGraphics.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ObjLoader.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Square.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="VirtualObject.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

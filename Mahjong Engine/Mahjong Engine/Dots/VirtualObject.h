@@ -15,9 +15,9 @@ class VirtualObject
 public:
 	VirtualObject(Mesh* mesh, Texture* texture, Shader* shader);
 
-	void SetMesh(Mesh* mesh);
-	void SetTexture(Texture* texture);
-	void SetShader(Shader* shader);
+	void SetMesh(Mesh& mesh);
+	void SetTexture(Texture& texture);
+	void SetShader(Shader& shader);
 
 	void Draw(DotsRendering::Camera* camera);
 
@@ -25,10 +25,12 @@ public:
 	glm::vec3 Scale;
 	glm::vec3 Rotation;
 
+	Shader* GetShader();
+
 	// Stray thought - how can quaternion be used here?
 
 private:
-	Mesh* mesh;
-	Texture* texture;
-	Shader* shader;
+	Mesh* myMesh;
+	Texture* myTexture;
+	Shader* myShader;
 };

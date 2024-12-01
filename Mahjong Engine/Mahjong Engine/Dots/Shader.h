@@ -10,12 +10,14 @@ private:
 	std::string LoadShader(const char* shaderPath);
 	unsigned int LoadVertexShader(const char* vertexShaderPath);
 	unsigned int LoadFragmentShader(const char* fragmentShaderPath);
-	void ApplyTexture(Texture* texture);
 
 public:
 	Shader(const char* vertexPath, const char* fragmentPath);
+	~Shader();
 
-	void SetMatrix(glm::mat4 matrix, const std::string& name);
+	bool RecompileShader(const char* vertexPath, const char* fragmentPath);
+
+	void SetMatrix4(glm::mat4 matrix, const std::string& name);
 
 	// Utility methods - These are usefull to alter data later on
 	void SetVector4(glm::vec4 vector4Value, const std::string& name);

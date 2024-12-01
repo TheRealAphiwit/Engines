@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm.hpp>
-// #include "ObjLoader.h"
+#include "ObjLoader.h"
 
 class Shader;
 #pragma region Old Texture Implementation
@@ -19,7 +19,7 @@ class Mesh
 {
 public:
 	Mesh(const float* meshVertices, size_t vertexSize, unsigned int* indices, size_t indexSize);
-	// Mesh(DotsRendering::ObjData objData);
+	Mesh(DotsRendering::ObjData objData);
 
 	~Mesh();
 	void Draw(Shader* shader);
