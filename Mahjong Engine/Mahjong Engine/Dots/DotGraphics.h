@@ -6,19 +6,23 @@
 struct  GLFWwindow;
 class VirtualObject;
 
+class Mesh;
+class Texture;
+class Shader;
+
 // Wierd namespace (again)
 namespace DotsRendering
 {
 	// Self created camera class
 	class Camera;
 
-	struct GorillaInitializeData
+	struct DotsInitData
 	{
 		Camera* camera;
 		GLFWwindow* window;
 	};
 
-	GorillaInitializeData Initialize(int width, int height);
+	DotsInitData Initialize(int width, int height);
 	void BeginRender(Camera* camera);
 	void End();
 	bool ShouldClose();

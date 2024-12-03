@@ -26,11 +26,10 @@ namespace Engine
 
 		float yaw, pitch;
 		#pragma region Same Thing As
-// float yaw;
-// float pitch;  
-#pragma endregion
-
+		// float yaw;
+		// float pitch;  
+		#pragma endregion
 		bool Editing = false;
-		double lastX, lastY;
+		float lastX, lastY;
 	};
 }

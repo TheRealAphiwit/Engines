@@ -24,25 +24,25 @@ bool DotsRendering::LoadOBJ(const std::string& filename, ObjData& outData)
 		std::string prefix;
 		ss >> prefix;
 
-		if (prefix == "v")
+		if (prefix == "v") // Vertices
 		{
 			glm::vec3 vertex;
 			ss >> vertex.x >> vertex.y >> vertex.z;
 			outData.vertices.push_back(vertex);
 		}
-		else if (prefix == "vn")
+		else if (prefix == "vn") //Vertex normals
 		{
 			glm::vec3 normal;
 			ss >> normal.x >> normal.y >> normal.z;
 			outData.normals.push_back(normal);
 		}
-		else if (prefix == "vt")
+		else if (prefix == "vt") // Vertex texture
 		{
 			glm::vec2 textCoord;
 			ss >> textCoord.x >> textCoord.y;
 			outData.textCoords.push_back(textCoord);
 		}
-		else if (prefix == "f")
+		else if (prefix == "f") // Face definitions
 		{
 			unsigned int vIndex[3], tIndex[3], nIndex[3];
 			char slash;
