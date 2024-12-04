@@ -26,9 +26,9 @@ namespace DotsRendering
 	void BeginRender(Camera* camera);
 	void End();
 	bool ShouldClose();
+	void ClosingInput(GLFWwindow* window);
 
-	void Input(GLFWwindow* window);
+	void CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* aShader);
 
-	std::vector<VirtualObject> GetObjects();
-	std::string LoadObjRaw(const char* path);
+	std::vector<VirtualObject*> GetObjects();
 }

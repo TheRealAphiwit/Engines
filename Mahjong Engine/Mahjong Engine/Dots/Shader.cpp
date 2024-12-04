@@ -44,6 +44,10 @@ unsigned int Shader::LoadVertexShader(const char* vertexShaderPath)
     unsigned int shaderObject;
 
     shaderObject = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(shaderObject, 1, &shaderCode, NULL);
+    glCompileShader(shaderObject);
+
+    glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &result);
 
     if (!result)
     {
@@ -73,7 +77,7 @@ unsigned int Shader::LoadFragmentShader(const char* fragmentShaderPath)
     if (!result)
     {
         glGetShaderInfoLog(shaderObject, 512, NULL, log);
-        std::cout << "Failed to compile fragment shader \n" << Log << std::endl;
+        std::cout << "Failed to compile fragment shader \n" << log << std::endl;
     }
 
     return shaderObject;

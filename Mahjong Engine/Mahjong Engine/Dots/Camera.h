@@ -14,6 +14,7 @@ namespace DotsRendering
 
 		void CameraUpdate();
 
+		// Will be used later to focus on objects
 		void SetPosition(const glm::vec3& aPosition);
 		void SetRotation(const glm::vec3& aRotation);
 

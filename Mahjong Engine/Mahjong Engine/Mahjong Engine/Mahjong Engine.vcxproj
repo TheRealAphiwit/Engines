@@ -24,7 +24,7 @@
     <ProjectGuid>{6452c90f-43f6-4c8a-9715-7f858a7f45de}</ProjectGuid>
     <RootNamespace>MahjongEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Dragons</ProjectName>
+    <ProjectName>DragonsEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -83,7 +83,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;GLFW\lib\glfw3.lib;MonkyGL\MonkyGL.lib;$(SolutionDir)$(Configuration)\Characters.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;GLFW\lib\glfw3.lib;MonkyGL\MonkyGL.lib;$(SolutionDir)$(Configuration)\Characters.lib;$(SolutionDir)$(Configuration)\Dots.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -102,7 +102,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;GLFW\lib\glfw3.lib;MonkyGL\MonkyGL.lib;$(SolutionDir)$(Configuration)\Characters.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;GLFW\lib\glfw3.lib;MonkyGL\MonkyGL.lib;$(SolutionDir)$(Configuration)\Characters.lib;$(SolutionDir)$(Configuration)\Dots.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -117,7 +117,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;GLFW\lib\glfw3.lib;MonkyGL\MonkyGL.lib;$(SolutionDir)$(Configuration)\Characters.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;GLFW\lib\glfw3.lib;MonkyGL\MonkyGL.lib;$(SolutionDir)$(Configuration)\Characters.lib;$(SolutionDir)$(Configuration)\Dots.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,7 +136,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;GLFW\lib\glfw3.lib;MonkyGL\MonkyGL.lib;$(SolutionDir)$(Configuration)\Characters.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;GLFW\lib\glfw3.lib;MonkyGL\MonkyGL.lib;$(SolutionDir)$(Configuration)\Characters.lib;$(SolutionDir)$(Configuration)\Dots.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

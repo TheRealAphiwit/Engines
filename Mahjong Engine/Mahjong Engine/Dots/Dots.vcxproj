@@ -24,6 +24,7 @@
     <ProjectGuid>{ec6cd2fb-d51c-42aa-8bea-fbc0cf570382}</ProjectGuid>
     <RootNamespace>Dots</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>DotsGL</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -150,6 +151,7 @@
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Square.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="VirtualObject.h" />
@@ -164,6 +166,7 @@
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Square.cpp" />
+    <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="VirtualObject.cpp" />
