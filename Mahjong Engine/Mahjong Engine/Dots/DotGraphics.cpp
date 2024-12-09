@@ -12,7 +12,7 @@
 #include <fwd.hpp>
 #include <gtc/matrix_transform.hpp>
 #include "Camera.h"
-// #include "stb_image.h"
+#include "stb_image.h"
 #include "Texture.h"
 #include "Square.h"
 
@@ -46,7 +46,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 {
 	DotsInitData initData;
 	initData.camera = NULL;
-	initData.camera = NULL;
+	initData.window = NULL;
 
 	if (!glfwInit())
 	{
@@ -76,6 +76,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 		return initData;
 	}
 
+	#pragma region File loadings
 	// How do we make it so that texture loads different .png's later in engine while running?
 	myGrassTexture = new Texture("../Assets/Images/Grass.png", true);
 	myTexture = new Texture("../Assets/Images/Default.png", false);
@@ -83,6 +84,8 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myBillboard = new Shader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
 
 	FlagMesh = LoadObjMesh("../Assets/Models/Flag.obj");
+	#pragma endregion
+
 
 	myCube = new Cube();
 	mySquare = new Square();

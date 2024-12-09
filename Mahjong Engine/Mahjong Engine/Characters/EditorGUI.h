@@ -1,14 +1,42 @@
 #pragma once
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include <glfw3.h>
+#include <vector>
 
-class EditorGUI
+class VirtualObject;
+class ResourceHandler;
+struct GLFWwindow;
+
+class ResourceEditor;
+class ShaderEditor;
+
+namespace Characters
 {
-public:
-	void Init(GLFWwindow* YOUR_WINDOW);
-	void GUIMain();
-	void Render();
-	void Shutdown();
-};
+	enum class ECurrentEditor
+	{
+		EObjectHierarchy,
+		EShaderEditor,
+		EResourceViewer,
+		COUNT
+	};
+
+	class ObjectEntry;
+
+	class EditorGUI
+	{
+	public:
+		EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler);
+		~EditorGUI();
+		void Render(std::vector<VirtualObject*> someObjects);
+
+	private:
+		void UpdateHieracrhy(std::vector<VirtualObject> someObjects);
+
+		void RepopulateEntries(std::vector<VirtualObject> someObjects);
+		std::vector<ObjectEntry*> myObjectEntries;
+		ResourceHandler* myResourceHandler;
+
+		ECurrentEditor myCurrentEditor;
+
+		ResourceEditor* myResourceEditor;
+		ShaderEditor* myShaderEditor;
+	};
+}

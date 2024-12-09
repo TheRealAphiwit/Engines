@@ -2,10 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <string>
 #include <map>
-#include <glm.hpp>  
 #include <algorithm>
 #include "Mesh.h"
 
@@ -70,4 +67,65 @@ Mesh* DotsRendering::LoadObjMesh(const std::string& filename)
 		std::cout << "Could not load mesh" << filename << std::endl;
 		return nullptr;
 	}
+}
+
+bool DotsRendering::SerializeObjData(const std::string& filename, const ObjData& data)
+{
+	std::ofstream file(filename, std::ios::binary);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open OBJ file: " << filename << std::endl;
+		return false;
+	}
+
+	// Metadata structure declaration
+	int numVertices = data.vertices.size();
+	int numTextCoords = data.textCoords.size();
+	int numNormals = data.normals.size();
+	int numIndices = data.indices.size();
+
+	//Tells compiler to write the data as a binary file
+	file.write(reinterpret_cast<const char*>(&numVertices), sizeof(int));
+	file.write(reinterpret_cast<const char*>(&numTextCoords), sizeof(int));
+	file.write(reinterpret_cast<const char*>(&numNormals), sizeof(int));
+	file.write(reinterpret_cast<const char*>(&numIndices), sizeof(int));
+
+	// Write the actual data
+	file.write(reinterpret_cast<const char*>(data.vertices.data()), numVertices * sizeof(glm::vec3));
+	file.write(reinterpret_cast<const char*>(data.textCoords.data()), numTextCoords * sizeof(glm::vec2));
+	file.write(reinterpret_cast<const char*>(data.normals.data()), numNormals * sizeof(glm::vec3));
+	file.write(reinterpret_cast<const char*>(data.indices.data()), numIndices * sizeof(unsigned int));
+
+	file.close();
+	return true;
+}
+
+bool DotsRendering::DeserializeObjData(const std::string& filename, ObjData& outData)
+{
+	std::ifstream file(filename, std::ios::binary);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open OBJ file: " << filename << std::endl;
+		return false;
+	}
+
+	// Read up metadata and prep data
+	int numVertices, numTextCoords, numNormals, numIndices;
+	file.read(reinterpret_cast<char*>(&numVertices), sizeof(int));
+	file.read(reinterpret_cast<char*>(&numTextCoords), sizeof(int));
+	file.read(reinterpret_cast<char*>(&numNormals), sizeof(int));
+	file.read(reinterpret_cast<char*>(&numIndices), sizeof(int));
+
+	// Resize the vectors (to accomodate data)
+	outData.vertices.resize(numVertices);
+	outData.textCoords.resize(numTextCoords);
+	outData.normals.resize(numNormals);
+	outData.indices.resize(numIndices);
+
+	// Read and assign the actual data
+	file.read(reinterpret_cast<char*>(outData.vertices.data()), numVertices * sizeof(glm::vec3));
+	file.read(reinterpret_cast<char*>(outData.textCoords.data()), numTextCoords * sizeof(glm::vec2));
+	file.read(reinterpret_cast<char*>(outData.normals.data()), numNormals * sizeof(glm::vec3));
+	file.read(reinterpret_cast<char*>(outData.indices.data()), numIndices * sizeof(unsigned int));
+
+	file.close();
+	return true;
 }

@@ -91,6 +91,10 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     }
 }
 
+Shader::~Shader()
+{
+}
+
 bool Shader::RecompileShader(const char* vertexPath, const char* fragmentPath)
 {
     int result;
@@ -136,7 +140,24 @@ void Shader::SetVector4(glm::vec4 vector4Value, const std::string& name)
     glUniform4f(glGetUniformLocation(myShaderProgram, name.c_str()), vector4Value.x, vector4Value.y, vector4Value.z, vector4Value.w);
 }
 
+void Shader::SetVector3(glm::vec3 vector3Value, const std::string& name)
+{
+}
+
+void Shader::SetVector2(glm::vec2 vector2Value, const std::string& name)
+{
+}
+
 void Shader::SetFloat(float floatValue, const std::string& name)
 {
     glUniform1f(glGetUniformLocation(myShaderProgram, name.c_str()), floatValue);
+}
+
+void Shader::SetInt(int intValue, const std::string& name)
+{
+}
+
+void Shader::Use()
+{
+	glUseProgram(myShaderProgram);
 }

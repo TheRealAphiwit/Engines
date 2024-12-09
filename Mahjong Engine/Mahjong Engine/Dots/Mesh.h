@@ -17,6 +17,8 @@ struct Vertex {
 
 class Mesh
 {
+	// friend class DotsRendering::OptmizedLoader;
+
 public:
 	Mesh(const float* meshVertices, size_t vertexSize, unsigned int* indices, size_t indexSize);
 	Mesh(DotsRendering::ObjData objData);

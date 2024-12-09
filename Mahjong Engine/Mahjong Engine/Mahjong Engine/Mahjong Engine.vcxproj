@@ -140,10 +140,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DragonEngine.cpp" />
     <ClCompile Include="ETime.cpp" />
     <ClCompile Include="FlyingCamera.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ResourceHandler.cpp" />
     <ClCompile Include="WindowsMemoryChecker.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +153,7 @@
     <ClInclude Include="ETime.h" />
     <ClInclude Include="FlyingCamera.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="ResourceHandler.h" />
     <ClInclude Include="WindowsMemoryChecker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

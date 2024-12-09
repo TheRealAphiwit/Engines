@@ -24,6 +24,7 @@
     <ProjectGuid>{13ef2d8f-f951-481b-9b29-c0cd734dbe7f}</ProjectGuid>
     <RootNamespace>Characters</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>CharactersEditor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
