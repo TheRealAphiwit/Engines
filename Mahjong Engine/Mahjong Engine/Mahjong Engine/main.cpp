@@ -21,7 +21,7 @@ int main()
     Engine::DragonEngine* engine = new Engine::DragonEngine(initData.window, initData.camera);
     Characters::EditorGUI* Gui = new Characters::EditorGUI(initData.window, resources);
 
-    glfwSetInputMode(initData.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(initData.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     float lastTime = 0;
     float currentTime = 0;

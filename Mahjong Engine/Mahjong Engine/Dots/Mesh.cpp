@@ -123,7 +123,6 @@ void Mesh::Draw(Shader* shader)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 		glDrawElements(GL_TRIANGLES, IndicesSize, GL_UNSIGNED_INT, (void*)0);
-		// What is (void*)0?
 
 		glBindVertexArray(0);
 	}

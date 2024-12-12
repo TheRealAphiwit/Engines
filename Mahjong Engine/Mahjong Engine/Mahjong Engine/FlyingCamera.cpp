@@ -1,4 +1,5 @@
 #include "FlyingCamera.h"
+#include "ObjectEntry.h"
 #include "Input.h"
 #include "Camera.h"
 #include "ETime.h"
@@ -34,7 +35,11 @@ void Engine::FlyingCamera::Update(GLFWwindow* aWindow)
 	if (Editing) return;
 
 	if (myInput->IsKeyDown(GLFW_KEY_W)) velocity.z = 1;
-	if (myInput->IsKeyDown(GLFW_KEY_A)) velocity.x = -1;
+	if (myInput->IsKeyDown(GLFW_KEY_A))
+	{
+		// std::cout << "A is pressed" << std::endl;
+		velocity.x = -1;
+	}
 	if (myInput->IsKeyDown(GLFW_KEY_S)) velocity.z = -1;
 	if (myInput->IsKeyDown(GLFW_KEY_D)) velocity.x = 1;
 

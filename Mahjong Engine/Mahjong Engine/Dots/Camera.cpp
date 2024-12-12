@@ -9,6 +9,7 @@ glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 DotsRendering::Camera::Camera(const float& aWidth, const float& aHeight)
 {
+	// myProjection = glm::perspective(glm::radians(45.0f), aWidth / aHeight, 0.1f, 100.0f);
 	myProjection = glm::perspective(glm::radians(45.0f), aWidth / aHeight, 0.1f, 100.0f);
 	myDirection = glm::vec3(0.0f, 0.0f, -1.0f);
 	myPosition = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -29,6 +30,7 @@ void DotsRendering::Camera::Move(const glm::vec3& aMove)
 	myPosition += myDirection * aMove.z;
 	myPosition += myRight * aMove.x;
 	myPosition += WorldUp * aMove.y;
+	std::cout << "Camera position: " << myPosition.x << " " << myPosition.y << " " << myPosition.z << std::endl;
 }
 
 void DotsRendering::Camera::SetDirection(const glm::vec3& aDirection)

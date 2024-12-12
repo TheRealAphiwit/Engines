@@ -99,6 +99,13 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	glEnable(GL_DEPTH_TEST);
 	glfwSwapInterval(1);
 
+	// Create a virtual object
+	for (size_t i = 0; i < 3; i++)
+	{
+		// Create virtual object
+		CreateVirtualObject(myCube, myTexture, myShader);
+	}
+
 	return initData;
 }
 
@@ -150,6 +157,7 @@ void DotsRendering::CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* 
 {
 	VirtualObject* newObject = new VirtualObject(aMesh, aTexture, aShader);
 	myObjects.push_back(newObject);
+	newObject->Position = glm::vec3(2.0f, 0.f, 0.f);
 }
 
 std::vector<VirtualObject*> DotsRendering::GetObjects()
