@@ -67,6 +67,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	if (window == NULL)
 	{
 		std::cout << "Failed to initialize window" << std::endl;
+		glfwTerminate();
 		return initData;
 	}
 
@@ -98,7 +99,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	glEnable(GL_DEPTH_TEST);
 	glfwSwapInterval(1);
 
-	return DotsInitData();
+	return initData;
 }
 
 void DotsRendering::BeginRender(Camera* camera)

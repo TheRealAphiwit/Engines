@@ -42,6 +42,15 @@
     <ClCompile Include="..\Dependencies\Imgui\include\imgui_widgets.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectEntry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorGUI.h">
@@ -73,6 +82,15 @@
     </ClInclude>
     <ClInclude Include="..\Dependencies\Imgui\include\imstb_truetype.h">
       <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectEntry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderEditor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

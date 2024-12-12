@@ -13,7 +13,6 @@ private:
 
 public:
 	Shader(const char* vertexPath, const char* fragmentPath);
-	~Shader();
 
 	bool RecompileShader(const char* vertexPath, const char* fragmentPath);
 

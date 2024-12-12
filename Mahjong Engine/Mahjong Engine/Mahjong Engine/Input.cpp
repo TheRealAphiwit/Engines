@@ -1,27 +1,35 @@
 #include "Input.h"
 #include <glfw3.h>
 #include <unordered_map>
+#include <stdexcept>
+#include <iostream>
 
 std::unordered_map<int, bool> myKeyStates;
 float lastX, lastY;
 
 Engine::Input::Input(GLFWwindow* aWindow)
 {
-	//Constructor
+	if (!aWindow) 
+	{
+		std::cerr << "GLFWwindow pointer is null!" << std::endl;
+		throw std::invalid_argument("GLFWwindow pointer is null");
+	}
 
+	std::cout << "Initializing Input with GLFWwindow: " << aWindow << std::endl;
 	myWindow = aWindow;
 
 	GLFWvidmode return_struct;
 
 	int width, height = 0;
-
 	glfwGetWindowSize(aWindow, &width, &height);
+	std::cout << "Window size: " << width << "x" << height << std::endl;
 
 	lastX = width / 2;
 	lastY = height / 2;
 
 	glfwSetKeyCallback(aWindow, KeyCallBack);
 	glfwSetCursorPosCallback(aWindow, MouseCallBack);
+	std::cout << "Input initialized successfully!" << std::endl;
 }
 
 bool Engine::Input::IsKeyPressed(const int& aKey)

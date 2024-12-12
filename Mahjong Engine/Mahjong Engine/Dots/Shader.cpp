@@ -91,10 +91,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     }
 }
 
-Shader::~Shader()
-{
-}
-
 bool Shader::RecompileShader(const char* vertexPath, const char* fragmentPath)
 {
     int result;

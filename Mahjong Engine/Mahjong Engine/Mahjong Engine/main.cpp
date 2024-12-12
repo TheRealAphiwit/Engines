@@ -11,11 +11,44 @@
 
 int main()
 {
-	/*ResourceHandler* resources = new ResourceHandler();
+	ResourceHandler* resources = new ResourceHandler();
 	DotsRendering::DotsInitData initData = DotsRendering::Initialize(1200, 720);
-	Engine::DragonEngine* engine = new Engine::DragonEngine(initData.window, initData.camera);*/
+    // Issue: initData.window is not being initialized for some reason?? Solved!
+    if (!initData.window) {
+        std::cerr << "Failed to initialize rendering window" << std::endl;
+        return -2;
+    }
+    Engine::DragonEngine* engine = new Engine::DragonEngine(initData.window, initData.camera);
+    Characters::EditorGUI* Gui = new Characters::EditorGUI(initData.window, resources);
 
-    if (!glfwInit()) {
+    glfwSetInputMode(initData.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    float lastTime = 0;
+    float currentTime = 0;
+    float delta = 0;
+
+    std::vector<VirtualObject*> objects;
+
+    while (!DotsRendering::ShouldClose())
+    {
+        objects = DotsRendering::GetObjects();
+        currentTime = (float)glfwGetTime();
+        delta = currentTime - lastTime;
+        lastTime = currentTime;
+
+        DotsRendering::BeginRender(engine->myCamera);
+        Gui->Render(objects);
+        DotsRendering::End();
+
+        engine->Update(delta);
+
+        // std message to know that it's looping
+        // std::cout << "Engine is looping" << std::endl;
+    }
+
+    return 0;
+
+    /*if (!glfwInit()) {
         std::cout << "Failed to initialize GLFW" << std::endl;
         return -1;
     }
@@ -41,5 +74,5 @@ int main()
     }
 
     myEditor.Shutdown();
-    return 0;
+    return 0;*/
 }

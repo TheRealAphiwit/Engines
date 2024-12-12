@@ -28,15 +28,14 @@ namespace Characters
 		void Render(std::vector<VirtualObject*> someObjects);
 
 	private:
-		void UpdateHieracrhy(std::vector<VirtualObject> someObjects);
+		void UpdateHieracrhy(std::vector<VirtualObject*> someObjects);
 
-		void RepopulateEntries(std::vector<VirtualObject> someObjects);
+		void RepopulateEntries(std::vector<VirtualObject*> someObjects);
 		std::vector<ObjectEntry*> myObjectEntries;
 		ResourceHandler* myResourceHandler;
 
 		ECurrentEditor myCurrentEditor;
 
 		ResourceEditor* myResourceEditor;
-		ShaderEditor* myShaderEditor;
 	};
 }
