@@ -20,11 +20,11 @@ namespace Engine
 		void Update(const float& aDeltaTime);
 
 		DotsRendering::Camera* myCamera;
+		FlyingCamera* myFlyingCamera;
 
 	private:
 		Input* myInput;
 		ETime* myTime;
-		FlyingCamera* myFlyingCamera;
 
 		GLFWwindow* myWindow;
 	};

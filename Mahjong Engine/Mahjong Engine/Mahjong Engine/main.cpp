@@ -12,16 +12,12 @@
 int main()
 {
 	ResourceHandler* resources = new ResourceHandler();
-	DotsRendering::DotsInitData initData = DotsRendering::Initialize(1200, 720);
-    // Issue: initData.window is not being initialized for some reason?? Solved!
-    if (!initData.window) {
-        std::cerr << "Failed to initialize rendering window" << std::endl;
-        return -2;
-    }
-    Engine::DragonEngine* engine = new Engine::DragonEngine(initData.window, initData.camera);
-    Characters::EditorGUI* Gui = new Characters::EditorGUI(initData.window, resources);
+	DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
+    // Here
+    Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
+    Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, resources);
 
-    glfwSetInputMode(initData.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(renderData.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     float lastTime = 0;
     float currentTime = 0;
@@ -41,11 +37,9 @@ int main()
         DotsRendering::End();
 
         engine->Update(delta);
-
-        // std message to know that it's looping
-        // std::cout << "Engine is looping" << std::endl;
     }
 
+	glfwTerminate();
     return 0;
 
     /*if (!glfwInit()) {

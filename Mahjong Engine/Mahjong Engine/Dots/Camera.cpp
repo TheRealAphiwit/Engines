@@ -30,7 +30,7 @@ void DotsRendering::Camera::Move(const glm::vec3& aMove)
 	myPosition += myDirection * aMove.z;
 	myPosition += myRight * aMove.x;
 	myPosition += WorldUp * aMove.y;
-	std::cout << "Camera position: " << myPosition.x << " " << myPosition.y << " " << myPosition.z << std::endl;
+	// std::cout << "Camera position: " << myPosition.x << " " << myPosition.y << " " << myPosition.z << std::endl;
 }
 
 void DotsRendering::Camera::SetDirection(const glm::vec3& aDirection)
