@@ -13,11 +13,10 @@ int main()
 {
 	ResourceHandler* resources = new ResourceHandler();
 	DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
-    // Here
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
     Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, resources);
 
-    glfwSetInputMode(renderData.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(renderData.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // GLFW_CURSOR diff
 
     float lastTime = 0;
     float currentTime = 0;
@@ -28,7 +27,7 @@ int main()
     while (!DotsRendering::ShouldClose())
     {
         objects = DotsRendering::GetObjects();
-        currentTime = (float)glfwGetTime();
+        currentTime = glfwGetTime();
         delta = currentTime - lastTime;
         lastTime = currentTime;
 

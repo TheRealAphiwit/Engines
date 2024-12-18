@@ -29,8 +29,9 @@ Texture::Texture(const char* path, const bool& shouldAlpha)
 		}
 		else
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		}
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{

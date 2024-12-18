@@ -35,16 +35,11 @@ void Engine::FlyingCamera::Update(GLFWwindow* aWindow)
 	if (Editing) return;
 
 	if (myInput->IsKeyDown(GLFW_KEY_W)) velocity.z = 1;
-	if (myInput->IsKeyDown(GLFW_KEY_A))
-	{
-		// std::cout << "A is pressed" << std::endl;
-		velocity.x = -1;
-	}
+	if (myInput->IsKeyDown(GLFW_KEY_A)) velocity.x = -1;
 	if (myInput->IsKeyDown(GLFW_KEY_S)) velocity.z = -1;
 	if (myInput->IsKeyDown(GLFW_KEY_D)) velocity.x = 1;
 
 	if (myInput->IsKeyDown(GLFW_KEY_SPACE)) velocity.y = 1;
-	// Wanna change later to ctrl
 	if (myInput->IsKeyDown(GLFW_KEY_LEFT_SHIFT)) velocity.y = -1;
 	#pragma endregion
 
@@ -56,7 +51,7 @@ void Engine::FlyingCamera::Update(GLFWwindow* aWindow)
 
 	// Calc ofset and then update last position
 	float xOffset = xPos - lastX;
-	float yOffset = yPos - lastY;
+	float yOffset = lastY - yPos;
 	lastX = xPos;
 	lastY = yPos;
 

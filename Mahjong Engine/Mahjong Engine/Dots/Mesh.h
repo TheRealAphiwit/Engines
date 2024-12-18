@@ -2,8 +2,8 @@
 #include <vector>
 #include <glm.hpp>
 #include "ObjLoader.h"
-
 class Shader;
+
 #pragma region Old Texture Implementation
 // class Texture;
 // We no longer need Texture ref here since that'll be in the 'Virtual Object'  

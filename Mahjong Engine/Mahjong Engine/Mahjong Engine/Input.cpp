@@ -65,7 +65,7 @@ void Engine::Input::KeyCallBack(GLFWwindow* aWindow, int aKey, int aScanCode, in
 	{
 		myKeyStates[aKey] = true;
 	}
-	else
+	else if (anAction == GLFW_RELEASE)
 	{
 		myKeyStates[aKey] = false;
 	}

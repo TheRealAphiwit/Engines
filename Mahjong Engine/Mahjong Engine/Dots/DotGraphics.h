@@ -29,6 +29,8 @@ namespace DotsRendering
 	void ClosingInput(GLFWwindow* window);
 
 	void CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* aShader);
+	void CreateDefaultCube();
+	void CreateDefaultSphere();
 
 	std::vector<VirtualObject*> GetObjects();
 }

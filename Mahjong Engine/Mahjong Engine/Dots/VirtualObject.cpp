@@ -38,7 +38,7 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 
 	trans = glm::translate(trans, Position);
 
-	trans = glm::rotate(trans, Rotation.x, glm:: vec3(1, 0, 0));
+	trans = glm::rotate(trans, Rotation.x, glm::vec3(1, 0, 0));
 	trans = glm::rotate(trans, Rotation.y, glm::vec3(0, 1, 0));
 	trans = glm::rotate(trans, Rotation.z, glm::vec3(0, 0, 1));
 
@@ -49,7 +49,7 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 
 	myShader->SetMatrix4(trans, "transform");
 	myShader->SetMatrix4(camera->myView, "view");
-	myShader->SetMatrix4(camera->myProjection, "project");
+	myShader->SetMatrix4(camera->myProjection, "projection");
 	myMesh->Draw(myShader);
 
 	glBindTexture(GL_TEXTURE_2D, 0);

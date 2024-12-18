@@ -91,6 +91,10 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     }
 }
 
+Shader::~Shader()
+{
+}
+
 bool Shader::RecompileShader(const char* vertexPath, const char* fragmentPath)
 {
     int result;
@@ -121,9 +125,9 @@ bool Shader::RecompileShader(const char* vertexPath, const char* fragmentPath)
     glDeleteShader(VertexShader);
     glDeleteShader(FragmentShader);
 
-    myShaderProgram = 0;
+    // myShaderProgram = 0;
 
-    return false;
+    return true;
 }
 
 void Shader::SetMatrix4(glm::mat4 matrix, const std::string& name)

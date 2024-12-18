@@ -32,6 +32,9 @@ Texture* myTexture;
 Texture* myGrassTexture;
 Mesh* FlagMesh;
 
+Mesh* mySphere;
+Mesh* myPlane;
+
 float myWidth;
 float myHeight;
 
@@ -99,12 +102,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	glEnable(GL_DEPTH_TEST);
 	glfwSwapInterval(1);
 
-	// Create a virtual object
-	for (size_t i = 0; i < 3; i++)
-	{
-		// Create virtual object
-		CreateVirtualObject(myCube, myTexture, myShader);
-	}
+	CreateVirtualObject(myCube, myTexture, myShader);
 
 	return initData;
 }
@@ -157,7 +155,18 @@ void DotsRendering::CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* 
 {
 	VirtualObject* newObject = new VirtualObject(aMesh, aTexture, aShader);
 	myObjects.push_back(newObject);
-	newObject->Position = glm::vec3(2.0f, 0.f, 0.f);
+}
+
+void DotsRendering::CreateDefaultCube()
+{
+	VirtualObject* newObject = new VirtualObject(myCube, myTexture, myShader);
+	myObjects.push_back(newObject);
+}
+
+void DotsRendering::CreateDefaultSphere()
+{
+	VirtualObject* newObject = new VirtualObject(mySphere, myTexture, myShader);
+	myObjects.push_back(newObject);
 }
 
 std::vector<VirtualObject*> DotsRendering::GetObjects()
