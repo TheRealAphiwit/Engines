@@ -10,8 +10,16 @@ class Mesh;
 class ResourceHandler
 {
 public:
-	ResourceHandler();
-	~ResourceHandler();
+	// Singelton
+	static ResourceHandler& GetInstance()
+	{
+		static ResourceHandler instance;
+		return instance;
+	}
+
+	// Prevent copy and overwriting
+	ResourceHandler(const ResourceHandler&) = delete;
+	ResourceHandler& operator=(const ResourceHandler&) = delete;
 
 	void CreateShader(const char* aVertexPath, const char* aFragmentPath, std::string aName);
 	void CreateTexture(const char* aTexturePath, std::string aName); // Should make a seperate one for 2D images
@@ -24,6 +32,8 @@ public:
 	std::vector<std::string> GetAllResources();
 
 private:
+	ResourceHandler();
+	~ResourceHandler();
 
 	std::unordered_map<std::string, Texture* >	myTextures;
 	std::unordered_map<std::string, Shader*	>	myShaders;

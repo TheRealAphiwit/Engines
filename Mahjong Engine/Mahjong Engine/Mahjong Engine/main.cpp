@@ -11,10 +11,11 @@
 
 int main()
 {
-	ResourceHandler* resources = new ResourceHandler();
+	// ResourceHandler* resources = new ResourceHandler();
+	ResourceHandler& resources = ResourceHandler::GetInstance();
 	DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
-    Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, resources);
+    Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources);
 
     glfwSetInputMode(renderData.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // GLFW_CURSOR diff
 
