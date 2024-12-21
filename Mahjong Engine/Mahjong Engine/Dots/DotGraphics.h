@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include <string>
 
 // Both of these are custom references we create
@@ -28,7 +29,8 @@ namespace DotsRendering
 	bool ShouldClose();
 	void ClosingInput(GLFWwindow* window);
 
-	void CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* aShader);
+	void CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* aShader); // OLD
+	void CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader); // NEW
 	void CreateDefaultCube();
 	void CreateDefaultSphere();
 

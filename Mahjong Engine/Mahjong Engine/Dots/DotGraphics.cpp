@@ -30,6 +30,7 @@ Cube* myCube;
 
 Texture* myTexture;
 Texture* myGrassTexture;
+Texture* myConcreteTexture;
 Mesh* FlagMesh;
 
 Mesh* mySphere;
@@ -81,8 +82,10 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	}
 
 	#pragma region File loadings
+	// #! Make 3 lists for loaded resources; meshes, textures, shaders - we'll be able to use this list to get resources simpler im editor if needed
 	// How do we make it so that texture loads different .png's later in engine while running?
 	myGrassTexture = new Texture("../Assets/Images/Grass.png", true);
+	myConcreteTexture = new Texture("../Assets/Images/Concrete.png", false);
 	myTexture = new Texture("../Assets/Images/Default.png", false);
 	myShader = new Shader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
 	myBillboard = new Shader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
@@ -102,7 +105,14 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	glEnable(GL_DEPTH_TEST);
 	glfwSwapInterval(1);
 
-	CreateVirtualObject(myCube, myTexture, myShader);
+	for (size_t i = 0; i < 3; i++)
+	{
+		// OLD version
+		// CreateVirtualObject(myCube, myTexture, myShader);
+
+		// NEW version
+		CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+	}
 
 	return initData;
 }
@@ -154,6 +164,12 @@ void DotsRendering::ClosingInput(GLFWwindow* window)
 void DotsRendering::CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* aShader)
 {
 	VirtualObject* newObject = new VirtualObject(aMesh, aTexture, aShader);
+	myObjects.push_back(newObject);
+}
+
+void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
+{
+	VirtualObject* newObject = new VirtualObject(name, aMesh, aTexture, aShader);
 	myObjects.push_back(newObject);
 }
 

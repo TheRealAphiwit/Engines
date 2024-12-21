@@ -100,8 +100,12 @@ void Characters::EditorGUI::UpdateHieracrhy(std::vector<VirtualObject*> someObje
 	ImGui::BeginChild("Scrolling");
 	for (size_t i = 0; i < myObjectEntries.size(); i++)
 	{
+		// #! Here we want to update to use VirtualObject->Name + number
 		std::string number = std::to_string(i);
-		std::string Title = "Object " + number;
+		// OLD version
+		// std::string Title = "Object " + number;
+		// NEW version
+		std::string Title = number + ". " + * myObjectEntries[i]->GetObject()->GetNamePtr();
 
 		if (ImGui::Button(Title.c_str()))
 		{

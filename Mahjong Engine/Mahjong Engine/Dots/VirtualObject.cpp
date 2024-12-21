@@ -6,6 +6,17 @@
 #include "Texture.h"
 #include <gtc/matrix_transform.hpp>
 
+// VirtualObject::VirtualObject(const std::string& name, Mesh* mesh, Texture* texture, Shader* shader)
+//{
+//	myMesh = mesh;
+//	myTexture = texture;
+//	myShader = shader;
+//
+//	Position = glm::vec3(0, 0, 0);
+//	Rotation = glm::vec3(0, 0, 0);
+//	Scale = glm::vec3(1, 1, 1);
+//}
+
 VirtualObject::VirtualObject(Mesh* mesh, Texture* texture, Shader* shader)
 {
 	myMesh = mesh;
@@ -16,6 +27,41 @@ VirtualObject::VirtualObject(Mesh* mesh, Texture* texture, Shader* shader)
 	Rotation = glm::vec3(0, 0, 0);
 	Scale = glm::vec3(1, 1, 1);
 }
+
+VirtualObject::VirtualObject(std::shared_ptr<std::string> name, Mesh * mesh, Texture * texture, Shader * shader) : myName(std::move(name)), myMesh(mesh), myTexture(texture), myShader(shader)
+{
+	Position = glm::vec3(0, 0, 0);
+	Rotation = glm::vec3(0, 0, 0);
+	Scale = glm::vec3(1, 1, 1);
+}
+
+const std::string& VirtualObject::GetName() const
+{
+	return *myName;
+}
+
+std::shared_ptr<std::string> VirtualObject::GetNamePtr()
+{
+	return myName;
+}
+
+void VirtualObject::SetName(const std::string& name)
+{
+	*myName = name;
+}
+
+//VirtualObject::VirtualObject(const std::string& name, Mesh* mesh, Texture* texture, Shader* shader)
+//{
+//	// Set the name of the object
+//	myName = name;
+//	myMesh = mesh;
+//	myTexture = texture;
+//	myShader = shader;
+//
+//	Position = glm::vec3(0, 0, 0);
+//	Rotation = glm::vec3(0, 0, 0);
+//	Scale = glm::vec3(1, 1, 1);
+//}
 
 void VirtualObject::SetMesh(Mesh& mesh)
 {

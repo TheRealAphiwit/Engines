@@ -52,6 +52,7 @@ void ResourceEditor::Update()
 		ImGui::InputText("vertex path", vPath, IM_ARRAYSIZE(vPath));
 		ImGui::InputText("fragment path", fPath, IM_ARRAYSIZE(fPath));
 
+		// Shader creation seems done already
 		if (ImGui::Button("Create Shader"))
 		{
 			std::string FinalVPath = "../Assets/Shaders/";
@@ -75,6 +76,7 @@ void ResourceEditor::Update()
 
 	case EResource::Mesh:
 
+		// NOt implemented
 		if (ImGui::Button("Create Mesh"))
 		{
 

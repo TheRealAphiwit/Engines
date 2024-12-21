@@ -12,6 +12,7 @@ namespace Characters
 		~ObjectEntry();
 
 		void Update();
+		VirtualObject* GetObject() { return myObject; } // Can this be here?
 
 		bool Opened = false;
 
