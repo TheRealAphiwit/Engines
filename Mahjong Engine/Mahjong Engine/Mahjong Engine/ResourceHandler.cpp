@@ -21,9 +21,9 @@ void ResourceHandler::CreateShader(const char* aVertexPath, const char* aFragmen
 	}
 }
 
-void ResourceHandler::CreateTexture(const char* aTexturePath, std::string aName)
+void ResourceHandler::CreateTexture(const char* aTexturePath, bool shouldAlpha, std::string aName)
 {
-	Texture* newTexture = new Texture(aTexturePath, false);
+	Texture* newTexture = new Texture(aTexturePath, shouldAlpha);
 
 	myTextures.emplace(aName, newTexture);
 }
@@ -33,6 +33,11 @@ void ResourceHandler::CreateMesh(const char* aModelPath, std::string aName)
 	Mesh* newMesh = DotsRendering::LoadObjMesh(aModelPath);
 
 	myMeshes.emplace(aName, newMesh);
+}
+
+void ResourceHandler::RegisterMesh(Mesh* aMesh, std::string meshName)
+{
+	myMeshes.emplace(meshName, aMesh);
 }
 
 Shader* ResourceHandler::GetShader(std::string aName)
@@ -48,6 +53,34 @@ Texture* ResourceHandler::GetTexture(std::string aName)
 Mesh* ResourceHandler::GetMesh(std::string aName)
 {
 	return myMeshes[aName];
+}
+
+const std::string ResourceHandler::GetShaderName(Shader* aShader)
+{
+	// Look through the unordered_map for the shader with the same pointer
+	for (auto& shader : myShaders)
+	{
+		if (shader.second == aShader) // Check for same val
+		{
+			return shader.first; //Return the name of the shader
+		}
+	}
+}
+
+const std::string ResourceHandler::GetTextureName(Texture* aTexture)
+{
+	for (auto& texture : myTextures)
+	{
+		if (texture.second == aTexture) {return texture.first;}
+	}
+}
+
+const std::string ResourceHandler::GetMeshName(Mesh* aMesh)
+{
+	for (auto& mesh : myMeshes)
+	{
+		if (mesh.second == aMesh) { return mesh.first; }
+	}
 }
 
 std::vector<std::string> ResourceHandler::GetAllResources()

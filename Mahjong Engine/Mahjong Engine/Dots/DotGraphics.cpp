@@ -18,6 +18,7 @@
 
 #include <fstream>
 #include <sstream>
+#include "../Mahjong Engine/ResourceHandler.h"
 
 GLFWwindow* window;
 
@@ -45,6 +46,7 @@ float DeltaTime;
 
 std::vector<VirtualObject*> myObjects;
 VirtualObject* myBillboardObject = nullptr;
+ResourceHandler& resourceHandler = ResourceHandler::GetInstance();
 
 DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 {
@@ -89,13 +91,23 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myTexture = new Texture("../Assets/Images/Default.png", false);
 	myShader = new Shader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
 	myBillboard = new Shader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
-
 	FlagMesh = LoadObjMesh("../Assets/Models/Flag.obj");
-	#pragma endregion
-
 
 	myCube = new Cube();
 	mySquare = new Square();
+	myTriangle = new Triangle();
+
+	// This section can be moved to ResourceHandler
+	resourceHandler.CreateTexture("../Assets/Images/Grass.png", true, "Grass");
+	resourceHandler.CreateTexture("../Assets/Images/Concrete.png", false, "Concrete");
+	resourceHandler.CreateTexture("../Assets/Images/Default.png", false, "Default");
+	resourceHandler.CreateShader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl", "myShader");
+	resourceHandler.CreateShader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl", "myBillboard");
+	resourceHandler.CreateMesh("../Assets/Models/Flag.obj", "FlagMesh");
+	resourceHandler.RegisterMesh(myCube, "Cube");
+	resourceHandler.RegisterMesh(mySquare, "Square");
+	resourceHandler.RegisterMesh(myTriangle, "Triangle");
+	#pragma endregion
 
 	Camera* camera = new Camera(width, height);
 
@@ -107,10 +119,6 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 
 	for (size_t i = 0; i < 3; i++)
 	{
-		// OLD version
-		// CreateVirtualObject(myCube, myTexture, myShader);
-
-		// NEW version
 		CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
 	}
 
@@ -169,8 +177,24 @@ void DotsRendering::CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* 
 
 void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
 {
+	// How I currently have done it
 	VirtualObject* newObject = new VirtualObject(name, aMesh, aTexture, aShader);
+	
+	// This currently doesn't work since type diff
+	newObject->SetMeshName(resourceHandler.GetMeshName(aMesh));
+	newObject->SetTextureName(resourceHandler.GetTextureName(aTexture));
+	newObject->SetShaderName(resourceHandler.GetShaderName(aShader));
 	myObjects.push_back(newObject);
+}
+
+void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, const std::string& meshName, const std::string& textureName, const std::string& shaderName)
+{
+	// String version
+	Mesh* mesh = ResourceHandler::GetInstance().GetMesh(meshName);
+	Texture* texture = ResourceHandler::GetInstance().GetTexture(textureName);
+	Shader* shader = ResourceHandler::GetInstance().GetShader(shaderName);
+
+	VirtualObject* newObject = new VirtualObject(name, mesh, texture, shader);
 }
 
 void DotsRendering::CreateDefaultCube()

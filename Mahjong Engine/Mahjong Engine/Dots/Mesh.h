@@ -32,5 +32,6 @@ private:
 	int IndicesSize = 0;
 
 protected:
+	std::string meshName; // This should be able to be overwritten by its children
 	unsigned int VBO, VAO, EBO;
 };

@@ -50,32 +50,38 @@ void VirtualObject::SetName(const std::string& name)
 	*myName = name;
 }
 
-//VirtualObject::VirtualObject(const std::string& name, Mesh* mesh, Texture* texture, Shader* shader)
-//{
-//	// Set the name of the object
-//	myName = name;
-//	myMesh = mesh;
-//	myTexture = texture;
-//	myShader = shader;
-//
-//	Position = glm::vec3(0, 0, 0);
-//	Rotation = glm::vec3(0, 0, 0);
-//	Scale = glm::vec3(1, 1, 1);
-//}
-
-void VirtualObject::SetMesh(Mesh& mesh)
+void VirtualObject::SetMesh(Mesh& mesh, std::string& name)
 {
 	myMesh = &mesh;
+	myModelName = name;
+
 }
 
-void VirtualObject::SetTexture(Texture& texture)
+void VirtualObject::SetTexture(Texture& texture, std::string& name)
 {
 	myTexture = &texture;
+	myTextureName = name;
 }
 
-void VirtualObject::SetShader(Shader& shader)
+void VirtualObject::SetShader(Shader& shader, std::string& name)
 {
 	myShader = &shader;
+	myShaderName = name;
+}
+
+void VirtualObject::SetMeshName(const std::string name)
+{
+	myModelName = name;
+}
+
+void VirtualObject::SetTextureName(const std::string name)
+{
+	myTextureName = name;
+}
+
+void VirtualObject::SetShaderName(const std::string name)
+{
+	myShaderName = name;
 }
 
 void VirtualObject::Draw(DotsRendering::Camera* camera)
@@ -104,4 +110,24 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 Shader* VirtualObject::GetShader()
 {
 	return myShader;
+}
+
+Texture* VirtualObject::GetTexture()
+{
+	return myTexture;
+}
+
+const std::string& VirtualObject::GetTexureName() const
+{
+	return myTextureName;
+}
+
+const std::string& VirtualObject::GetModelName() const
+{
+	return myModelName;
+}
+
+const std::string& VirtualObject::GetShaderName() const
+{
+	return myShaderName;
 }

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+#include "../Mahjong Engine/ResourceHandler.h"
 
 Characters::ObjectEntry::ObjectEntry()
 {
@@ -62,38 +63,58 @@ void Characters::ObjectEntry::Update()
 	};
 #pragma endregion
 
-#pragma region Texture
-	std::vector<std::string> textures;
-	// Get resourcehandler
-	// Get all textures to the list
-#pragma endregion
-
 	// Creates our inputs fields
 	if (ImGui::InputText("Name", nameBuffer, sizeof(nameBuffer))) // Is a if statement cause we want to check if the name has been changed
 	{
 		*myObject->GetNamePtr() = nameBuffer;
 	}
-
 	ImGui::InputFloat3("Position ", *pos);
 	ImGui::InputFloat3("Scale ", *scale);
 	ImGui::SliderFloat3("Rotation ", *rot, -glm::pi<float>(), glm::pi<float>());
 
-	// Texture selection - this is a temp version currently
-	/*if (ImGui::BeginCombo("Texture", textures[0].c_str()))
-	{
-		for (int n = 0; n < textures.size(); n++)
-		{
-			const bool is_selected = (textures[0] == textures[n]);
-			if (ImGui::Selectable(textures[n].c_str(), is_selected))
-			{
-				textures[0] = textures[n];
-			}
+#pragma region Model
+	static std::string selectedModel = myObject->GetModelName();
+	std::unordered_map<std::string, Mesh*> meshes = ResourceHandler::GetInstance().GetMeshes();
 
-			if (is_selected)
+	if (ImGui::BeginCombo("Model", selectedModel.c_str()))
+	{
+		for (auto& mesh : meshes)
+		{
+			bool isSelected = (selectedModel == mesh.first);
+			if (ImGui::Selectable(mesh.first.c_str(), isSelected))
+			{
+				selectedModel = mesh.first;
+				myObject->SetMesh(*mesh.second, selectedModel);
+			}
+			if (isSelected)
 			{
 				ImGui::SetItemDefaultFocus();
 			}
 		}
 		ImGui::EndCombo();
-	}*/
+	}
+#pragma endregion
+
+#pragma region Texture
+	static std::string selectedTextureName = myObject->GetTexureName();
+	std::unordered_map<std::string, Texture*> textures = ResourceHandler::GetInstance().GetTextures();
+
+	if (ImGui::BeginCombo("Texture", selectedTextureName.c_str()))
+	{
+		for (auto& texture : textures)
+		{
+			bool isSelected = (selectedTextureName == texture.first);
+			if (ImGui::Selectable(texture.first.c_str(), isSelected))
+			{
+				selectedTextureName = texture.first;
+				myObject->SetTexture(*texture.second, selectedTextureName);
+			}
+			if (isSelected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+#pragma endregion
 }

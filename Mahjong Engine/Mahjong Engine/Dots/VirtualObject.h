@@ -22,9 +22,18 @@ public:
 	std::shared_ptr<std::string> GetNamePtr();
 	void SetName(const std::string& name); // #? Might be used when I make a handler that oversees objects with same name
 
-	void SetMesh(Mesh& mesh);
-	void SetTexture(Texture& texture);
-	void SetShader(Shader& shader);
+#pragma region Setters For Editor Version (mostly)
+	void SetMesh(Mesh& mesh, std::string& name);
+	void SetTexture(Texture& texture, std::string& name);
+	void SetShader(Shader& shader, std::string& name);
+#pragma endregion
+
+#pragma region Setters For Names
+	void SetMeshName(const std::string name);
+	void SetTextureName(const std::string name);
+	void SetShaderName(const std::string name);
+#pragma endregion
+
 
 	void Draw(DotsRendering::Camera* camera);
 
@@ -33,11 +42,20 @@ public:
 	glm::vec3 Rotation;
 
 	Shader* GetShader();
+	Texture* GetTexture();
+
+	const std::string& GetTexureName() const;
+	const std::string& GetModelName() const;
+	const std::string& GetShaderName() const;
 
 	// Stray thought - how can quaternion be used here?
 
 private:
 	std::shared_ptr<std::string> myName;
+	std::string myTextureName;
+	std::string myModelName;
+	std::string myShaderName;
+	
 	Mesh* myMesh;
 	Texture* myTexture;
 	Shader* myShader;
