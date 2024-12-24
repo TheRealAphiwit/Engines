@@ -187,16 +187,6 @@ void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh*
 	myObjects.push_back(newObject);
 }
 
-void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, const std::string& meshName, const std::string& textureName, const std::string& shaderName)
-{
-	// String version
-	Mesh* mesh = ResourceHandler::GetInstance().GetMesh(meshName);
-	Texture* texture = ResourceHandler::GetInstance().GetTexture(textureName);
-	Shader* shader = ResourceHandler::GetInstance().GetShader(shaderName);
-
-	VirtualObject* newObject = new VirtualObject(name, mesh, texture, shader);
-}
-
 void DotsRendering::CreateDefaultCube()
 {
 	VirtualObject* newObject = new VirtualObject(myCube, myTexture, myShader);

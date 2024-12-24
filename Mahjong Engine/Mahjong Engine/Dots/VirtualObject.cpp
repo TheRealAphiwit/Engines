@@ -54,7 +54,6 @@ void VirtualObject::SetMesh(Mesh& mesh, std::string& name)
 {
 	myMesh = &mesh;
 	myModelName = name;
-
 }
 
 void VirtualObject::SetTexture(Texture& texture, std::string& name)

@@ -35,7 +35,7 @@ void Characters::ObjectEntry::Update()
 		return;
 	}
 
-	char nameBuffer[128];
+	char nameBuffer[128]; // Create buffer for chars
 	strncpy_s(nameBuffer, myObject->GetName().c_str(), sizeof(nameBuffer)); // Copying the name to the buffer
 	nameBuffer[sizeof(nameBuffer) - 1] = '\0'; // Using null-termination to prevent buffer overflow
 
