@@ -31,6 +31,8 @@ namespace DotsRendering
 
 	void CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* aShader); // OLD
 	void CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader); // NEW
+	void CreateVirtualObject(std::shared_ptr<std::string> name, std::string meshName, std::string textureName, std::string shaderName); // ALT VERSION
+	void DeleteVirtualObject(VirtualObject* object);
 	void CreateDefaultCube();
 	void CreateDefaultSphere();
 

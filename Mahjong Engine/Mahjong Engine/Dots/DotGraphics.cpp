@@ -187,6 +187,31 @@ void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh*
 	myObjects.push_back(newObject);
 }
 
+void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, std::string meshName, std::string textureName, std::string shaderName)
+{
+	// This is the way I want to do it
+	VirtualObject* newObject = new VirtualObject(name, resourceHandler.GetMesh(meshName), resourceHandler.GetTexture(textureName), resourceHandler.GetShader(shaderName));
+	newObject->SetMeshName(meshName);
+	newObject->SetTextureName(textureName);
+	newObject->SetShaderName(shaderName);
+	myObjects.push_back(newObject);
+}
+
+void DotsRendering::DeleteVirtualObject(VirtualObject* object)
+{
+	if (!object) {return;}
+
+	for (int i = 0; i < myObjects.size(); i++)
+	{
+		if (myObjects[i] == object)
+		{
+			myObjects.erase(myObjects.begin() + i);
+			delete object;
+			return;
+		}
+	}
+}
+
 void DotsRendering::CreateDefaultCube()
 {
 	VirtualObject* newObject = new VirtualObject(myCube, myTexture, myShader);

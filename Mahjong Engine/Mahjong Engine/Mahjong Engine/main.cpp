@@ -11,7 +11,6 @@
 
 int main()
 {
-	// ResourceHandler* resources = new ResourceHandler();
 	ResourceHandler& resources = ResourceHandler::GetInstance();
 	DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
