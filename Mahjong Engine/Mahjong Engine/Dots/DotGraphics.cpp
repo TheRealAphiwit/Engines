@@ -83,7 +83,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 		return initData;
 	}
 
-	#pragma region File loadings
+	#pragma region Asset Loadings
 	// #! Make 3 lists for loaded resources; meshes, textures, shaders - we'll be able to use this list to get resources simpler im editor if needed
 	// How do we make it so that texture loads different .png's later in engine while running?
 	myGrassTexture = new Texture("../Assets/Images/Grass.png", true);
@@ -169,12 +169,7 @@ void DotsRendering::ClosingInput(GLFWwindow* window)
 	}
 }
 
-void DotsRendering::CreateVirtualObject(Mesh* aMesh, Texture* aTexture, Shader* aShader)
-{
-	VirtualObject* newObject = new VirtualObject(aMesh, aTexture, aShader);
-	myObjects.push_back(newObject);
-}
-
+#pragma region Can Be Moved To EntityHandler
 void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
 {
 	// How I currently have done it
@@ -214,13 +209,13 @@ void DotsRendering::DeleteVirtualObject(VirtualObject* object)
 
 void DotsRendering::CreateDefaultCube()
 {
-	VirtualObject* newObject = new VirtualObject(myCube, myTexture, myShader);
+	VirtualObject* newObject = new VirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
 	myObjects.push_back(newObject);
 }
 
 void DotsRendering::CreateDefaultSphere()
 {
-	VirtualObject* newObject = new VirtualObject(mySphere, myTexture, myShader);
+	VirtualObject* newObject = new VirtualObject(std::make_shared < std::string>("Sphere"), mySphere, myTexture, myShader);
 	myObjects.push_back(newObject);
 }
 
@@ -228,3 +223,4 @@ std::vector<VirtualObject*> DotsRendering::GetObjects()
 {
 	return myObjects;
 }
+#pragma endregion

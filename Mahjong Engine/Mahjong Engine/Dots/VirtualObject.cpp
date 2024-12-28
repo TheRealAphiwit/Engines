@@ -17,18 +17,7 @@
 //	Scale = glm::vec3(1, 1, 1);
 //}
 
-VirtualObject::VirtualObject(Mesh* mesh, Texture* texture, Shader* shader)
-{
-	myMesh = mesh;
-	myTexture = texture;
-	myShader = shader;
-
-	Position = glm::vec3(0, 0, 0);
-	Rotation = glm::vec3(0, 0, 0);
-	Scale = glm::vec3(1, 1, 1);
-}
-
-VirtualObject::VirtualObject(std::shared_ptr<std::string> name, Mesh * mesh, Texture * texture, Shader * shader) : myName(std::move(name)), myMesh(mesh), myTexture(texture), myShader(shader)
+VirtualObject::VirtualObject(std::shared_ptr<std::string> name, Mesh * mesh, Texture * texture, Shader * shader) : myName(std::move(name)), myMesh(mesh), myTexture(texture), myShader(shader), myModelName("None"), myShaderName("None"), myTextureName("None")
 {
 	Position = glm::vec3(0, 0, 0);
 	Rotation = glm::vec3(0, 0, 0);
@@ -68,17 +57,17 @@ void VirtualObject::SetShader(Shader& shader, std::string& name)
 	myShaderName = name;
 }
 
-void VirtualObject::SetMeshName(const std::string name)
+void VirtualObject::SetMeshName(std::string name)
 {
 	myModelName = name;
 }
 
-void VirtualObject::SetTextureName(const std::string name)
+void VirtualObject::SetTextureName(std::string name)
 {
 	myTextureName = name;
 }
 
-void VirtualObject::SetShaderName(const std::string name)
+void VirtualObject::SetShaderName(std::string name)
 {
 	myShaderName = name;
 }

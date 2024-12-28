@@ -15,7 +15,6 @@ namespace DotsRendering
 class VirtualObject
 {
 public:
-	VirtualObject(Mesh* mesh, Texture* texture, Shader* shader);
 	VirtualObject(std::shared_ptr<std::string> name, Mesh* mesh, Texture* texture, Shader* shader); // This is the updated one we'll try to use
 
 	const std::string& GetName() const;
@@ -29,9 +28,9 @@ public:
 #pragma endregion
 
 #pragma region Setters For Names
-	void SetMeshName(const std::string name);
-	void SetTextureName(const std::string name);
-	void SetShaderName(const std::string name);
+	void SetMeshName(std::string name);
+	void SetTextureName(std::string name);
+	void SetShaderName(std::string name);
 #pragma endregion
 
 
