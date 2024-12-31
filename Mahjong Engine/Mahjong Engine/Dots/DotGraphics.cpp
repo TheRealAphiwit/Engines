@@ -20,29 +20,30 @@
 #include <sstream>
 #include "../Mahjong Engine/ResourceHandler.h"
 
-GLFWwindow* window;
+// Can these pointers be stored in a .h file and still be acceseble in the .cpp file and for other scripts?
 
-Shader* myShader;
-Shader* myBillboard;
+namespace DotsRendering
+{
+	GLFWwindow* window = nullptr;
+	Shader* myShader = nullptr;
+	Shader* myBillboard = nullptr;
+	Square* mySquare = nullptr;
+	Triangle* myTriangle = nullptr;
+	Cube* myCube = nullptr;
+	Texture* myTexture = nullptr;
+	Texture* myGrassTexture = nullptr;
+	Texture* myConcreteTexture = nullptr;
+	Mesh* FlagMesh = nullptr;
+	Mesh* mySphere = nullptr;
+	Mesh* myPlane = nullptr;
 
-Square* mySquare;
-Triangle* myTriangle;
-Cube* myCube;
+	float myWidth = 0.0f;
+	float myHeight = 0.0f;
 
-Texture* myTexture;
-Texture* myGrassTexture;
-Texture* myConcreteTexture;
-Mesh* FlagMesh;
-
-Mesh* mySphere;
-Mesh* myPlane;
-
-float myWidth;
-float myHeight;
-
-float lastTime;
-float currentTime;
-float DeltaTime;
+	float lastTime = 0.0f;
+	float currentTime = 0.0f;
+	float DeltaTime = 0.0f;
+}
 
 std::vector<VirtualObject*> myObjects;
 VirtualObject* myBillboardObject = nullptr;
@@ -83,6 +84,10 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 		return initData;
 	}
 
+	myCube = new Cube();
+	mySquare = new Square();
+	myTriangle = new Triangle();
+
 	#pragma region Asset Loadings
 	// #! Make 3 lists for loaded resources; meshes, textures, shaders - we'll be able to use this list to get resources simpler im editor if needed
 	// How do we make it so that texture loads different .png's later in engine while running?
@@ -92,10 +97,6 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myShader = new Shader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
 	myBillboard = new Shader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
 	FlagMesh = LoadObjMesh("../Assets/Models/Flag.obj");
-
-	myCube = new Cube();
-	mySquare = new Square();
-	myTriangle = new Triangle();
 
 	// This section can be moved to ResourceHandler
 	resourceHandler.CreateTexture("../Assets/Images/Grass.png", true, "Grass");
@@ -117,6 +118,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	glEnable(GL_DEPTH_TEST);
 	glfwSwapInterval(1);
 
+	// Move this to EntityHandler::Initialize() to see if it works
 	for (size_t i = 0; i < 3; i++)
 	{
 		CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
