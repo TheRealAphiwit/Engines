@@ -15,6 +15,7 @@
 #include "stb_image.h"
 #include "Texture.h"
 #include "Square.h"
+#include "EntityHandler.h"
 
 #include <fstream>
 #include <sstream>
@@ -45,7 +46,6 @@ namespace DotsRendering
 	float DeltaTime = 0.0f;
 }
 
-std::vector<VirtualObject*> myObjects;
 VirtualObject* myBillboardObject = nullptr;
 
 DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
@@ -127,9 +127,11 @@ void DotsRendering::BeginRender(Camera* camera)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (int i = 0; i < myObjects.size(); i++)
+	std::vector<VirtualObject*> objects = EntityHandler::GetInstance().GetObjects();
+
+	for (int i = 0; i < objects.size(); i++)
 	{
-		myObjects[i]->Draw(camera);
+		objects[i]->Draw(camera);
 	}
 
 	float time = glfwGetTime();
@@ -165,9 +167,4 @@ void DotsRendering::ClosingInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
-}
-
-std::vector<VirtualObject*> DotsRendering::GetObjects()
-{
-	return myObjects;
 }
