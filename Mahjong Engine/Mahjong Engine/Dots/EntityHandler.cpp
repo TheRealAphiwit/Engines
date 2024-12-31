@@ -8,13 +8,22 @@
 
 #include "../Mahjong Engine/ResourceHandler.h"
 
-ResourceHandler& resourceHandler = ResourceHandler::GetInstance();
-
 DotsRendering::EntityHandler::EntityHandler()
 {
-	myCube = new Cube();
-	myTexture = resourceHandler.GetTexture("Grass");
-	myShader = resourceHandler.GetShader("Basic");
+	
+}
+
+DotsRendering::EntityHandler::~EntityHandler()
+{
+}
+
+void DotsRendering::EntityHandler::Initialize()
+{
+	// Move this to EntityHandler::Initialize() to see if it works
+	for (size_t i = 0; i < 3; i++)
+	{
+		CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+	}
 }
 
 void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
@@ -23,16 +32,16 @@ void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::stri
 	VirtualObject* newObject = new VirtualObject(name, aMesh, aTexture, aShader);
 
 	// This currently doesn't work since type diff
-	newObject->SetMeshName(resourceHandler.GetMeshName(aMesh));
-	newObject->SetTextureName(resourceHandler.GetTextureName(aTexture));
-	newObject->SetShaderName(resourceHandler.GetShaderName(aShader));
+	newObject->SetMeshName(ResourceHandler::GetInstance().GetMeshName(aMesh));
+	newObject->SetTextureName(ResourceHandler::GetInstance().GetTextureName(aTexture));
+	newObject->SetShaderName(ResourceHandler::GetInstance().GetShaderName(aShader));
 	myObjects.push_back(newObject);
 }
 
 void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::string> name, std::string meshName, std::string textureName, std::string shaderName)
 {
 	// This is the way I want to do it
-	VirtualObject* newObject = new VirtualObject(name, resourceHandler.GetMesh(meshName), resourceHandler.GetTexture(textureName), resourceHandler.GetShader(shaderName));
+	VirtualObject* newObject = new VirtualObject(name, ResourceHandler::GetInstance().GetMesh(meshName), ResourceHandler::GetInstance().GetTexture(textureName), ResourceHandler::GetInstance().GetShader(shaderName));
 	newObject->SetMeshName(meshName);
 	newObject->SetTextureName(textureName);
 	newObject->SetShaderName(shaderName);
@@ -58,4 +67,15 @@ void DotsRendering::EntityHandler::CreateDefaultCube()
 {
 	VirtualObject* newObject = new VirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
 	myObjects.push_back(newObject);
+}
+
+void DotsRendering::EntityHandler::CreateDefaultSphere()
+{
+	VirtualObject* newObject = new VirtualObject(std::make_shared < std::string>("Sphere"), mySphere, myTexture, myShader);
+	myObjects.push_back(newObject);
+}
+
+std::vector<VirtualObject*> DotsRendering::EntityHandler::GetObjects()
+{
+	return myObjects;
 }

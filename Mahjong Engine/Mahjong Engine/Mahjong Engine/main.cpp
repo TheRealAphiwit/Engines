@@ -3,6 +3,7 @@
 #include "ResourceHandler.h"
 #include "VirtualObject.h"
 #include "DotGraphics.h"
+#include "EntityHandler.h"
 
 #include <vector>
 #include <iostream>
@@ -13,6 +14,8 @@ int main()
 {
 	ResourceHandler& resources = ResourceHandler::GetInstance();
 	DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
+	DotsRendering::EntityHandler& entityHandler = DotsRendering::EntityHandler::GetInstance();
+	entityHandler.Initialize();
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
     Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources);
 
@@ -26,7 +29,7 @@ int main()
 
     while (!DotsRendering::ShouldClose())
     {
-        objects = DotsRendering::GetObjects();
+		objects = entityHandler.GetObjects();
         currentTime = glfwGetTime();
         delta = currentTime - lastTime;
         lastTime = currentTime;

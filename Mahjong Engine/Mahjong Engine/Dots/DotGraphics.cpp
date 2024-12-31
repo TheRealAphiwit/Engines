@@ -47,7 +47,6 @@ namespace DotsRendering
 
 std::vector<VirtualObject*> myObjects;
 VirtualObject* myBillboardObject = nullptr;
-ResourceHandler& resourceHandler = ResourceHandler::GetInstance();
 
 DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 {
@@ -99,15 +98,15 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	FlagMesh = LoadObjMesh("../Assets/Models/Flag.obj");
 
 	// This section can be moved to ResourceHandler
-	resourceHandler.CreateTexture("../Assets/Images/Grass.png", true, "Grass");
-	resourceHandler.CreateTexture("../Assets/Images/Concrete.png", false, "Concrete");
-	resourceHandler.CreateTexture("../Assets/Images/Default.png", false, "Default");
-	resourceHandler.CreateShader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl", "myShader");
-	resourceHandler.CreateShader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl", "myBillboard");
-	resourceHandler.CreateMesh("../Assets/Models/Flag.obj", "FlagMesh");
-	resourceHandler.RegisterMesh(myCube, "Cube");
-	resourceHandler.RegisterMesh(mySquare, "Square");
-	resourceHandler.RegisterMesh(myTriangle, "Triangle");
+	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Grass.png", true, "Grass");
+	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Concrete.png", false, "Concrete");
+	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Default.png", false, "Default");
+	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl", "myShader");
+	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl", "myBillboard");
+	ResourceHandler::GetInstance().CreateMesh("../Assets/Models/Flag.obj", "FlagMesh");
+	ResourceHandler::GetInstance().RegisterMesh(myCube, "Cube");
+	ResourceHandler::GetInstance().RegisterMesh(mySquare, "Square");
+	ResourceHandler::GetInstance().RegisterMesh(myTriangle, "Triangle");
 	#pragma endregion
 
 	Camera* camera = new Camera(width, height);
@@ -118,11 +117,8 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	glEnable(GL_DEPTH_TEST);
 	glfwSwapInterval(1);
 
-	// Move this to EntityHandler::Initialize() to see if it works
-	for (size_t i = 0; i < 3; i++)
-	{
-		CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
-	}
+	myTexture = ResourceHandler::GetInstance().GetTexture("Default");
+	myShader = ResourceHandler::GetInstance().GetShader("myShader");
 
 	return initData;
 }
@@ -171,58 +167,7 @@ void DotsRendering::ClosingInput(GLFWwindow* window)
 	}
 }
 
-#pragma region Can Be Moved To EntityHandler
-void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
-{
-	// How I currently have done it
-	VirtualObject* newObject = new VirtualObject(name, aMesh, aTexture, aShader);
-	
-	// This currently doesn't work since type diff
-	newObject->SetMeshName(resourceHandler.GetMeshName(aMesh));
-	newObject->SetTextureName(resourceHandler.GetTextureName(aTexture));
-	newObject->SetShaderName(resourceHandler.GetShaderName(aShader));
-	myObjects.push_back(newObject);
-}
-
-void DotsRendering::CreateVirtualObject(std::shared_ptr<std::string> name, std::string meshName, std::string textureName, std::string shaderName)
-{
-	// This is the way I want to do it
-	VirtualObject* newObject = new VirtualObject(name, resourceHandler.GetMesh(meshName), resourceHandler.GetTexture(textureName), resourceHandler.GetShader(shaderName));
-	newObject->SetMeshName(meshName);
-	newObject->SetTextureName(textureName);
-	newObject->SetShaderName(shaderName);
-	myObjects.push_back(newObject);
-}
-
-void DotsRendering::DeleteVirtualObject(VirtualObject* object)
-{
-	if (!object) {return;}
-
-	for (int i = 0; i < myObjects.size(); i++)
-	{
-		if (myObjects[i] == object)
-		{
-			myObjects.erase(myObjects.begin() + i);
-			delete object;
-			return;
-		}
-	}
-}
-
-void DotsRendering::CreateDefaultCube()
-{
-	VirtualObject* newObject = new VirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
-	myObjects.push_back(newObject);
-}
-
-void DotsRendering::CreateDefaultSphere()
-{
-	VirtualObject* newObject = new VirtualObject(std::make_shared < std::string>("Sphere"), mySphere, myTexture, myShader);
-	myObjects.push_back(newObject);
-}
-
 std::vector<VirtualObject*> DotsRendering::GetObjects()
 {
 	return myObjects;
 }
-#pragma endregion

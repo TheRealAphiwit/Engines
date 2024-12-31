@@ -32,13 +32,6 @@ namespace DotsRendering
 	bool ShouldClose();
 	void ClosingInput(GLFWwindow* window);
 
-	// All these can be moved to EntityHandler
-	void CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader); // NEW
-	void CreateVirtualObject(std::shared_ptr<std::string> name, std::string meshName, std::string textureName, std::string shaderName); // ALT VERSION
-	void DeleteVirtualObject(VirtualObject* object);
-	void CreateDefaultCube();
-	void CreateDefaultSphere();
-
 	extern GLFWwindow* window;
 	extern Shader* myShader;
 	extern Shader* myBillboard;
