@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include "Messages.h"
 
 class Texture;
 class Shader;
@@ -20,6 +21,8 @@ public:
 	// Prevent copy and overwriting
 	ResourceHandler(const ResourceHandler&) = delete;
 	ResourceHandler& operator=(const ResourceHandler&) = delete;
+
+	void ProcessMessages(MessageSystem::Message* aMessage);
 
 	void CreateShader(const char* aVertexPath, const char* aFragmentPath, std::string aName);
 	void CreateTexture(const char* aTexturePath, bool shouldAlpha, std::string aName); // Should make a seperate one for 2D images
