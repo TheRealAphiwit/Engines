@@ -21,7 +21,8 @@ namespace MessageSystem
 		MessageHandler& operator=(const MessageHandler&) = delete;
 		#pragma endregion
 	
-
+		void CreateMessage(const std::string& aQueueName, const std::string& aMessage);
+		void ProcessQueue(const std::string& aQueueName);
 
 	private:
 		MessageHandler();

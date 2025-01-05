@@ -11,6 +11,7 @@ class Mesh;
 class ResourceHandler
 {
 public:
+	#pragma region Singelton Setup
 	// Singelton
 	static ResourceHandler& GetInstance()
 	{
@@ -21,6 +22,7 @@ public:
 	// Prevent copy and overwriting
 	ResourceHandler(const ResourceHandler&) = delete;
 	ResourceHandler& operator=(const ResourceHandler&) = delete;
+	#pragma endregion
 
 	void ProcessMessages(MessageSystem::Message* aMessage);
 

@@ -6,10 +6,10 @@ namespace MessageSystem
 
 	enum class MessageType
 	{
-		String,
-		Mouse,
-		FloatMessage,
-		Raycast,
+		Graphics,
+		UI,
+		Physics,
+		Entity,
 	};
 
 	class Message

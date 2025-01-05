@@ -17,6 +17,20 @@ DotsRendering::EntityHandler::~EntityHandler()
 {
 }
 
+void DotsRendering::EntityHandler::ProcessMessages(MessageSystem::Message* aMessage)
+{
+	std::string& message = aMessage->message;
+
+	if (message == "CreateDefaultCube")
+	{
+		CreateDefaultCube();
+	}
+	else if (message == "CreateDefaultSphere")
+	{
+		CreateDefaultSphere();
+	}
+}
+
 void DotsRendering::EntityHandler::Initialize()
 {
 	// Move this to EntityHandler::Initialize() to see if it works

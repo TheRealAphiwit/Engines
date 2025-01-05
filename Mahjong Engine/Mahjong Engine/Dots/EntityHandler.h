@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include "Messages.h"
 
 // Needed components for entity handling
 class VirtualObject;
@@ -24,6 +25,8 @@ namespace DotsRendering
 		// Prevent copy and overwriting
 		EntityHandler(const EntityHandler&) = delete;
 		EntityHandler& operator=(const EntityHandler&) = delete;
+
+		void ProcessMessages(MessageSystem::Message* aMessage);
 
 		void Initialize();
 		void CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader); // NEW

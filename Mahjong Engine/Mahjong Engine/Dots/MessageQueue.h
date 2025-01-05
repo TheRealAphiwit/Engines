@@ -8,9 +8,9 @@ namespace MessageSystem
 	{
 	public:
 		void QueueMessage(Message* aMessage);
+		void ProcessMessages();
 
 	private:
-		void ProcessMessages();
 		void ProcessMessage(Message* aMessage);
 
 		std::vector<Message*> messages;
