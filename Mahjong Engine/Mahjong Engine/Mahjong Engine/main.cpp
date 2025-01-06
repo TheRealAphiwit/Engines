@@ -14,12 +14,12 @@
 int main()
 {
 	ResourceHandler& resources = ResourceHandler::GetInstance();
-	DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
+	MessageSystem::MessageHandler& messageHandler = MessageSystem::MessageHandler::GetInstance();
+    DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
 	DotsRendering::EntityHandler& entityHandler = DotsRendering::EntityHandler::GetInstance();
 	entityHandler.Initialize();
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
     Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources);
-	// MessageSystem::MessageHandler& messageHandler = MessageSystem::MessageHandler::GetInstance();
 
     glfwSetInputMode(renderData.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // GLFW_CURSOR diff
 

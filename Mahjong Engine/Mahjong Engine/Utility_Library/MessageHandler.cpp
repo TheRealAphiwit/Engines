@@ -9,3 +9,11 @@ void MessageSystem::MessageHandler::ProcessQueue(const std::string& aQueueName)
 {
 	myMessageQueues[aQueueName].ProcessMessages();
 }
+
+MessageSystem::MessageHandler::MessageHandler()
+{
+}
+
+MessageSystem::MessageHandler::~MessageHandler()
+{
+}

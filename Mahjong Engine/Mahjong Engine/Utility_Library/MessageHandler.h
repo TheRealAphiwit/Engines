@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
-#include "../Dots/MessageQueue.h" //lmao
+#include "MessageQueue.h" //lmao
 
 namespace MessageSystem
 {

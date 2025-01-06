@@ -1,7 +1,7 @@
 #include "MessageQueue.h"
 #include "MessageQueue.h"
 #include "MessageQueue.h"
-#include "EntityHandler.h"
+#include "../Dots/EntityHandler.h"
 
 void MessageSystem::MessageQueue::QueueMessage(Message* aMessage)
 {
@@ -25,7 +25,7 @@ void MessageSystem::MessageQueue::ProcessMessage(Message* aMessage)
 	{
 	case MessageType::Entity:
 		// Call entity handler
-		EntityHandler::GetInstance().ProcessMessages(aMessage);
+		DotsRendering::EntityHandler::GetInstance().ProcessMessages(aMessage);
 		break;
 	}
 }
