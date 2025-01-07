@@ -43,6 +43,7 @@ int main()
 
         engine->Update(delta);
 
+        // 0 check first- currently it freezes
 		// messageHandler.ProcessQueue("Entity");
     }
 
