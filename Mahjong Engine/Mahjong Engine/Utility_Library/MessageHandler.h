@@ -23,6 +23,7 @@ namespace MessageSystem
 	
 		void CreateMessage(const std::string& aQueueName, const std::string& aMessage);
 		void ProcessQueue(const std::string& aQueueName);
+		void ProcessMessage(Message* aMessage);
 
 	private:
 		MessageHandler();

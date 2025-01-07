@@ -18,6 +18,7 @@ int main()
     DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
 	DotsRendering::EntityHandler& entityHandler = DotsRendering::EntityHandler::GetInstance();
 	entityHandler.Initialize();
+    messageHandler.ProcessQueue("Entity");
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
     Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources);
 
@@ -41,6 +42,8 @@ int main()
         DotsRendering::End();
 
         engine->Update(delta);
+
+		// messageHandler.ProcessQueue("Entity");
     }
 
 	glfwTerminate();

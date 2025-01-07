@@ -116,7 +116,7 @@ Mesh::~Mesh()
 void Mesh::Draw(Shader* shader)
 {
 	shader->Use();
-	glBindVertexArray(VAO);
+	glBindVertexArray(VAO); 
 
 	if (IndicesSize > 0)
 	{

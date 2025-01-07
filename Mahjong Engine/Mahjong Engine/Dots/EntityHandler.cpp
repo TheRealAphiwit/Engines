@@ -7,6 +7,7 @@
 #include "DotGraphics.h"
 
 #include "../Mahjong Engine/ResourceHandler.h"
+#include "../Utility_Library/MessageHandler.h"
 
 DotsRendering::EntityHandler::EntityHandler()
 {
@@ -38,6 +39,9 @@ void DotsRendering::EntityHandler::Initialize()
 	{
 		CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
 	}
+
+	// Send request to create default cube
+	MessageSystem::MessageHandler::GetInstance().CreateMessage("Entity", "Request: Create Default Cube Entity");
 }
 
 void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
