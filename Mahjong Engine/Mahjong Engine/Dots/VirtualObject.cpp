@@ -146,3 +146,79 @@ glm::mat4 VirtualObject::GetModelMatrix() const
 
 	return model;
 }
+
+bool VirtualObject::WriteTo(std::ofstream& outFile) const
+{
+	if (!outFile) return false;
+
+	// Serializa name
+	size_t nameSize = myName->size();
+	outFile.write(reinterpret_cast<const char*>(&nameSize), sizeof(nameSize));
+	outFile.write(myName->c_str(), nameSize);
+
+	//Serialize position, scale and rotation
+	outFile.write(reinterpret_cast<const char*>(&Position), sizeof(Position));
+	outFile.write(reinterpret_cast<const char*>(&Scale), sizeof(Scale));
+	outFile.write(reinterpret_cast<const char*>(&Rotation), sizeof(Rotation));
+
+	// Serialize model, texture and shader names - we'll use names as identifiers
+	size_t modelNameSize = myModelName.size();
+	outFile.write(reinterpret_cast<const char*>(&modelNameSize), sizeof(modelNameSize));
+	outFile.write(myModelName.c_str(), modelNameSize);
+
+	size_t textureNameSize = myTextureName.size();
+	outFile.write(reinterpret_cast<const char*>(&textureNameSize), sizeof(textureNameSize));
+	outFile.write(myTextureName.c_str(), textureNameSize);
+
+	size_t shaderNameSize = myShaderName.size();
+	outFile.write(reinterpret_cast<const char*>(&shaderNameSize), sizeof(shaderNameSize));
+	outFile.write(myShaderName.c_str(), shaderNameSize);
+
+	return outFile.good();
+}
+
+bool VirtualObject::ReadFrom(std::ifstream& inFile)
+{
+	if (!inFile) return false;
+
+	// Deserialize name
+	size_t nameSize = 0; // Setting 0 to avoid garbage data
+	inFile.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
+	char* buffer = new char[nameSize + 1];
+	inFile.read(buffer, nameSize);
+	buffer[nameSize] = '\0';
+	myName = std::make_shared<std::string>(buffer);
+	delete[] buffer;
+
+	// Deserialize position, scale and rotation
+	inFile.read(reinterpret_cast<char*>(&Position), sizeof(Position));
+	inFile.read(reinterpret_cast<char*>(&Scale), sizeof(Scale));
+	inFile.read(reinterpret_cast<char*>(&Rotation), sizeof(Rotation));
+
+	// Deserialize model, texture and shader names
+	size_t modelNameSize = 0;
+	inFile.read(reinterpret_cast<char*>(&modelNameSize), sizeof(modelNameSize));
+	buffer = new char[modelNameSize + 1];
+	inFile.read(buffer, modelNameSize);
+	buffer[modelNameSize] = '\0';
+	myModelName = buffer;
+	delete[] buffer;
+
+	size_t textureNameSize = 0;
+	inFile.read(reinterpret_cast<char*>(&textureNameSize), sizeof(textureNameSize));
+	buffer = new char[textureNameSize + 1];
+	inFile.read(buffer, textureNameSize);
+	buffer[textureNameSize] = '\0';
+	myTextureName = buffer;
+	delete[] buffer;
+
+	size_t shaderNameSize = 0;
+	inFile.read(reinterpret_cast<char*>(&shaderNameSize), sizeof(shaderNameSize));
+	buffer = new char[shaderNameSize + 1];
+	inFile.read(buffer, shaderNameSize);
+	buffer[shaderNameSize] = '\0';
+	myShaderName = buffer;
+	delete[] buffer;
+
+	return inFile.good();
+}

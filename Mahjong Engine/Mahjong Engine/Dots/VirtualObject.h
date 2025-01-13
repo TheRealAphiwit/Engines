@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include <glm.hpp>
+#include "ISerializable.h"
 
 class Mesh;
 class Texture;
@@ -12,7 +13,7 @@ namespace DotsRendering
 	class Camera;
 }
 
-class VirtualObject
+class VirtualObject : public ISerializable
 {
 public:
 	VirtualObject(std::shared_ptr<std::string> name, Mesh* mesh, Texture* texture, Shader* shader); // This is the updated one we'll try to use
@@ -50,6 +51,11 @@ public:
 	glm::mat4 GetModelMatrix() const;
 
 	// Stray thought - how can quaternion be used here?
+
+	#pragma region Serialization
+	bool WriteTo(std::ofstream& outFile) const override;
+	bool ReadFrom(std::ifstream& inFile) override;
+	#pragma endregion
 
 private:
 	std::shared_ptr<std::string> myName;
