@@ -11,10 +11,11 @@ uniform vec3 light_attenuation = vec3(1, 0.1, 0.001);		// Constant, linear and q
 in vec3 v_normal;​
 in vec2 UV_Coord;​
 in vec3 position;​
-in vec3 vecToEye;	// Vector from vertex to eye
 
-out vec4fragColor;​​
+// Vector from vertex to eye
+in vec3 vecToEye;	
 
+out vec4 fragColor;​​
 
 
 void main()​
@@ -24,6 +25,7 @@ void main()​
 	fragColor = vec4(0,0,0,texel.w); // start at 0 lighting​
 	
 	// Ambient first​
+	vec4 materialAmbient = vec4(0.5, 0.5, 0.5, 0.1);
 	fragColor.xyz += materialAmbient * light_ambient;​
 
 	// Diffuse part start​

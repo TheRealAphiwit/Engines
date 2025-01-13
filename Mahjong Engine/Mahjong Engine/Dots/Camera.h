@@ -20,6 +20,7 @@ namespace DotsRendering
 
 		void Move(const glm::vec3& aMove);
 		void SetDirection(const glm::vec3& aDirection);
+		glm::vec3 GetCameraPosition() const;
 
 	private:
 		glm::vec3 myPosition;

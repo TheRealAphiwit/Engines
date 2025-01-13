@@ -129,12 +129,10 @@ void Mesh::Draw(Shader* shader)
 
 	if (EBO == 0)
 	{
-		std::cout << "EBO is 0" << std::endl;
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
 	else
 	{
-		std::cout << "EBO is not 0" << std::endl;
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	}
 

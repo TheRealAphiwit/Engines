@@ -47,6 +47,8 @@ public:
 	const std::string& GetModelName() const;
 	const std::string& GetShaderName() const;
 
+	glm::mat4 GetModelMatrix() const;
+
 	// Stray thought - how can quaternion be used here?
 
 private:

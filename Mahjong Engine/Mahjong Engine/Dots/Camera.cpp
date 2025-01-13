@@ -44,3 +44,8 @@ void DotsRendering::Camera::SetDirection(const glm::vec3& aDirection)
 {
 	myDirection = glm::normalize(aDirection);
 }
+
+glm::vec3 DotsRendering::Camera::GetCameraPosition() const
+{
+	return myPosition;
+}

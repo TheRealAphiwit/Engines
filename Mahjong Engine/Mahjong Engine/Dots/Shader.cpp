@@ -104,6 +104,7 @@ bool Shader::RecompileShader(const char* vertexPath, const char* fragmentPath)
     unsigned int FragmentShader = LoadFragmentShader(fragmentPath);
 
     myShaderProgram = glCreateProgram();
+    // shader name
     glAttachShader(myShaderProgram, VertexShader);
     glAttachShader(myShaderProgram, FragmentShader);
     glLinkProgram(myShaderProgram);

@@ -21,6 +21,7 @@ out vec3 vecToEye;	// Vector from ​
 ​void main() 
 {​
 	mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;​
+	// Setting object position in ws to be rendered im gl pos
 	gl_Position = mvp * vec4(in_Position, 1);​
 	position = (modelMatrix * vec4(in_Position, 1)).xyz;​
 	v_normal = in_Normal; // just pass along for now​
