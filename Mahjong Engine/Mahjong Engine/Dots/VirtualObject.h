@@ -52,9 +52,12 @@ public:
 
 	// Stray thought - how can quaternion be used here?
 
-	#pragma region Serialization
+	#pragma region Serialization, Saving and Loading
 	bool WriteTo(std::ofstream& outFile) const override;
 	bool ReadFrom(std::ifstream& inFile) override;
+
+	void SaveToFile(const std::string& filePath);
+	void LoadFromFile(const std::string& filePath);
 	#pragma endregion
 
 private:

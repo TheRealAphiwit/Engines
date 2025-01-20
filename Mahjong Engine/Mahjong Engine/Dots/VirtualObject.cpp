@@ -184,11 +184,9 @@ bool VirtualObject::ReadFrom(std::ifstream& inFile)
 	// Deserialize name
 	size_t nameSize = 0; // Setting 0 to avoid garbage data
 	inFile.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
-	char* buffer = new char[nameSize + 1];
-	inFile.read(buffer, nameSize);
-	buffer[nameSize] = '\0';
-	myName = std::make_shared<std::string>(buffer);
-	delete[] buffer;
+	std::string tempName(nameSize, '\0'); // Pre-allocate space in the string
+	inFile.read(&tempName[0], nameSize);
+	myName = std::make_shared<std::string>(tempName);
 
 	// Deserialize position, scale and rotation
 	inFile.read(reinterpret_cast<char*>(&Position), sizeof(Position));
@@ -198,27 +196,50 @@ bool VirtualObject::ReadFrom(std::ifstream& inFile)
 	// Deserialize model, texture and shader names
 	size_t modelNameSize = 0;
 	inFile.read(reinterpret_cast<char*>(&modelNameSize), sizeof(modelNameSize));
-	buffer = new char[modelNameSize + 1];
-	inFile.read(buffer, modelNameSize);
-	buffer[modelNameSize] = '\0';
-	myModelName = buffer;
-	delete[] buffer;
+	myModelName.resize(modelNameSize);
+	inFile.read(&myModelName[0], modelNameSize);
 
 	size_t textureNameSize = 0;
 	inFile.read(reinterpret_cast<char*>(&textureNameSize), sizeof(textureNameSize));
-	buffer = new char[textureNameSize + 1];
-	inFile.read(buffer, textureNameSize);
-	buffer[textureNameSize] = '\0';
-	myTextureName = buffer;
-	delete[] buffer;
+	myTextureName.resize(textureNameSize);
+	inFile.read(&myTextureName[0], textureNameSize);
 
 	size_t shaderNameSize = 0;
 	inFile.read(reinterpret_cast<char*>(&shaderNameSize), sizeof(shaderNameSize));
-	buffer = new char[shaderNameSize + 1];
-	inFile.read(buffer, shaderNameSize);
-	buffer[shaderNameSize] = '\0';
-	myShaderName = buffer;
-	delete[] buffer;
+	myShaderName.resize(shaderNameSize);
+	inFile.read(&myShaderName[0], shaderNameSize);
 
 	return inFile.good();
+}
+
+void VirtualObject::SaveToFile(const std::string& filePath)
+{
+	std::ofstream outFile(filePath, std::ios::binary);
+	if (!outFile)
+	{
+		throw std::runtime_error("Failed to open file for saving: " + filePath);
+	}
+
+	if (!WriteTo(outFile))
+	{
+		throw std::runtime_error("Failed to write to file: " + filePath);
+	}
+	
+	outFile.close();
+}
+
+void VirtualObject::LoadFromFile(const std::string& filePath)
+{
+	std::ifstream inFile(filePath, std::ios::binary);
+	if (!inFile)
+	{
+		throw std::runtime_error("Failed to open file for loading: " + filePath);
+	}
+
+	if (!ReadFrom(inFile))
+	{
+		throw std::runtime_error("Failed to read from file: " + filePath);
+	}
+
+	inFile.close();
 }
