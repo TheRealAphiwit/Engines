@@ -22,7 +22,6 @@ namespace DotsRendering
 	bool DeserializeObjData(const std::string& filename, ObjData& outData);
 
 	#pragma region Goal
-	// Implement binary file creation to work alongside serializaion and deserialization
 	// Check also before loading and creating a binary file if the file already exists
 	#pragma endregion
 }
