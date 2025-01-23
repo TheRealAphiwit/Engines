@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include <glm.hpp>
+#include <thread>
 #include "ISerializable.h"
 
 class Mesh;
