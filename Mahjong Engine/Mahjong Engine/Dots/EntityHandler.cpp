@@ -66,6 +66,18 @@ void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::stri
 	myObjects.push_back(newObject);
 }
 
+// void DotsRendering::EntityHandler::ThreadCreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
+//{
+//}
+
+std::future<VirtualObject*> DotsRendering::EntityHandler::ThreadCreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
+{
+	// Start a new thread
+	std::thread CreateObjectThread(Initialize);
+
+	return std::future<VirtualObject*>();
+}
+
 void DotsRendering::EntityHandler::DeleteVirtualObject(VirtualObject* object)
 {
 	if (!object) { return; }
