@@ -8,6 +8,7 @@
 
 #include "../Mahjong Engine/ResourceHandler.h"
 #include "../Utility_Library/MessageHandler.h"
+#include <iostream>
 
 DotsRendering::EntityHandler::EntityHandler()
 {
@@ -37,7 +38,11 @@ void DotsRendering::EntityHandler::Initialize()
 	// Move this to EntityHandler::Initialize() to see if it works
 	for (size_t i = 0; i < 3; i++)
 	{
-		CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+		// Nomral version
+		//CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+
+		// Thread version
+		ThreadCreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
 	}
 
 	// Send request to create default cube
@@ -56,6 +61,7 @@ void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::stri
 	myObjects.push_back(newObject);
 }
 
+// Alt version
 void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::string> name, std::string meshName, std::string textureName, std::string shaderName)
 {
 	// This is the way I want to do it
@@ -66,16 +72,46 @@ void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::stri
 	myObjects.push_back(newObject);
 }
 
+// 1st version of threading
 // void DotsRendering::EntityHandler::ThreadCreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
 //{
 //}
 
 std::future<VirtualObject*> DotsRendering::EntityHandler::ThreadCreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
 {
-	// Start a new thread
-	std::thread CreateObjectThread(Initialize);
+	return std::async
+	(std::launch::async, [this, name, aMesh, aTexture, aShader]() -> VirtualObject* 
+		{
+			// Create the VirtualObject
+			VirtualObject* newObject = new VirtualObject(name, aMesh, aTexture, aShader);
 
-	return std::future<VirtualObject*>();
+			// Lock and update the shared resource
+			{
+				std::lock_guard<std::mutex> lock(myObjectsMutex);
+				std::cout << "Created VirtualObject: " << newObject->GetName() << std::endl;
+				myObjects.push_back(newObject);
+			}
+
+			// Return the created object
+			return newObject;
+		}
+	);
+
+	// Usage example:
+	/*
+	auto future = EntityHandler::GetInstance().ThreadCreateVirtualObject(name, mesh, texture, shader);
+
+	// Do some other work while the VirtualObject is being created...
+
+	// Retrieve the created object when it's ready
+	try {
+		VirtualObject* createdObject = future.get(); // Blocks until the object is ready
+		std::cout << "Created VirtualObject: " << createdObject->GetName() << std::endl;
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Error creating VirtualObject: " << e.what() << std::endl;
+	}
+	*/
 }
 
 void DotsRendering::EntityHandler::DeleteVirtualObject(VirtualObject* object)
