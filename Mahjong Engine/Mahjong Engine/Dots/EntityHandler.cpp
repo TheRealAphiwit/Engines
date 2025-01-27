@@ -27,7 +27,7 @@ void DotsRendering::EntityHandler::ProcessMessages(MessageSystem::Message* aMess
 	{
 		CreateDefaultCube();
 	}
-	else if (message == "ThreadCreateDefaultCUbe")
+	else if (message == "ThreadCreateDefaultCube")
 	{
 		ThreadCreateDefaultCube();
 	}
@@ -46,7 +46,7 @@ void DotsRendering::EntityHandler::Initialize()
 	}
 
 	// Send request to create default cube
-	MessageSystem::MessageHandler::GetInstance().CreateMessage("Entity", "Request: Create Default Cube Entity");
+	MessageSystem::MessageHandler::GetInstance().CreateMessage("Entity", "Request: Thread Create Default Cube Entity");
 }
 
 void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)

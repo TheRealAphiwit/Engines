@@ -1,6 +1,7 @@
 #include "MessageHandler.h"
 #include "MessageQueue.h"
 #include "Messages.h"
+#include "MemoryChecker.h"
 #include "../Dots/EntityHandler.h"
 
 void MessageSystem::MessageHandler::CreateMessage(const std::string& aQueueName, const std::string& aMessage)
@@ -21,14 +22,17 @@ void MessageSystem::MessageHandler::ProcessMessage(Message* aMessage)
 	case MessageSystem::MessageType::Entity:
 		std::string& message = aMessage->message;
 
-		if (message == "Request: Create Default Cube Entity")
+		if (message == "Request: Thread Create Default Cube Entity")
 		{
 			// Grant permission (I'll later add strain checker and grant or queue the permission depending on that)
 			
-
 			// Create new message
 			MessageSystem::Message* newMessage = new MessageSystem::Message(MessageSystem::MessageType::Entity, "ThreadCreateDefaultCube");
 			DotsRendering::EntityHandler::GetInstance().ProcessMessages(newMessage);
+
+			// Memory
+			MemoryChecker memoryChecker;
+			memoryChecker.PrintMemoryStatus();
 		} 
 	}
 
