@@ -1,6 +1,7 @@
 #include "MessageQueue.h"
 #include "MessageQueue.h"
 #include "MessageQueue.h"
+#include "MemoryChecker.h"
 #include "../Dots/EntityHandler.h"
 
 void MessageSystem::MessageQueue::QueueMessage(Message* aMessage)
@@ -29,6 +30,10 @@ void MessageSystem::MessageQueue::ProcessMessage(Message* aMessage)
 		// Create new message
 		MessageSystem::Message* newMessage = new MessageSystem::Message(MessageSystem::MessageType::Entity, "ThreadCreateDefaultCube");
 		DotsRendering::EntityHandler::GetInstance().ProcessMessages(newMessage);
+
+		// Memory
+		MemoryChecker memoryChecker;
+		memoryChecker.PrintMemoryStatus();
 	}
 
 	// Old switch case

@@ -1,7 +1,6 @@
 #include "MessageHandler.h"
 #include "MessageQueue.h"
 #include "Messages.h"
-#include "MemoryChecker.h"
 #include "../Dots/EntityHandler.h"
 
 void MessageSystem::MessageHandler::CreateMessage(const std::string& aQueueName, const std::string& aMessage)
@@ -16,6 +15,8 @@ void MessageSystem::MessageHandler::ProcessQueue(const std::string& aQueueName)
 
 void MessageSystem::MessageHandler::ProcessMessage(Message* aMessage)
 {
+	//DEPRECATED
+
 	// Switch case
 	switch (aMessage->type)
 	{
@@ -29,10 +30,6 @@ void MessageSystem::MessageHandler::ProcessMessage(Message* aMessage)
 			// Create new message
 			MessageSystem::Message* newMessage = new MessageSystem::Message(MessageSystem::MessageType::Entity, "ThreadCreateDefaultCube");
 			DotsRendering::EntityHandler::GetInstance().ProcessMessages(newMessage);
-
-			// Memory
-			MemoryChecker memoryChecker;
-			memoryChecker.PrintMemoryStatus();
 		} 
 	}
 
