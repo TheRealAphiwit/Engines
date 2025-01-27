@@ -27,9 +27,9 @@ void DotsRendering::EntityHandler::ProcessMessages(MessageSystem::Message* aMess
 	{
 		CreateDefaultCube();
 	}
-	else if (message == "CreateDefaultSphere")
+	else if (message == "ThreadCreateDefaultCUbe")
 	{
-		CreateDefaultSphere();
+		ThreadCreateDefaultCube();
 	}
 }
 
@@ -133,6 +133,24 @@ void DotsRendering::EntityHandler::CreateDefaultCube()
 {
 	VirtualObject* newObject = new VirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
 	myObjects.push_back(newObject);
+}
+
+std::future<VirtualObject*> DotsRendering::EntityHandler::ThreadCreateDefaultCube()
+{
+	return std::async
+	(
+		std::launch::async, [this]() 
+		{
+			// Create the cube object
+			VirtualObject* newObject = new VirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+
+			// Lock the mutex to safely modify the shared myObjects vector
+			std::lock_guard<std::mutex> lock(myObjectsMutex);
+			myObjects.push_back(newObject);
+
+			return newObject; // Return the created VirtualObject
+		}
+	);
 }
 
 void DotsRendering::EntityHandler::CreateDefaultSphere()

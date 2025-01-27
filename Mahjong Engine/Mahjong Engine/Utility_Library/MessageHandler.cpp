@@ -24,10 +24,12 @@ void MessageSystem::MessageHandler::ProcessMessage(Message* aMessage)
 		if (message == "Request: Create Default Cube Entity")
 		{
 			// Grant permission (I'll later add strain checker and grant or queue the permission depending on that)
+			
+
 			// Create new message
-			MessageSystem::Message* newMessage = new MessageSystem::Message(MessageSystem::MessageType::Entity, "CreateDefaultCube");
+			MessageSystem::Message* newMessage = new MessageSystem::Message(MessageSystem::MessageType::Entity, "ThreadCreateDefaultCube");
 			DotsRendering::EntityHandler::GetInstance().ProcessMessages(newMessage);
-		}
+		} 
 	}
 
 	/*std::string& message = aMessage->message;
