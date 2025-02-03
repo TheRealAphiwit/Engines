@@ -117,4 +117,11 @@ void Characters::ObjectEntry::Update()
 		ImGui::EndCombo();
 	}
 #pragma endregion
+
+#pragma region DeleteButton
+	if (ImGui::Button("Delete Object"))
+	{
+
+	}
+#pragma endregion
 }

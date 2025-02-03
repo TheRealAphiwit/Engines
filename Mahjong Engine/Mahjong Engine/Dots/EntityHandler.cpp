@@ -114,6 +114,28 @@ std::future<VirtualObject*> DotsRendering::EntityHandler::ThreadCreateVirtualObj
 	*/
 }
 
+std::future<void> DotsRendering::EntityHandler::ThreadDeleteVirtualObject(VirtualObject* object)
+{
+	return std::async
+	(std::launch::async, [this, object]()
+		{
+			if (!object) return;
+
+			// Lock mutex to safely access and modify myObjects
+			std::lock_guard<std::mutex> lock(myObjectsMutex);
+
+			// auto can be VirtualObject
+			auto it = std::find(myObjects.begin(), myObjects.end(), object);
+			if (it != myObjects.end())
+			{
+				myObjects.erase(it);
+				delete object;
+				std::cout << "Deleted VirtualObject\n";
+			}
+		}
+	);
+}
+
 void DotsRendering::EntityHandler::DeleteVirtualObject(VirtualObject* object)
 {
 	if (!object) { return; }

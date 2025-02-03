@@ -37,7 +37,8 @@ namespace DotsRendering
 		
 		// void ThreadCreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader);
 		std::future<VirtualObject*> ThreadCreateVirtualObject(std::shared_ptr<std::string> name, Mesh * aMesh, Texture * aTexture, Shader * aShader);
-		
+		std::future<void> ThreadDeleteVirtualObject(VirtualObject* object);
+
 		void DeleteVirtualObject(VirtualObject* object);
 		void CreateDefaultCube();
 		std::future<VirtualObject*> ThreadCreateDefaultCube();

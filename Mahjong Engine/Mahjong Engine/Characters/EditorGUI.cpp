@@ -7,8 +7,9 @@
 #include "VirtualObject.h"
 #include <string>
 #include "ObjectEntry.h"
-
+#include "EntityHandler.h"
 #include "ResourceEditor.h"
+#include <iostream>
 
 #define itoc(a) ((char*)(intptr_t)(a)) // Line here allows us to convert int's into char*'s
 
@@ -88,7 +89,17 @@ void Characters::EditorGUI::UpdateHieracrhy(std::vector<VirtualObject*> someObje
 {
 	if (ImGui::Button("Create Object"))
 	{
+		// Call the threaded function to create a default cube
+		std::future<VirtualObject*> future = DotsRendering::EntityHandler::GetInstance().ThreadCreateDefaultCube();
 
+		// Optionally, handle the future if needed (e.g., wait for result, check errors)
+		try {
+			VirtualObject* createdObject = future.get(); // Blocks until the object is ready
+			std::cout << "Created VirtualObject: " << createdObject->GetName() << std::endl;
+		}
+		catch (const std::exception& error) {
+			std::cerr << "Error creating VirtualObject: " << error.what() << std::endl;
+		}
 	}
 
 	// Check if existing items are correct
