@@ -1,8 +1,8 @@
 #pragma once
+#include "EditorGUI.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "EditorGUI.h"
 #include <glm.hpp>
 #include "VirtualObject.h"
 #include <string>
@@ -13,7 +13,7 @@
 
 #define itoc(a) ((char*)(intptr_t)(a)) // Line here allows us to convert int's into char*'s
 
-Characters::EditorGUI::EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler)
+Characters::EditorGUI::EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler, DotsRendering::Camera* aCamera)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -23,10 +23,9 @@ Characters::EditorGUI::EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResource
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	myResourceHandler = aResourceHandler;
-
-	myCurrentEditor = ECurrentEditor::COUNT;
-
 	myResourceEditor = new ResourceEditor(myResourceHandler);
+	myCamera = aCamera;
+	myCurrentEditor = ECurrentEditor::COUNT;
 }
 
 Characters::EditorGUI::~EditorGUI()
@@ -56,6 +55,7 @@ void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects)
 			if (ImGui::MenuItem("Shader Editor", "Ctrl+O")) { myCurrentEditor = ECurrentEditor::EShaderEditor; }
 			if (ImGui::MenuItem("Resource Viewer", "Ctrl+S")) { myCurrentEditor = ECurrentEditor::EResourceViewer; }
 			if (ImGui::MenuItem("Object Hierarchy", "Ctrl+W")) { myCurrentEditor = ECurrentEditor::EObjectHierarchy; }
+			if (ImGui::MenuItem("Camera Settings", "Ctrl+C")) { myCurrentEditor = ECurrentEditor::ECameraSettings; }
 			ImGui::EndMenu(); // Closes currrent menu context
 		}
 		ImGui::EndMenuBar(); // Closes menubar context
@@ -72,6 +72,9 @@ void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects)
 		break;
 	case Characters::ECurrentEditor::EResourceViewer:
 		myResourceEditor->Update();
+		break;
+	case Characters::ECurrentEditor::ECameraSettings:
+		UpdateCameraSettings();
 		break;
 	case Characters::ECurrentEditor::COUNT:
 		break;
@@ -139,6 +142,26 @@ void Characters::EditorGUI::UpdateHieracrhy(std::vector<VirtualObject*> someObje
 		}
 	}
 	ImGui::EndChild();
+}
+
+void Characters::EditorGUI::UpdateCameraSettings()
+{
+	if (ImGui::Begin("Camera Settings"))
+	{
+		glm::vec3 cameraPos = myCamera->GetCameraPosition();
+		glm::vec3 cameraRot = glm::vec3(0.0f);
+
+		if (ImGui::DragFloat3("Position", &cameraPos.x, 0.1f))
+		{
+			myCamera->SetPosition(cameraPos);
+		}
+
+		if (ImGui::DragFloat3("Rotation", &cameraRot.x, 0.1f))
+		{
+			myCamera->SetRotation(cameraRot);
+		}
+	}
+	ImGui::End();
 }
 
 void Characters::EditorGUI::RepopulateEntries(std::vector<VirtualObject*> someObjects)

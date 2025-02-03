@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Camera.h"
 
 class VirtualObject;
 class ResourceHandler;
@@ -15,6 +16,7 @@ namespace Characters
 		EObjectHierarchy,
 		EShaderEditor,
 		EResourceViewer,
+		ECameraSettings,
 		COUNT
 	};
 
@@ -23,19 +25,20 @@ namespace Characters
 	class EditorGUI
 	{
 	public:
-		EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler);
+		EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler, DotsRendering::Camera* aCamera);
 		~EditorGUI();
 		void Render(std::vector<VirtualObject*> someObjects);
 
 	private:
 		void UpdateHieracrhy(std::vector<VirtualObject*> someObjects);
+		void UpdateCameraSettings();
 
 		void RepopulateEntries(std::vector<VirtualObject*> someObjects);
 		std::vector<ObjectEntry*> myObjectEntries;
+		
+		DotsRendering::Camera* myCamera;
 		ResourceHandler* myResourceHandler;
-
 		ECurrentEditor myCurrentEditor;
-
 		ResourceEditor* myResourceEditor;
 	};
 }
