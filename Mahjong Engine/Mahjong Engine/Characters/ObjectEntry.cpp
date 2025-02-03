@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
+#include "EntityHandler.h"
 #include "../Mahjong Engine/ResourceHandler.h"
 
 Characters::ObjectEntry::ObjectEntry()
@@ -121,7 +122,9 @@ void Characters::ObjectEntry::Update()
 #pragma region DeleteButton
 	if (ImGui::Button("Delete Object"))
 	{
-
+		DotsRendering::EntityHandler::GetInstance().DeleteVirtualObject(myObject);
+		myObject = nullptr;
+		Opened = false;
 	}
 #pragma endregion
 }
