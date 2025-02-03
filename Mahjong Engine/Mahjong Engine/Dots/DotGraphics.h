@@ -25,7 +25,6 @@ namespace DotsRendering
 		GLFWwindow* window;
 	};
 
-
 	DotsInitData Initialize(int width, int height);
 	void BeginRender(Camera* camera);
 	void End();
