@@ -41,12 +41,34 @@ bool DotsRendering::LoadOBJ(const std::string& filename, ObjData& outData)
 		}
 		else if (prefix == "f") // Face definitions
 		{
-			unsigned int vIndex[3], tIndex[3], nIndex[3];
-			char slash;
-			for (int i = 0; i < 3; ++i)
+			std::vector<unsigned int> vIndices, tIndices, nIndices;
+			std::string vertexData;
+
+			while (ss >> vertexData)
 			{
-				ss >> vIndex[i] >> slash >> tIndex[i] >> slash >> nIndex[i];
-				outData.indices.push_back(vIndex[i] - 1);
+				std::replace(vertexData.begin(), vertexData.end(), '/', ' '); // Replace '/' with space
+				std::istringstream vss(vertexData);
+				unsigned int vIdx = 0, tIdx = 0, nIdx = 0;
+				vss >> vIdx;
+
+				if (vss.peek() == ' ') vss.ignore(); // Skip space
+				if (vss >> tIdx) {}
+				else tIdx = 0;  // Optional texture coordinate
+				if (vss.peek() == ' ') vss.ignore();
+				if (vss >> nIdx) {}
+				else nIdx = 0;  // Optional normal
+
+				vIndices.push_back(vIdx - 1); // Convert to 0-based indexing
+				if (tIdx > 0) tIndices.push_back(tIdx - 1);
+				if (nIdx > 0) nIndices.push_back(nIdx - 1);
+			}
+
+			// Triangulate if more than 3 vertices in a face
+			for (size_t i = 1; i + 1 < vIndices.size(); i++)
+			{
+				outData.indices.push_back(vIndices[0]);
+				outData.indices.push_back(vIndices[i]);
+				outData.indices.push_back(vIndices[i + 1]);
 			}
 		}
 	}
