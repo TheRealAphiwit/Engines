@@ -38,7 +38,7 @@ void DotsRendering::EntityHandler::Initialize()
 	// Move this to EntityHandler::Initialize() to see if it works
 	for (size_t i = 0; i < 3; i++)
 	{
-		// Nomral version
+		// Normal version
 		//CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
 
 		// Thread version
