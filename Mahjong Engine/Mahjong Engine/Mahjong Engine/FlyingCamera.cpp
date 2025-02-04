@@ -24,15 +24,15 @@ Engine::FlyingCamera::FlyingCamera(DotsRendering::Camera* aCamera, Engine::Input
 void Engine::FlyingCamera::Update(GLFWwindow* aWindow)
 {
 	#pragma region Keyboard Movement
-	glm::vec3 velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
-
 	if (myInput->IsKeyPressed(GLFW_KEY_TAB))
 	{
 		SetCamState(aWindow);
 	}
 
 	if (Editing) return;
+
+	glm::vec3 velocity = glm::vec3(0.0f);
+	glm::vec3 direction = glm::vec3(0.0f);
 
 	if (myInput->IsKeyDown(GLFW_KEY_W)) velocity.z = 1;
 	if (myInput->IsKeyDown(GLFW_KEY_A)) velocity.x = -1;
@@ -44,10 +44,8 @@ void Engine::FlyingCamera::Update(GLFWwindow* aWindow)
 	#pragma endregion
 
 	#pragma region Mouse Movement
-	float xPos, yPos;
-	// Get current
-	xPos = myInput->GetCursorX();
-	yPos = myInput->GetCursorY();
+	float xPos = myInput->GetCursorX();
+	float yPos = myInput->GetCursorY();
 
 	// Calc ofset and then update last position
 	float xOffset = xPos - lastX;
@@ -61,10 +59,7 @@ void Engine::FlyingCamera::Update(GLFWwindow* aWindow)
 	yaw += xOffset;
 	pitch += yOffset;
 
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
+	pitch = glm::clamp(pitch, -89.0f, 89.0f);
 
 	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	direction.y = sin(glm::radians(pitch));

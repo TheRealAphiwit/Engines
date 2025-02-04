@@ -9,6 +9,7 @@ glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 DotsRendering::Camera::Camera(const float& aWidth, const float& aHeight)
 {
+	myProjectionType = ProjectionType::Perspective;
 	myProjection = glm::perspective(glm::radians(45.0f), aWidth / aHeight, 0.1f, 100.0f);
 	myDirection = glm::vec3(0.0f, 0.0f, -1.0f);
 	myPosition = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -26,10 +27,12 @@ void DotsRendering::Camera::CameraUpdate()
 
 void DotsRendering::Camera::SetPosition(const glm::vec3& aPosition)
 {
+	myPosition = aPosition;
 }
 
 void DotsRendering::Camera::SetRotation(const glm::vec3& aRotation)
 {
+	myDirection = glm::normalize(aRotation);
 }
 
 void DotsRendering::Camera::Move(const glm::vec3& aMove)
@@ -48,4 +51,14 @@ void DotsRendering::Camera::SetDirection(const glm::vec3& aDirection)
 glm::vec3 DotsRendering::Camera::GetCameraPosition() const
 {
 	return myPosition;
+}
+
+glm::vec3 DotsRendering::Camera::GetCameraRotation() const
+{
+	return myDirection;
+}
+
+void DotsRendering::Camera::GetProjectionType()
+{
+	std::cout << "Projection type: " << static_cast<int>(myProjectionType) << std::endl;
 }

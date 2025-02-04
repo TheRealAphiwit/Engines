@@ -149,7 +149,7 @@ void Characters::EditorGUI::UpdateCameraSettings()
 	if (ImGui::Begin("Camera Settings"))
 	{
 		glm::vec3 cameraPos = myCamera->GetCameraPosition();
-		glm::vec3 cameraRot = glm::vec3(0.0f);
+		glm::vec3 cameraRot = myCamera->GetCameraRotation();
 
 		if (ImGui::DragFloat3("Position", &cameraPos.x, 0.1f))
 		{
