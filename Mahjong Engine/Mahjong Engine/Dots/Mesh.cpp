@@ -138,3 +138,72 @@ void Mesh::Draw(Shader* shader)
 
 	glBindVertexArray(0);
 }
+
+bool Mesh::WriteTo(std::ofstream& outFile) const
+{
+	if (!outFile) return false;
+
+	// Serialize vertices
+	size_t verticesSize = myVertices.size();
+	outFile.write(reinterpret_cast<const char*>(&verticesSize), sizeof(verticesSize));
+	outFile.write(reinterpret_cast<const char*>(myVertices.data()), verticesSize * sizeof(Vertex));
+
+	// Serialize indices
+	size_t indicesSize = myIndices.size();
+	outFile.write(reinterpret_cast<const char*>(&indicesSize), sizeof(indicesSize));
+	outFile.write(reinterpret_cast<const char*>(myIndices.data()), indicesSize * sizeof(unsigned int));
+
+	return outFile.good();
+}
+
+bool Mesh::ReadFrom(std::ifstream& inFile)
+{
+	if (!inFile) return false;
+
+	// Deserialize vertices
+	size_t verticesSize = 0;
+	inFile.read(reinterpret_cast<char*>(&verticesSize), sizeof(verticesSize));
+	myVertices.resize(verticesSize);
+	inFile.read(reinterpret_cast<char*>(myVertices.data()), verticesSize * sizeof(Vertex));
+
+	// Deserialize indices
+	size_t indicesSize = 0;
+	inFile.read(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
+	myIndices.resize(indicesSize);
+	inFile.read(reinterpret_cast<char*>(myIndices.data()), indicesSize * sizeof(unsigned int));
+
+	return inFile.good();
+}
+
+void Mesh::SaveToFile(const std::string& filePath)
+{
+	std::ofstream outFile(filePath, std::ios::binary);
+
+	if (!outFile)
+	{
+		throw std::runtime_error("Failed to open file for saving: " + filePath);
+	}
+
+	if (!WriteTo(outFile))
+	{
+		throw std::runtime_error("Failed to write to file: " + filePath);
+	}
+
+	outFile.close();
+}
+
+void Mesh::LoadFromFile(const std::string& filePath)
+{
+	std::ifstream inFile(filePath, std::ios::binary);
+	if (!inFile)
+	{
+		throw std::runtime_error("Failed to open file for loading: " + filePath);
+	}
+
+	if (!ReadFrom(inFile))
+	{
+		throw std::runtime_error("Failed to read from file: " + filePath);
+	}
+
+	inFile.close();
+}

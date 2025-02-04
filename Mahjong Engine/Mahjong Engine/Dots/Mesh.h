@@ -2,6 +2,7 @@
 #include <vector>
 #include <glm.hpp>
 #include "ObjLoader.h"
+#include "ISerializable.h"
 class Shader;
 
 #pragma region Old Texture Implementation
@@ -15,7 +16,7 @@ struct Vertex {
 	glm::vec2 TextCoords;
 };
 
-class Mesh
+class Mesh : public ISerializable
 {
 	// friend class DotsRendering::OptmizedLoader;
 
@@ -25,6 +26,14 @@ public:
 
 	~Mesh();
 	void Draw(Shader* shader);
+
+#pragma region Serialization, Saving and Loading
+	bool WriteTo(std::ofstream& outFile) const override;
+	bool ReadFrom(std::ifstream& inFile) override;
+
+	void SaveToFile(const std::string& filePath);
+	void LoadFromFile(const std::string& filePath);
+#pragma endregion
 
 private:
 	std::vector<Vertex> myVertices;
