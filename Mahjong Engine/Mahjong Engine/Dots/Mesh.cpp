@@ -192,7 +192,7 @@ void Mesh::SaveToFile(const std::string& filePath)
 	outFile.close();
 }
 
-void Mesh::LoadFromFile(const std::string& filePath)
+Mesh* Mesh::LoadFromFile(const std::string& filePath)
 {
 	std::ifstream inFile(filePath, std::ios::binary);
 	if (!inFile)
@@ -206,4 +206,5 @@ void Mesh::LoadFromFile(const std::string& filePath)
 	}
 
 	inFile.close();
+	return this;
 }

@@ -32,7 +32,7 @@ public:
 	bool ReadFrom(std::ifstream& inFile) override;
 
 	void SaveToFile(const std::string& filePath);
-	void LoadFromFile(const std::string& filePath);
+	Mesh* LoadFromFile(const std::string& filePath);
 #pragma endregion
 
 private:

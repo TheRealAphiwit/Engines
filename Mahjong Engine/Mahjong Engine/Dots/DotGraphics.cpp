@@ -97,7 +97,15 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	// myShader = new Shader("../Assets/Shaders/Phong/PhongVertexShader.glsl", "../Assets/Shaders/Phong/PhongFragmentShader.glsl");
 	// myShader = new Shader("../Assets/Shaders/Phong/myPhongVS.glsl", "../Assets/Shaders/Phong/myPhongFS.glsl");
 	myBillboard = new Shader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
-	FlagMesh = LoadObjMesh("../Assets/Models/Flag.obj");
+	
+	try
+	{
+		FlagMesh = LoadObjMesh("Flag"); // Try mesh caching with this
+	}
+	catch (const std::exception& error)
+	{
+		std::cout << "Failed to load flag mesh: " << error.what() << std::endl;
+	}
 
 	// This section can be moved to ResourceHandler
 	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Grass.png", true, "Grass");
@@ -109,6 +117,11 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	ResourceHandler::GetInstance().RegisterMesh(myCube, "Cube");
 	ResourceHandler::GetInstance().RegisterMesh(mySquare, "Square");
 	ResourceHandler::GetInstance().RegisterMesh(myTriangle, "Triangle");
+	#pragma endregion
+
+	#pragma region Loading and Saving
+	// Go through every mesh - try loading first else save
+
 	#pragma endregion
 
 	Camera* camera = new Camera(width, height);

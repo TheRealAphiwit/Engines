@@ -80,13 +80,26 @@ bool DotsRendering::LoadOBJ(const std::string& filename, ObjData& outData)
 Mesh* DotsRendering::LoadObjMesh(const std::string& filename)
 {
 	ObjData objData;
-	if (LoadOBJ(filename, objData))
+
+	// Currently don't work: flagmesh is still empty
+	try
 	{
-		return new Mesh(objData);
+		// First: Try loading binary file
+		if (DeserializeObjData("../Assets/Meshes/Binary/" + filename + ".bin", objData))
+		{return new Mesh(objData);} 
+		else {std::cout << "Failed to load binary file: " << filename << std::endl;}
+
+		// Second: Try loading OBJ file
+		if (LoadOBJ("../Assets/Meshes/Obj/" + filename + ".obj", objData))
+		{
+			// Serialize the data to binary file
+			return new Mesh(objData);
+		} 
+		else {std::cout << "Failed to load OBJ file: " << filename << std::endl;}
 	}
-	else
+	catch (const std::exception&)
 	{
-		std::cout << "Could not load mesh" << filename << std::endl;
+		std::cout << "Failed to load mesh" << filename << std::endl;
 		return nullptr;
 	}
 }

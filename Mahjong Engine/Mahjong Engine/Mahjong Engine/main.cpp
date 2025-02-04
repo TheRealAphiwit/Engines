@@ -29,7 +29,6 @@ int main()
     float delta = 0;
 
     std::vector<VirtualObject*> objects;
-    renderData.camera->GetProjectionType();
 
     while (!DotsRendering::ShouldClose())
     {
