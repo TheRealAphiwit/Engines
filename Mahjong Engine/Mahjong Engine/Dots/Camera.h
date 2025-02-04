@@ -16,7 +16,7 @@ namespace DotsRendering
 	public:
 		// My new additions
 		ProjectionType myProjectionType;
-
+		float myZoom;
 		glm::mat4 myProjection;
 		glm::mat4 myView;
 
@@ -31,7 +31,11 @@ namespace DotsRendering
 
 		glm::vec3 GetCameraPosition() const;
 		glm::vec3 GetCameraRotation() const;
+
+		// New additions
 		void GetProjectionType();
+		void SetZoom(float newZoom);
+		float GetZoom() const { return myZoom; }
 
 	private:
 		glm::vec3 myPosition;

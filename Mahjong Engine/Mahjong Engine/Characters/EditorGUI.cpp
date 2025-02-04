@@ -150,6 +150,7 @@ void Characters::EditorGUI::UpdateCameraSettings()
 	{
 		glm::vec3 cameraPos = myCamera->GetCameraPosition();
 		glm::vec3 cameraRot = myCamera->GetCameraRotation();
+		float zoom = myCamera->GetZoom();
 
 		if (ImGui::DragFloat3("Position", &cameraPos.x, 0.1f))
 		{
@@ -159,6 +160,11 @@ void Characters::EditorGUI::UpdateCameraSettings()
 		if (ImGui::DragFloat3("Rotation", &cameraRot.x, 0.1f))
 		{
 			myCamera->SetRotation(cameraRot);
+		}
+
+		if (ImGui::SliderFloat("Zoom(FOV)", &zoom, 10.0f, 90.0f))
+		{
+			myCamera->SetZoom(zoom);
 		}
 	}
 	ImGui::End();

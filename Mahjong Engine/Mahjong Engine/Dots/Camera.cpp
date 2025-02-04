@@ -62,3 +62,12 @@ void DotsRendering::Camera::GetProjectionType()
 {
 	std::cout << "Projection type: " << static_cast<int>(myProjectionType) << std::endl;
 }
+
+void DotsRendering::Camera::SetZoom(float newZoom)
+{
+	myZoom = glm::clamp(newZoom, 10.0f, 90.0f); // Prevent extreme FOV values
+	myProjection = glm::perspective(glm::radians(myZoom), 16.0f / 9.0f, 0.1f, 1000.0f);
+
+	// myZoom = newZoom;
+	// myProjection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+}
