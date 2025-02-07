@@ -73,29 +73,42 @@ bool DotsRendering::LoadOBJ(const std::string& filename, ObjData& outData)
 		}
 	}
 
+	// Print out the data
+	std::cout << "(ObjLoader) OBJ file: " << filename << std::endl;
+	std::cout << "Vertices: " << outData.vertices.size() << std::endl;
+	std::cout << "Normals: " << outData.normals.size() << std::endl;
+	std::cout << "TextCoords: " << outData.textCoords.size() << std::endl;
+	std::cout << "Indices: " << outData.indices.size() << std::endl;
+
 	file.close();
     return true;
 }
 
+// Can be used for both .obj and .bin files
 Mesh* DotsRendering::LoadObjMesh(const std::string& filename)
 {
 	ObjData objData;
+	std::string binaryPath = "../Assets/Meshes/Binary/" + filename + ".bin";
+	std::string objPath = "../Assets/Meshes/Obj/" + filename + ".obj";
 
 	// Currently don't work: flagmesh is still empty
 	try
 	{
 		// First: Try loading binary file
-		if (DeserializeObjData("../Assets/Meshes/Binary/" + filename + ".bin", objData))
+		if (DeserializeObjData(binaryPath, objData))
 		{return new Mesh(objData);} 
-		else {std::cout << "Failed to load binary file: " << filename << std::endl;}
+		else 
+		{std::cout << "Failed to load binary file: " << binaryPath << std::endl;}
 
 		// Second: Try loading OBJ file
-		if (LoadOBJ("../Assets/Meshes/Obj/" + filename + ".obj", objData))
+		if (LoadOBJ(objPath, objData))
 		{
 			// Serialize the data to binary file
+			std::cout << "Serializing OBJ data to binary file" << std::endl;
+			SerializeObjData(binaryPath, objData);
 			return new Mesh(objData);
 		} 
-		else {std::cout << "Failed to load OBJ file: " << filename << std::endl;}
+		else {std::cout << "Failed to load OBJ file: " << objPath << std::endl;}
 	}
 	catch (const std::exception&)
 	{
@@ -108,7 +121,7 @@ bool DotsRendering::SerializeObjData(const std::string& filename, const ObjData&
 {
 	std::ofstream file(filename, std::ios::binary);
 	if (!file.is_open()) {
-		std::cerr << "Failed to open OBJ file: " << filename << std::endl;
+		std::cerr << "Failed to SERIALIZE file: " << filename << std::endl;
 		return false;
 	}
 
@@ -138,7 +151,7 @@ bool DotsRendering::DeserializeObjData(const std::string& filename, ObjData& out
 {
 	std::ifstream file(filename, std::ios::binary);
 	if (!file.is_open()) {
-		std::cerr << "Failed to open OBJ file: " << filename << std::endl;
+		std::cerr << "Failed to DESERIALIZE obj data: " << filename << std::endl;
 		return false;
 	}
 
