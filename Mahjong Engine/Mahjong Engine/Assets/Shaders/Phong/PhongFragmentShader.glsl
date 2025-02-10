@@ -1,18 +1,16 @@
 #version 410​
-uniform vec4 eyePosition = vec4(0.0, 5.0, 0.0, 0.0);​​
-uniform vec4 primaryColorVec4 = vec4(1.0, 1.0, 1.0, 1.0);	// Useful for debugging, and can use .w component to fade items alpha​
-uniform vec4 light_ambient = vec4(0.2, 0.2, 0.2, 1);		// Base lighting for all objects regardless of position
-uniform vec4 light_diffuse = vec4(1, 0.9, 0.8, 1);​		// Color for diffuse light, let’s make it slightly warm, R G B
-uniform vec4 light_specular = vec4(0.9, 0.8, 0.7, 1);​		// For highlights​
-uniform vec3 light_position = vec4(10, 25, 15);			// Where in the world is the point light?​ - Hard coded atm
+uniform vec4 eyePosition       = vec4(0.0, 5.0, 0.0, 0.0);​​
+uniform vec4 primaryColorVec4  = vec4(1.0, 1.0, 1.0, 1.0);	// Useful for debugging, and can use .w component to fade items alpha​
+uniform vec4 light_ambient     = vec4(0.2, 0.2, 0.2, 1);		// Base lighting for all objects regardless of position
+uniform vec4 light_diffuse 	   = vec4(1, 0.9, 0.8, 1);​		// Color for diffuse light, let’s make it slightly warm, R G B
+uniform vec4 light_specular    = vec4(0.9, 0.8, 0.7, 1);​		// For highlights​
+uniform vec3 light_position    = vec3(10, 25, 15);			// Where in the world is the point light?​ - Hard coded atm
 uniform vec3 light_attenuation = vec3(1, 0.1, 0.001);		// Constant, linear and quadratic – distance fading​
 
 // Input data from the fragment shader​
 in vec3 v_normal;​
 in vec2 UV_Coord;​
 in vec3 position;​
-
-// Vector from vertex to eye
 in vec3 vecToEye;	
 
 out vec4 fragColor;​​
@@ -51,7 +49,7 @@ void main()​
 
 		vec3 halfVector = normalize((-lightDirection + vectorToEye) / 2);​
 		float initialBrightness = max(dot(halfVector, normalizedNormal), 0.0);​
-		float totalBrightness = initialBrightness;​
+		float totalBrightness = initialBrightness;​ // Init total brightness
 
 		for (int i = 0; i < materialShininess; ++i)
 		{​
@@ -62,6 +60,6 @@ void main()​
 		fragColor.xyz += totalBrightness * light_specular.xyz​ * attenuation * materialSpecular.xyz;​
 
 		// If you want for debugging or entity-specific properties​
-		//fragColor *= primaryColorVec4;
+		fragColor *= primaryColorVec4;
 	}
 }
