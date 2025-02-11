@@ -16,6 +16,7 @@ DotsRendering::Camera::Camera(const float& aWidth, const float& aHeight)
 	myUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	myRight = glm::vec3(0, 0, 0);
 	myView = glm::mat4(0);
+	myZoom = 45.0f;
 }
 
 void DotsRendering::Camera::CameraUpdate()

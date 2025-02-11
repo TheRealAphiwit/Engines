@@ -93,17 +93,8 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	myShader->SetMatrix4(camera->myProjection, "projection");
 	myShader->SetVector3(camera->GetCameraPosition(), "light_position");
 
-	//Phong version
-	//myShader->SetMatrix4(trans, "modelMatrix");
-	//myShader->SetMatrix4(camera->myView, "viewMatrix");
-	//myShader->SetMatrix4(camera->myProjection, "projectionMatrix");
-	//myShader->SetVector3(camera->GetCameraPosition(), "eyePosition");
-	//myShader->SetVector4(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "primaryColorVec4"); // White
-	//myShader->SetVector4(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f), "light_ambient");    // Dim gray
-	//myShader->SetVector4(glm::vec4(1.0f, 0.9f, 0.8f, 1.0f), "light_diffuse");    // Warm white
-	//myShader->SetVector4(glm::vec4(0.9f, 0.8f, 0.7f, 1.0f), "light_specular");   // Specular
-	//myShader->SetVector3(camera->GetCameraPosition(), "light_position"); // Light position
-	//myShader->SetVector3(glm::vec3(1.0f, 0.1f, 0.001f), "light_attenuation");    // Attenuation
+	//Phong version - bind here
+
 
 	myMesh->Draw(myShader);
 

@@ -93,9 +93,11 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myGrassTexture = new Texture("../Assets/Images/Grass.png", true);
 	myConcreteTexture = new Texture("../Assets/Images/Concrete.png", false);
 	myTexture = new Texture("../Assets/Images/Default.png", false);
+	
 	// myShader = new Shader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
 	myShader = new Shader("../Assets/Shaders/Phong/PhongVertexShader.glsl", "../Assets/Shaders/Phong/PhongFragmentShader.glsl");
 	// myShader = new Shader("../Assets/Shaders/Phong/myPhongVS.glsl", "../Assets/Shaders/Phong/myPhongFS.glsl");
+	
 	myBillboard = new Shader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
 
 	// This section can be moved to ResourceHandler
