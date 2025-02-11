@@ -143,6 +143,7 @@ void Shader::SetVector4(glm::vec4 vector4Value, const std::string& name)
 
 void Shader::SetVector3(glm::vec3 vector3Value, const std::string& name)
 {
+	glUniform3f(glGetUniformLocation(myShaderProgram, name.c_str()), vector3Value.x, vector3Value.y, vector3Value.z);
 }
 
 void Shader::SetVector2(glm::vec2 vector2Value, const std::string& name)

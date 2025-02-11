@@ -77,24 +77,57 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	glm::mat4 trans = glm::mat4(1.0f);
 
 	trans = glm::translate(trans, Position);
-
 	trans = glm::rotate(trans, Rotation.x, glm::vec3(1, 0, 0));
 	trans = glm::rotate(trans, Rotation.y, glm::vec3(0, 1, 0));
 	trans = glm::rotate(trans, Rotation.z, glm::vec3(0, 0, 1));
-
 	trans = glm::scale(trans, Scale);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, myTexture->TextureObject);
 
 	// Default version
-	myShader->SetMatrix4(trans, "transform");
+	/*myShader->SetMatrix4(trans, "transform");
 	myShader->SetMatrix4(camera->myView, "view");
-	myShader->SetMatrix4(camera->myProjection, "projection");
-	myShader->SetVector3(camera->GetCameraPosition(), "light_position");
+	myShader->SetMatrix4(camera->myProjection, "projection");*/
 
-	//Phong version - bind here
+	// Bind transformation matrices
+	myShader->SetMatrix4(trans, "modelMatrix");
+	myShader->SetMatrix4(camera->myView, "viewMatrix");
+	myShader->SetMatrix4(camera->myProjection, "projectionMatrix");
 
+	// Camera position (for specular reflections)
+	myShader->SetVector3(camera->GetCameraPosition(), "eyePosition");
+	
+	// Light properties
+	glm::vec3 lightPos(0.0f, 10.0f, 5.0f);
+	glm::vec3 lightAttenuation(1.0f, 0.09f, 0.032f); // Example values
+	myShader->SetVector3(lightPos, "light_position");
+	myShader->SetVector3(lightAttenuation, "light_attenuation");
+
+	// Light colors
+	glm::vec4 ambientLight(0.2f, 0.2f, 0.2f, 1.0f);
+	glm::vec4 diffuseLight(0.8f, 0.8f, 0.8f, 1.0f);
+	glm::vec4 specularLight(1.0f, 1.0f, 1.0f, 1.0f);
+
+	myShader->SetVector4(ambientLight, "light_ambient");
+	myShader->SetVector4(diffuseLight, "light_diffuse");
+	myShader->SetVector4(specularLight, "light_specular");
+
+	// Material properties
+	glm::vec4 materialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 materialSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	float materialShininess = 32.0f;
+
+	myShader->SetVector4(materialDiffuse, "materialDiffuse");
+	myShader->SetVector4(materialSpecular, "materialSpecular");
+	myShader->SetFloat(materialShininess, "materialShininess");
+
+	// Set primary color for debugging or tinting
+	glm::vec4 primaryColor(1.0f, 1.0f, 1.0f, 1.0f); // White by default
+	myShader->SetVector4(primaryColor, "primaryColorVec4");
+
+	// Camera pos = light pos
+	//myShader->SetVector3(camera->GetCameraPosition(), "light_position");
 
 	myMesh->Draw(myShader);
 

@@ -1,4 +1,4 @@
-#version 410​
+#version 410
 uniform vec4 eyePosition;
 uniform vec4 primaryColorVec4; 
 uniform vec4 light_ambient;
