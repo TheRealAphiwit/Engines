@@ -24,7 +24,7 @@ void main()
 {
     // Placeholder color
     vec4 texel = vec4(0.5, 0.5, 0.5, 1);
-    fragColor = vec4(0,0,0,texel.w); // Start at 0 lighting
+    fragColor = vec4(1.0,0,0,texel.w); // Start at 0 lighting
 
     // Ambient lighting
     vec4 materialAmbient = vec4(0.5, 0.5, 0.5, 0.1);
