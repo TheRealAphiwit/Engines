@@ -22,7 +22,7 @@ out vec4 fragColor;
 
 void main() 
 {
-    // Placeholder color
+    // Placeholder color (red)
     vec4 texel = vec4(0.5, 0.5, 0.5, 1);
     fragColor = vec4(1.0,0,0,texel.w); // Start at 0 lighting
 

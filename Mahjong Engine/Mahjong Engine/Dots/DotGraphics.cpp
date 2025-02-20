@@ -94,9 +94,9 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myConcreteTexture = new Texture("../Assets/Images/Concrete.png", false);
 	myTexture = new Texture("../Assets/Images/Default.png", false);
 	
-	// myShader = new Shader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
+	myShader = new Shader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
 	// myShader = new Shader("../Assets/Shaders/Phong/PhongVertexShader.glsl", "../Assets/Shaders/Phong/PhongFragmentShader.glsl");
-	myShader = new Shader("../Assets/Shaders/Phong/myPhongVS.glsl", "../Assets/Shaders/Phong/myPhongFS.glsl");
+	// myShader = new Shader("../Assets/Shaders/Phong/myPhongVS.glsl", "../Assets/Shaders/Phong/myPhongFS.glsl");
 	
 	myBillboard = new Shader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
 
@@ -129,13 +129,6 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 
 	myTexture = ResourceHandler::GetInstance().GetTexture("Default");
 	//myShader = ResourceHandler::GetInstance().GetShader("myShader");
-
-	//myShader->SetVector4(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), "primaryColorVec4"); // White
-	//myShader->SetVector4(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f), "light_ambient");    // Dim gray
-	//myShader->SetVector4(glm::vec4(1.0f, 0.9f, 0.8f, 1.0f), "light_diffuse");    // Warm white
-	//myShader->SetVector4(glm::vec4(0.9f, 0.8f, 0.7f, 1.0f), "light_specular");   // Specular
-	//myShader->SetVector4(glm::vec4(10.0f, 25.0f, 15.0f, 1.0f), "light_position"); // Light position
-	//myShader->SetVector3(glm::vec3(1.0f, 0.1f, 0.001f), "light_attenuation");    // Attenuation
 
 	return initData;
 }
