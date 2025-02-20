@@ -28,6 +28,8 @@ int main()
     float currentTime = 0;
     float delta = 0;
 
+	bool IsSimulating = false;
+
     std::vector<VirtualObject*> objects;
 
     while (!DotsRendering::ShouldClose())
@@ -36,6 +38,11 @@ int main()
         currentTime = glfwGetTime();
         delta = currentTime - lastTime;
         lastTime = currentTime;
+
+        if (IsSimulating)
+        {
+            // Run physics calculations
+        }
 
         DotsRendering::BeginRender(engine->myCamera);
         Gui->Render(objects);
