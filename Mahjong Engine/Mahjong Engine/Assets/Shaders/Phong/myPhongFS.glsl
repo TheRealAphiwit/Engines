@@ -61,5 +61,6 @@ void main()
     }
 
     // For debugging purp
-    fragColor *= primaryColorVec4;
+    // fragColor *= primaryColorVec4;
+    // fragColor = vec4(1);
 }

@@ -91,41 +91,41 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	myShader->SetMatrix4(camera->myProjection, "projection");
 
 #pragma region Phong Version
-	//// Bind transformation matrices
-	//myShader->SetMatrix4(trans, "modelMatrix");
-	//myShader->SetMatrix4(camera->myView, "viewMatrix");
-	//myShader->SetMatrix4(camera->myProjection, "projectionMatrix");
+	// Bind transformation matrices
+	myShader->SetMatrix4(trans, "modelMatrix");
+	myShader->SetMatrix4(camera->myView, "viewMatrix");
+	myShader->SetMatrix4(camera->myProjection, "projectionMatrix");
 
-	//// Camera position (for specular reflections)
-	//myShader->SetVector3(camera->GetCameraPosition(), "eyePosition");
-	//
-	//// Light properties
-	//glm::vec3 lightPos(0.0f, 10.0f, 5.0f);
-	//glm::vec3 lightAttenuation(1.0f, 0.09f, 0.032f); // Example values
-	//myShader->SetVector3(lightPos, "light_position");
-	//myShader->SetVector3(lightAttenuation, "light_attenuation");
+	// Camera position (for specular reflections)
+	myShader->SetVector3(camera->GetCameraPosition(), "eyePosition");
+	
+	// Light properties
+	glm::vec3 lightPos(0.0f, 10.0f, 5.0f);
+	glm::vec3 lightAttenuation(1.0f, 0.09f, 0.032f); // Example values
+	myShader->SetVector3(lightPos, "light_position");
+	myShader->SetVector3(lightAttenuation, "light_attenuation");
 
-	//// Light colors
-	//glm::vec4 ambientLight(0.2f, 0.2f, 0.2f, 1.0f);
-	//glm::vec4 diffuseLight(0.8f, 0.8f, 0.8f, 1.0f);
-	//glm::vec4 specularLight(1.0f, 1.0f, 1.0f, 1.0f);
+	// Light colors
+	glm::vec4 ambientLight(0.2f, 0.2f, 0.2f, 1.0f);
+	glm::vec4 diffuseLight(0.8f, 0.8f, 0.8f, 1.0f);
+	glm::vec4 specularLight(1.0f, 1.0f, 1.0f, 1.0f);
 
-	//myShader->SetVector4(ambientLight, "light_ambient");
-	//myShader->SetVector4(diffuseLight, "light_diffuse");
-	//myShader->SetVector4(specularLight, "light_specular");
+	myShader->SetVector4(ambientLight, "light_ambient");
+	myShader->SetVector4(diffuseLight, "light_diffuse");
+	myShader->SetVector4(specularLight, "light_specular");
 
-	//// Material properties
-	//glm::vec4 materialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-	//glm::vec4 materialSpecular(0.5f, 0.5f, 0.5f, 1.0f);
-	//float materialShininess = 32.0f;
+	// Material properties
+	glm::vec4 materialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 materialSpecular(0.5f, 0.5f, 0.5f, 1.0f);
+	float materialShininess = 32.0f;
 
-	//myShader->SetVector4(materialDiffuse, "materialDiffuse");
-	//myShader->SetVector4(materialSpecular, "materialSpecular");
-	//myShader->SetFloat(materialShininess, "materialShininess");
+	myShader->SetVector4(materialDiffuse, "materialDiffuse");
+	myShader->SetVector4(materialSpecular, "materialSpecular");
+	myShader->SetFloat(materialShininess, "materialShininess");
 
-	//// Set primary color for debugging or tinting
-	//glm::vec4 primaryColor(1.0f, 1.0f, 1.0f, 1.0f); // White by default
-	//myShader->SetVector4(primaryColor, "primaryColorVec4");
+	// Set primary color for debugging or tinting
+	glm::vec4 primaryColor(1.0f, 1.0f, 1.0f, 1.0f); // White by default
+	myShader->SetVector4(primaryColor, "primaryColorVec4");
 #pragma endregion
 
 	// Camera pos = light pos
