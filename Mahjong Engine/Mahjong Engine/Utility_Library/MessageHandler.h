@@ -3,6 +3,8 @@
 #include <string>
 #include "MessageQueue.h" //lmao
 
+// Emil: Make this system also use threading and mutexes [ ! ]
+
 namespace MessageSystem
 {
 	class MessageHandler
