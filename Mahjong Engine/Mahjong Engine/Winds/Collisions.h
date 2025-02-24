@@ -12,88 +12,93 @@ namespace Winds
 	{
 	public: virtual ~Collider() {}
 		  template<typename T>
-		  bool isOf() { return dynamic_cast<T*>(this) != nullptr; }
+		  bool IsOf() { return dynamic_cast<T*>(this) != nullptr; } // Will be used for dynamic/static checks
 	
-		  glm::vec3 center;
-		  glm::vec3 position;
-		  glm::mat4 transform;
+		  glm::vec3 Center;
+		  glm::vec3 Position;
+		  glm::mat4 Transform;
 
-		  glm::mat3 momentOfInertia;
-		  glm::mat3 inverseMomentOfInertia;
+		  glm::mat3 MomentOfInertia;
+		  glm::mat3 InverseMomentOfInertia;
 
-		  bool hasGravity;
-		  bool isKinematic;
-		  glm::vec3 velocity;
-		  glm::vec3 angularVelocity;
-		  float mass;
+		  bool HasGravity;
+		  bool IsKinematic;
+		  glm::vec3 Velocity;
+		  glm::vec3 AngularVelocity;
+#pragma region Potential Upgrades
+		  // linear drag
+		  // angular drag
+		  // friction
+#pragma endregion
+		  float Mass;
 	};
 
 	struct Collision
 	{
-		Collider* col1;
-		Collider* col2;
+		Collider* Col1;
+		Collider* Col2;
 
-		glm::vec3 point;
-		glm::vec3 normal;
+		glm::vec3 Point;
+		glm::vec3 Normal;
 	};
 
 	class SphereCollider : public Collider
 	{
 	public:
-		float radius;
+		float Radius;
 
 		SphereCollider(const glm::vec3& aCenter, const float& aRadius)
 		{
-			velocity = glm::vec3(0, 0, 0);
-			angularVelocity = glm::vec3(0, 0, 0);
-			position = glm::vec3(0, 0, 0);
-			hasGravity = false;
-			center = aCenter;
-			radius = aRadius;
-			mass = 1;
+			Velocity = glm::vec3(0, 0, 0);
+			AngularVelocity = glm::vec3(0, 0, 0);
+			Position = glm::vec3(0, 0, 0);
+			HasGravity = false;
+			Center = aCenter;
+			Radius = aRadius;
+			Mass = 1;
 
-			momentOfInertia = ComputeMomentOfInertiaSphere(mass, radius);
-			inverseMomentOfInertia = glm::inverse(momentOfInertia);
+			MomentOfInertia = ComputeMomentOfInertiaSphere(Mass, Radius);
+			InverseMomentOfInertia = glm::inverse(MomentOfInertia);
 		}
 	};
 
 	class BoxCollider : public Collider
 	{
 	public:
-		glm::vec3 extents;
+		glm::vec3 Extents;
 
 		BoxCollider(const glm::vec3& aCenter, const glm::vec3& someExtents)
 		{
-			velocity = glm::vec3(0, 0, 0);
-			angularVelocity = glm::vec3(0, 0, 0);
-			position = glm::vec3(0, 0, 0);
-			hasGravity = false;
-			center = aCenter;
-			extents = someExtents;
-			mass = 1;
+			Velocity = glm::vec3(0, 0, 0);
+			AngularVelocity = glm::vec3(0, 0, 0);
+			Position = glm::vec3(0, 0, 0);
+			HasGravity = false;
+			Center = aCenter;
+			Extents = someExtents;
+			Mass = 1;
 
-			momentOfInertia = ComputeMomentOfInertiaBox(mass, extents);
-			inverseMomentOfInertia = glm::inverse(momentOfInertia);
+			MomentOfInertia = ComputeMomentOfInertiaBox(Mass, Extents);
+			InverseMomentOfInertia = glm::inverse(MomentOfInertia);
 		}
 	};
 
 	class PlaneCollider : public Collider
 	{
 	public:
-		glm::vec3 normal;
-		float distance;
+		glm::vec3 Normal;
+		float Distance;
 
 		PlaneCollider(const glm::vec3& aNormal, float aDistance)
 		{
-			velocity = glm::vec3(0, 0, 0);
-			angularVelocity = glm::vec3(0, 0, 0);
-			position = glm::vec3(0, 0, 0);
-			hasGravity = false;
-			isKinematic = true;
+			Velocity = glm::vec3(0, 0, 0);
+			AngularVelocity = glm::vec3(0, 0, 0);
+			Position = glm::vec3(0, 0, 0);
+			HasGravity = false;
+			IsKinematic = true;
 
-			normal = glm::normalize(aNormal);
-			distance = aDistance;
-			mass = 1;
+			Normal = glm::normalize(aNormal);
+			Distance = aDistance;
+			Mass = 1;
 		}
 	};
 }

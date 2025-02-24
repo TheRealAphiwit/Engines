@@ -110,5 +110,19 @@ namespace Winds
 		HandleStaticDynamic(staticDynamicCollisions);
 	}
 
+	std::vector<Collider*> Winds_Physics::UpdatePhysicsScene()
+	{
+		// Get colliders
+		std::vector<Collider*> cols;
+		cols.push_back(main_plane);
+
+		/*for (GameObject* c : c->GetCollider())
+		{
+
+		}*/
+
+		return std::vector<Collider*>();
+	}
+
 
 }
