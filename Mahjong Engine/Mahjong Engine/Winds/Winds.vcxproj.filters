@@ -21,12 +21,21 @@
     <ClInclude Include="Collisions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Intersections.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Raycast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Winds_Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Collisions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersections.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

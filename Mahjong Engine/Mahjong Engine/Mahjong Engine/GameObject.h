@@ -22,6 +22,7 @@ class VirtualObject;
 
 class GameObject
 {
+public:
 	GameObject(VirtualObject* anObject, Winds::Collider* aCollider);
 	~GameObject();
 

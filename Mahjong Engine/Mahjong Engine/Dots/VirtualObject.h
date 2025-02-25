@@ -44,6 +44,7 @@ public:
 
 	Shader* GetShader();
 	Texture* GetTexture();
+	glm::mat4 GetTrans();
 
 	const std::string& GetTexureName() const;
 	const std::string& GetModelName() const;

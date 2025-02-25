@@ -1,9 +1,13 @@
 #pragma once
+#include "GameObject.h"
+#include <vector>
+
 struct GLFWwindow;
 
 namespace DotsRendering
 {
 	class Camera;
+	class Graphics; // Not imp
 }
 
 namespace Engine
@@ -19,12 +23,20 @@ namespace Engine
 
 		void Update(const float& aDeltaTime);
 
+		void StartSimulating();
+		void StopSimulating();
+		const bool& IsSimulating();
+
+		std::vector<GameObject*> GetGameObject();
+
 		DotsRendering::Camera* myCamera;
 		FlyingCamera* myFlyingCamera;
 
 	private:
+		bool ShouldSimulate = false;
 		Input* myInput;
 		ETime* myTime;
+		std::vector<GameObject*> myGameObjects;
 
 		GLFWwindow* myWindow;
 	};

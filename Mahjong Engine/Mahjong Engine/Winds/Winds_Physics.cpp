@@ -1,10 +1,10 @@
 #include "Winds_Physics.h"
-#include "../Mahjong Engine/DragonEngine.h"
-// #include "GameObject.h"
+#include "../Mahjong Engine/DragonEngine.h" // Not so much for these
+#include "../Mahjong Engine/GameObject.h"
 #include "Collisions.h"
 // #include "Intersections.h"
 #include <iostream>
-#include "../Dots/VirtualObject.h"
+#include "VirtualObject.h" // This is fine
 #include <gtc/matrix_transform.hpp>
 // #include "MonkeyMath.h"
 // #include "Raycast.h"
@@ -17,14 +17,14 @@ namespace Winds
 		myEngine = aEngine;
 
 		main_plane = new PlaneCollider(glm::vec3(0, 1, 0), 1);
-		main_plane->position = glm::vec3(0, 0, 0);
+		main_plane->Position = glm::vec3(0, 0, 0);
 	}
 
 	void Winds_Physics::Simulate(const float aDeltaTime)
 	{
 		float limitDt = glm::min(aDeltaTime, 0.01f);
 
-		//colliders = UpdatePhysicsScene();
+		colliders = UpdatePhysicsScene();
 		//std::vector<Collision> collisions = CheckIntersections(colliders);
 
 		//ApplyGravity(colliders, limitDt);
@@ -40,9 +40,9 @@ namespace Winds
 	{
 		for (Collider* c : colliders)
 		{
-			if (!c->isKinematic && c->hasGravity)
+			if (!c->IsKinematic && c->HasGravity)
 			{
-				c->velocity += glm::vec3(0, GravityMultiplier, 0) * dt;
+				c->Velocity += glm::vec3(0, GravityMultiplier, 0) * dt;
 			}
 		}
 	}
@@ -51,37 +51,37 @@ namespace Winds
 	{
 		for (Collider* c : colliders)
 		{
-			if (!c->isKinematic)
+			if (!c->IsKinematic)
 			{
-				std::cout << glm::to_string(c->angularVelocity) << std::endl;
-				c->position += c->velocity * dt;
-				c->transform[3] = glm::vec4(c->position, 1.0f);
+				std::cout << glm::to_string(c->AngularVelocity) << std::endl;
+				c->Position += c->Velocity * dt;
+				c->Transform[3] = glm::vec4(c->Position, 1.0f);
 
-				if (glm::length(c->angularVelocity) > 0.0001f)
+				if (glm::length(c->AngularVelocity) > 0.0001f)
 				{
-					glm::vec3 angularVelocityNorm = glm::normalize(c->angularVelocity);
-					glm::quat angularRotation = glm::angleAxis(glm::length(c->angularVelocity) * dt, angularVelocityNorm);
+					glm::vec3 angularVelocityNorm = glm::normalize(c->AngularVelocity);
+					glm::quat angularRotation = glm::angleAxis(glm::length(c->AngularVelocity) * dt, angularVelocityNorm);
 					glm::mat3 rotationDelta = glm::mat3_cast(angularRotation);
-					c->transform = glm::mat4(rotationDelta) * c->transform;
+					c->Transform = glm::mat4(rotationDelta) * c->Transform;
 				}
 
-				if (c->mass > 0)
+				if (c->Mass > 0)
 				{
-					c->velocity *= glm::pow(1.0f - LinearDrag, dt);
+					c->Velocity *= glm::pow(1.0f - LinearDrag, dt);
 				}
-				if (c->mass > 0)
+				if (c->Mass > 0)
 				{
-					c->angularVelocity *= glm::exp(-AngularDrag * dt);
+					c->AngularVelocity *= glm::exp(-AngularDrag * dt);
 				}
 
-				glm::mat3 rotationMatrix = glm::mat3(c->transform);
-				glm::mat3 inertiaTensorInWorldSpace = rotationMatrix * c->momentOfInertia * glm::transpose(rotationMatrix);
-				c->inverseMomentOfInertia = glm::inverse(inertiaTensorInWorldSpace);
+				glm::mat3 rotationMatrix = glm::mat3(c->Transform);
+				glm::mat3 inertiaTensorInWorldSpace = rotationMatrix * c->MomentOfInertia * glm::transpose(rotationMatrix);
+				c->InverseMomentOfInertia = glm::inverse(inertiaTensorInWorldSpace);
 			}
 			else
 			{
-				c->velocity = glm::vec3(0, 0, 0);
-				c->angularVelocity = glm::vec3(0, 0, 0);
+				c->Velocity = glm::vec3(0, 0, 0);
+				c->AngularVelocity = glm::vec3(0, 0, 0);
 			}
 		}
 	}
@@ -93,8 +93,8 @@ namespace Winds
 
 		for (Collision c : collisions)
 		{
-			bool A_isDynamic = !c.col1->isKinematic;
-			bool B_isDynamic = !c.col2->isKinematic;
+			bool A_isDynamic = !c.Col1->IsKinematic;
+			bool B_isDynamic = !c.Col2->IsKinematic;
 
 			if (A_isDynamic && B_isDynamic)
 			{
@@ -116,13 +116,37 @@ namespace Winds
 		std::vector<Collider*> cols;
 		cols.push_back(main_plane);
 
-		/*for (GameObject* c : c->GetCollider())
+
+		for (GameObject* c : myEngine->GetGameObject())
 		{
+			Collider* col = c->GetCollider();
+			if (col != nullptr)
+			{
+				glm::mat4 trans = c->GetVirtualObject()->GetTrans();
 
-		}*/
+				col->Transform = trans;
+				col->Position = glm::vec3(trans[3]);
 
-		return std::vector<Collider*>();
+				cols.push_back(col);
+			}
+		}
+
+		return cols;
 	}
+	std::vector<Collision> Winds_Physics::CheckIntersections(std::vector<Collider*> colliders)
+	{
+		std::vector<Collision> collisions;
 
+		int count = colliders.size();
 
+		for (int i = 0; i < count; i++)
+		{
+			for (int j = i + 1; j < count; j++)
+			{
+				Collision c = CheckIntersect();
+			}
+		}
+
+		return std::vector<Collision>();
+	}
 }

@@ -22,3 +22,8 @@ void Engine::DragonEngine::Update(const float& aDeltaTime)
 	myFlyingCamera->Update(myWindow);
 	myTime->UpdateDeltaTime(aDeltaTime);
 }
+
+std::vector<GameObject*> Engine::DragonEngine::GetGameObject()
+{
+	return myGameObjects;
+}

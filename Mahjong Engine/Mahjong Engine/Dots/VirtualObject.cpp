@@ -6,6 +6,9 @@
 #include "Texture.h"
 #include <gtc/matrix_transform.hpp>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <gtx/quaternion.hpp>
+
 // VirtualObject::VirtualObject(const std::string& name, Mesh* mesh, Texture* texture, Shader* shader)
 //{
 //	myMesh = mesh;
@@ -144,6 +147,13 @@ Shader* VirtualObject::GetShader()
 Texture* VirtualObject::GetTexture()
 {
 	return myTexture;
+}
+
+glm::mat4 VirtualObject::GetTrans()
+{
+	glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+
+	return glm::translate(glm::mat4(1.0f), Position) * rotation * glm::scale(glm::mat4(1.0f), Scale);
 }
 
 const std::string& VirtualObject::GetTexureName() const
