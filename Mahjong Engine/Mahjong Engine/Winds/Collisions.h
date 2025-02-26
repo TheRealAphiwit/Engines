@@ -4,7 +4,7 @@
 
 namespace Winds
 {
-	glm::mat3 ComputeMomentOfInertiaBox(float mass, glm::vec3 extents);
+	glm::mat3 ComputeMomentOfInertiaBox(float mass, glm::vec3 extents, glm::vec3 aPosition);
 	glm::mat3 ComputeMomentOfInertiaSphere(float mass, float radius);
 
 	// This class does not init all vals as it is to be inherited from
@@ -12,8 +12,10 @@ namespace Winds
 	{
 	public: virtual ~Collider() {}
 		  template<typename T>
-		  bool IsOf() { return dynamic_cast<T*>(this) != nullptr; } // Will be used for dynamic/static checks
+		  bool IsOf() { return dynamic_cast<T*>(this) != NULL; } // Will be used for dynamic/static checks
 	
+		  virtual void ComputeInertia() = 0;
+
 		  glm::vec3 Center;
 		  glm::vec3 Position;
 		  glm::mat4 Transform;
@@ -60,6 +62,8 @@ namespace Winds
 			MomentOfInertia = ComputeMomentOfInertiaSphere(Mass, Radius);
 			InverseMomentOfInertia = glm::inverse(MomentOfInertia);
 		}
+
+		void ComputeInertia() override {}
 	};
 
 	class BoxCollider : public Collider
@@ -76,8 +80,11 @@ namespace Winds
 			Center = aCenter;
 			Extents = someExtents;
 			Mass = 1;
+		}
 
-			MomentOfInertia = ComputeMomentOfInertiaBox(Mass, Extents);
+		void ComputeInertia() override
+		{
+			MomentOfInertia = ComputeMomentOfInertiaBox(Mass, Extents, Position);
 			InverseMomentOfInertia = glm::inverse(MomentOfInertia);
 		}
 	};
@@ -100,5 +107,7 @@ namespace Winds
 			Distance = aDistance;
 			Mass = 1;
 		}
+
+		void ComputeInertia() {}
 	};
 }
