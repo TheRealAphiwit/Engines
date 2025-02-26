@@ -46,6 +46,208 @@ namespace Winds
         return { nullptr, nullptr, glm::vec3() }; // return nulls if outside current scope
     }
 
+    Collision SphereSphereIntersect(const SphereCollider& aSphere1, const SphereCollider& aSphere2)
+    {
+        Collision returnCollision = { nullptr, nullptr, glm::vec3() };
+
+        glm::vec3 pos1 = glm::vec3(aSphere1.Transform[3]);
+        glm::vec3 pos2 = glm::vec3(aSphere2.Transform[3]);
+        float dist2 = glm::distance2(pos1, pos2);
+        float radiusSum = aSphere1.Radius + aSphere2.Radius;
+
+        if (dist2 < radiusSum * radiusSum)
+        {
+            float dist = glm::sqrt(dist2);
+            glm::vec3 normal = (dist > 0.0f) ? (pos2 - pos1) / dist : glm::vec3(1, 0, 0);
+            glm::vec3 contactPoint = pos1 + normal * aSphere1.Radius;
+
+            returnCollision = { const_cast<SphereCollider*>(&aSphere1), const_cast<SphereCollider*>(&aSphere2), contactPoint, normal }; // un-const the spheres to be modified
+        }
+
+        return returnCollision;
+    }
+
+    Collision BoxBoxIntersect(const BoxCollider& aBox1, const BoxCollider& aBox2) // Don't fully understand
+    {
+        Collision returnCollision = { nullptr, nullptr, glm::vec3(), glm::vec3() };
+
+        // Extract rotation and translation
+        glm::mat3 rotation1 = glm::mat3(aBox1.Transform);
+        glm::mat3 rotation2 = glm::mat3(aBox2.Transform);
+        glm::vec3 translation = glm::vec3(aBox2.Transform[3]) - glm::vec3(aBox1.Transform[3]);
+
+        glm::mat3 rotation = rotation1 * glm::transpose(rotation2);
+        glm::mat3 absRotation;
+        for (int i = 0; i < 3; ++i) {
+            absRotation[i] = glm::abs(rotation[i]) + 0.000001f;
+        }
+
+        float minPenetration = FLT_MAX;
+        glm::vec3 bestAxis = glm::vec3(0.0f);
+
+        // --- 1. Box 1's face axes ---
+        for (int i = 0; i < 3; ++i) {
+            float ra = aBox1.Extents[i];
+            float rb = glm::dot(absRotation[i], aBox2.Extents);
+            float penetration = (ra + rb) - glm::abs(glm::dot(translation, rotation1[i]));
+
+            if (penetration < 0.0f) return returnCollision;
+
+            if (penetration < minPenetration) {
+                minPenetration = penetration;
+                bestAxis = rotation1[i];
+            }
+        }
+
+        // --- 2. Box 2's face axes ---
+        for (int i = 0; i < 3; ++i) {
+            float ra = glm::dot(absRotation[i], aBox1.Extents);
+            float rb = aBox2.Extents[i];
+            float penetration = (ra + rb) - glm::abs(glm::dot(translation, rotation2[i]));
+
+            if (penetration < 0.0f) return returnCollision;
+
+            if (penetration < minPenetration) {
+                minPenetration = penetration;
+                bestAxis = rotation2[i];
+            }
+        }
+
+        // --- 3. Cross-product axes ---
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                glm::vec3 axis = glm::cross(rotation1[i], rotation2[j]);
+
+                if (glm::length(axis) < 0.001f) continue;
+                axis = glm::normalize(axis);
+
+                float ra = glm::dot(aBox1.Extents, glm::abs(rotation1 * axis));
+                float rb = glm::dot(aBox2.Extents, glm::abs(rotation2 * axis));
+                float penetration = (ra + rb) - glm::abs(glm::dot(glm::normalize(translation), axis)) * glm::length(translation);
+
+                if (penetration < 0.0f) return returnCollision;
+
+                if (penetration < minPenetration) {
+                    minPenetration = penetration;
+                    bestAxis = axis;
+                }
+            }
+        }
+
+        // Ensure normal points from box1 to box2
+        glm::vec3 normal = glm::normalize(bestAxis);
+        if (glm::dot(normal, translation) < 0.0f) {
+            normal = -normal;
+        }
+
+        // Compute contact point (approximate)
+        glm::vec3 contactPoint = glm::vec3(aBox1.Transform[3]) + normal * minPenetration * 0.5f;
+
+        return { const_cast<BoxCollider*>(&aBox1), const_cast<BoxCollider*>(&aBox2), contactPoint, normal };
+    }
+
+    Collision BoxSphereIntersect(const BoxCollider& aBox1, const SphereCollider& aSphere2)
+    {
+        glm::vec3 sphereCenter = glm::vec3(aSphere2.Transform[3]);
+        glm::vec3 localSphereCenter = glm::inverse(aBox1.Transform) * glm::vec4(sphereCenter, 1.0f);
+        glm::vec3 closestPoint = glm::clamp(localSphereCenter, -aBox1.Extents, aBox1.Extents);
+        float dist2 = glm::length2(localSphereCenter - closestPoint);
+
+        if (dist2 < aSphere2.Radius * aSphere2.Radius)
+        {
+            glm::vec3 normal = localSphereCenter - closestPoint;
+            if (glm::length(normal) > 0.0001f)
+                normal = glm::normalize(normal);
+            else
+                normal = glm::vec3(1, 0, 0); // Fallback normal
+
+            glm::vec3 worldContactPoint = aBox1.Transform * glm::vec4(closestPoint, 1.0f);
+            return { const_cast<BoxCollider*>(&aBox1), const_cast<SphereCollider*>(&aSphere2), worldContactPoint, normal };
+        }
+
+        return { nullptr, nullptr, glm::vec3(0), glm::vec3(0) };
+    }
+
+    Collision PlaneBoxIntersect(const PlaneCollider& aPlane, const BoxCollider& aBox)
+    {
+        glm::vec3 boxCenter = glm::vec3(aBox.Transform[3]);
+        glm::mat3 boxRotation = glm::mat3(aBox.Transform);  // Extract the rotation matrix of the box
+
+        // Step 1: Get the axis-aligned half-extents of the box (using half the full extents)
+        glm::vec3 halfExtents = aBox.Extents * 0.5f;
+
+        // Step 2: Transform the box's center into the plane's coordinate system (by using inverse of box rotation)
+        glm::vec3 boxToPlane = boxCenter - glm::vec3(aPlane.Position);
+        glm::vec3 transformedCenter = glm::inverse(boxRotation) * boxToPlane;
+
+        // Step 3: Project the plane normal onto the box's local coordinate system to check for overlap
+        glm::vec3 normal = glm::normalize(aPlane.Normal);
+        float d = glm::dot(normal, aPlane.Position);
+
+        // Calculate the distance from the center of the box to the plane
+        float distance = glm::dot(normal, transformedCenter) - d;
+
+        // Step 4: Penetration depth check
+        float penetrationDepth = halfExtents.z - glm::abs(distance);
+        if (penetrationDepth > 0)  // Box is penetrating the plane
+        {
+            // Step 5: Get the box's local corners
+            glm::vec3 localCorners[8] = {
+                glm::vec3(-halfExtents.x, -halfExtents.y, -halfExtents.z),
+                glm::vec3(halfExtents.x, -halfExtents.y, -halfExtents.z),
+                glm::vec3(-halfExtents.x,  halfExtents.y, -halfExtents.z),
+                glm::vec3(halfExtents.x,  halfExtents.y, -halfExtents.z),
+                glm::vec3(-halfExtents.x, -halfExtents.y,  halfExtents.z),
+                glm::vec3(halfExtents.x, -halfExtents.y,  halfExtents.z),
+                glm::vec3(-halfExtents.x,  halfExtents.y,  halfExtents.z),
+                glm::vec3(halfExtents.x,  halfExtents.y,  halfExtents.z)
+            };
+
+            // Step 6: Rotate the corners back into world space
+            for (int i = 0; i < 8; ++i) {
+                localCorners[i] = boxRotation * localCorners[i];
+            }
+
+            // Step 7: Find the closest point to the plane and check for intersection
+            for (int i = 0; i < 8; ++i) {
+                float pointDistance = glm::dot(normal, localCorners[i]);
+                if (pointDistance < halfExtents.z)  // If any corner is closer than the box's extents, it's a collision
+                {
+                    glm::vec3 correction = normal * (halfExtents.z - pointDistance);
+                    glm::vec3 contactPoint = localCorners[i] + correction;
+
+                    // Apply contact point correction
+                    boxCenter += correction;  // Correct position to prevent clipping
+
+                    return { const_cast<PlaneCollider*>(&aPlane), const_cast<BoxCollider*>(&aBox), contactPoint, normal };
+                }
+            }
+        }
+
+        return { nullptr, nullptr, glm::vec3(0), glm::vec3(0) };
+    }
+
+    Collision PlaneSphereIntersect(const PlaneCollider& aPlane, const SphereCollider& aSphere)
+    {
+        glm::vec3 normal = glm::normalize(aPlane.Normal);
+        float d = glm::dot(normal, aPlane.Position);
+        float distance = glm::dot(normal, aSphere.Position) - d;
+
+        if (distance < aSphere.Radius)
+        {
+            glm::vec3 collisionPoint = aSphere.Position - normal * distance;
+
+            // correct that position
+            float penetrationDepth = aSphere.Radius - distance;
+            glm::vec3 correction = normal * penetrationDepth;
+            const_cast<SphereCollider*>(&aSphere)->Position += correction; // push the sphere out
+
+            return { const_cast<PlaneCollider*>(&aPlane), const_cast<SphereCollider*>(&aSphere), collisionPoint, normal };
+        }
+
+        return { nullptr, nullptr, glm::vec3(), glm::vec3() };
+    }
+
     bool CheckRayIntersect(const Ray& aRay, Collider* aCollider)
     {
         if (aCollider->IsOf<SphereCollider>())
@@ -61,7 +263,7 @@ namespace Winds
 
         return false;
     }
-    bool RaySphereIntersect(const Ray& aRay, const SphereCollider& aSphere)
+    bool RaySphereIntersect(const Ray& aRay, const SphereCollider& aSphere) // This one I dont fully understand
     {
         // vector between ray origin & sphere center
         glm::vec3 center = aSphere.Transform[3];
@@ -69,7 +271,56 @@ namespace Winds
         
         // project diff onto ray direction 
         float t0 = glm::dot(diff, aRay.Direction);
+        // perpendicular distance! ....? also dot on itself makes sense since diff is not normalized
+        float dSquared = glm::dot(diff, diff) - t0 * t0;
 
-        return false;
+        // distance is greater than the sphere's radius squared, no intersection
+        float radiusSquared = aSphere.Radius * aSphere.Radius;
+        if (dSquared > radiusSquared)
+        {
+            return false;
+        }
+
+        // distance from closest to the intersection point
+        float t1 = glm::sqrt(radiusSquared - dSquared);
+
+        float Epsilon = 0.000001f; // just a small number to help with tiny floating point errors
+        float outIntersectionDistance = (t0 > t1 + Epsilon) ? t0 - t1 : t0 + t1; // could actually return this as the distance
+
+        // return true if intersection distance is positive
+        return outIntersectionDistance > Epsilon;
+    }
+    bool RayBoxIntersect(const Ray& aRay, const BoxCollider& aBox)
+    {
+        glm::vec3 min = glm::vec3(aBox.Transform[3]) - aBox.Extents;
+        glm::vec3 max = glm::vec3(aBox.Transform[3]) + aBox.Extents;
+
+        glm::vec3 invDir = 1.0f / aRay.Direction;
+
+        float t1 = (min.x - aRay.Origin.x) * invDir.x;
+        float t2 = (max.x - aRay.Origin.x) * invDir.x;
+        float t3 = (min.y - aRay.Origin.y) * invDir.y;
+        float t4 = (max.y - aRay.Origin.y) * invDir.y;
+        float t5 = (min.z - aRay.Origin.z) * invDir.z;
+        float t6 = (max.z - aRay.Origin.z) * invDir.z;
+
+        float tmin = std::max(std::max(std::min(t1, t2), std::min(t3, t4)), std::min(t5, t6));
+        float tmax = std::min(std::min(std::max(t1, t2), std::max(t3, t4)), std::max(t5, t6));
+
+        return tmax >= std::max(0.0f, tmin);
+    }
+    bool RayOBBIntersect(const Ray& aRay, const BoxCollider& aBox)
+    {
+        glm::vec3 center = glm::vec3(aBox.Transform[3]);
+        glm::mat3 rotation = glm::mat3(aBox.Transform);
+
+        glm::vec3 localOrigin = glm::transpose(rotation) * (aRay.Origin - center);
+        glm::vec3 localDirection = glm::transpose(rotation) * aRay.Direction;
+
+        BoxCollider localBox = BoxCollider(glm::vec3(0, 0, 0), aBox.Extents);
+        localBox.Extents = aBox.Extents;
+
+        Ray localRay(localOrigin, localDirection);
+        return RayBoxIntersect(localRay, localBox);
     }
 }
