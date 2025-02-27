@@ -1,15 +1,18 @@
 #include "EditorGUI.h"
 #include "DragonEngine.h"
-#include "ResourceHandler.h"
-#include "VirtualObject.h"
 #include "DotGraphics.h"
+#include "Winds_Physics.h"
+
+#include "ResourceHandler.h"
 #include "EntityHandler.h"
 #include "MessageHandler.h"
+// #include "OpenGLFrameBuffer.h"
 
-#include <vector>
-#include <iostream>
 #include <glfw3.h>
+#include <iostream>
 #include <stdio.h>
+#include "VirtualObject.h"
+#include <vector>
 
 int main()
 {
@@ -17,18 +20,18 @@ int main()
 	MessageSystem::MessageHandler& messageHandler = MessageSystem::MessageHandler::GetInstance();
     DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
 	DotsRendering::EntityHandler& entityHandler = DotsRendering::EntityHandler::GetInstance();
-	entityHandler.Initialize();
+
+    entityHandler.Initialize();
     messageHandler.ProcessQueue("Entity");
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
     Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources, renderData.camera);
+    Winds::Winds_Physics* Physics = new Winds::Winds_Physics(engine);
 
     glfwSetInputMode(renderData.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // GLFW_CURSOR diff
 
     float lastTime = 0;
     float currentTime = 0;
     float delta = 0;
-
-	bool IsSimulating = false;
 
     std::vector<VirtualObject*> objects;
 
@@ -39,9 +42,9 @@ int main()
         delta = currentTime - lastTime;
         lastTime = currentTime;
 
-        if (IsSimulating)
+        if (engine->IsSimulating())
         {
-            // Run physics calculations
+            Physics->Simulate(delta);
         }
 
         DotsRendering::BeginRender(engine->myCamera);
