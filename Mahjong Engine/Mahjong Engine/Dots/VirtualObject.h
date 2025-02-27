@@ -23,10 +23,15 @@ public:
 	std::shared_ptr<std::string> GetNamePtr();
 	void SetName(const std::string& name); // #? Might be used when I make a handler that oversees objects with same name
 
-#pragma region Setters For Editor Version (mostly)
+#pragma region Setters
+	// Visuals
 	void SetMesh(Mesh& mesh, std::string& name);
 	void SetTexture(Texture& texture, std::string& name);
 	void SetShader(Shader& shader, std::string& name);
+
+	// Transforms
+	void SetRotation(const glm::vec3& aRotation);
+	void SetTransform(const glm::mat4& aTransform);
 #pragma endregion
 
 #pragma region Setters For Names

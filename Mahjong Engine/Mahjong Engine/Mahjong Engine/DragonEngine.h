@@ -23,11 +23,12 @@ namespace Engine
 
 		void Update(const float& aDeltaTime);
 
+		// No defs
 		void StartSimulating();
 		void StopSimulating();
 		const bool& IsSimulating();
 
-		std::vector<GameObject*> GetGameObject();
+		std::vector<GameObject*> GetGameObjects();
 
 		DotsRendering::Camera* myCamera;
 		FlyingCamera* myFlyingCamera;

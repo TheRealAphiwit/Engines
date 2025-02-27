@@ -2,7 +2,7 @@
 #include "../Mahjong Engine/DragonEngine.h" // Not so much for these
 #include "../Mahjong Engine/GameObject.h"
 #include "Collisions.h"
-// #include "Intersections.h"
+#include "Intersections.h"
 #include <iostream>
 #include "VirtualObject.h" // This is fine
 #include <gtc/matrix_transform.hpp>
@@ -53,9 +53,14 @@ namespace Winds
 		{
 			if (!c->IsKinematic)
 			{
-				std::cout << glm::to_string(c->AngularVelocity) << std::endl;
 				c->Position += c->Velocity * dt;
 				c->Transform[3] = glm::vec4(c->Position, 1.0f);
+
+				float maxAngularVelocity = 3;
+				if (glm::length(c->AngularVelocity) > maxAngularVelocity)
+				{
+					c->AngularVelocity = glm::normalize(c->AngularVelocity) * maxAngularVelocity;
+				}
 
 				if (glm::length(c->AngularVelocity) > 0.0001f)
 				{
@@ -69,11 +74,13 @@ namespace Winds
 				{
 					c->Velocity *= glm::pow(1.0f - LinearDrag, dt);
 				}
+
 				if (c->Mass > 0)
 				{
 					c->AngularVelocity *= glm::exp(-AngularDrag * dt);
 				}
 
+				// inertia tensor in world space
 				glm::mat3 rotationMatrix = glm::mat3(c->Transform);
 				glm::mat3 inertiaTensorInWorldSpace = rotationMatrix * c->MomentOfInertia * glm::transpose(rotationMatrix);
 				c->InverseMomentOfInertia = glm::inverse(inertiaTensorInWorldSpace);
@@ -143,10 +150,24 @@ namespace Winds
 		{
 			for (int j = i + 1; j < count; j++)
 			{
-				Collision c = CheckIntersect();
+				Collision c = CheckIntersect(colliders[i], colliders[j]);
+				if (c.Col1 != nullptr && c.Col2 != nullptr)
+				{
+					collisions.push_back(c);
+				}
 			}
 		}
-
-		return std::vector<Collision>();
+		return collisions;
+	}
+	void Winds_Physics::UpdateVisuals()
+	{
+		for (GameObject* c : myEngine->GetGameObjects())
+		{
+			Collider* col = c->GetCollider();
+			if (col != nullptr)
+			{
+				c->GetVirtualObject()->SetTransform(col->Transform);
+			}
+		}
 	}
 }

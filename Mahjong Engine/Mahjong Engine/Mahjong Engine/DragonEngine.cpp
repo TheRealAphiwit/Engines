@@ -23,7 +23,7 @@ void Engine::DragonEngine::Update(const float& aDeltaTime)
 	myTime->UpdateDeltaTime(aDeltaTime);
 }
 
-std::vector<GameObject*> Engine::DragonEngine::GetGameObject()
+std::vector<GameObject*> Engine::DragonEngine::GetGameObjects()
 {
 	return myGameObjects;
 }

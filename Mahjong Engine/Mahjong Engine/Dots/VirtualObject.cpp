@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "MahjongMath.h"
 #include <gtc/matrix_transform.hpp>
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -58,6 +59,21 @@ void VirtualObject::SetShader(Shader& shader, std::string& name)
 {
 	myShader = &shader;
 	myShaderName = name;
+}
+
+void VirtualObject::SetRotation(const glm::vec3& aRotation)
+{
+	Rotation = aRotation;
+}
+
+void VirtualObject::SetTransform(const glm::mat4& aTransform)
+{
+	glm::vec3 translation, rotation, scale;
+	MahjongMath::DecomposeTransform(aTransform, translation, rotation, scale);
+
+	Position = translation;
+	Rotation = rotation;
+	Scale = scale;
 }
 
 void VirtualObject::SetMeshName(std::string name)
