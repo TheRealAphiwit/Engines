@@ -166,6 +166,7 @@
     <ClInclude Include="ETime.h" />
     <ClInclude Include="FlyingCamera.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectHandler.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="ResourceHandler.h" />
     <ClInclude Include="WindowsMemoryChecker.h" />
