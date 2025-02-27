@@ -1,5 +1,5 @@
 #include "GameObject.h"
-#include "../Winds/Collisions.h"
+#include "Collisions.h"
 #include "VirtualObject.h"
 
 GameObject::GameObject(VirtualObject* anObject, Winds::Collider* aCollider) : myVirtualObject(anObject), myCollider(aCollider)
@@ -69,7 +69,7 @@ const ColliderData& GameObject::GetData()
 
 	// Returns diff type of data depending on collider type
 	// Downcasting with dynamic_cast is used once again
-	if (myCollider->IsOf<Winds::SphereCollider*>())
+	if (myCollider->IsOf<Winds::SphereCollider>())
 	{
 		Winds::SphereCollider* sc = dynamic_cast<Winds::SphereCollider*>(myCollider);
 		d.Mass = sc->Mass;
@@ -78,7 +78,7 @@ const ColliderData& GameObject::GetData()
 		d.Radius = sc->Radius;
 		d.IsKinematic = sc->IsKinematic;
 	}
-	else if (myCollider->IsOf<Winds::BoxCollider*>())
+	else if (myCollider->IsOf<Winds::BoxCollider>())
 	{
 		Winds::BoxCollider* bc = dynamic_cast<Winds::BoxCollider*>(myCollider);
 		d.Mass = bc->Mass;

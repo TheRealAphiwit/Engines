@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="MahjongMath.h" />
     <ClInclude Include="MemoryChecker.h" />
     <ClInclude Include="MessageHandler.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -142,6 +143,7 @@
     <ClInclude Include="Messages.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MahjongMath.cpp" />
     <ClCompile Include="MemoryChecker.cpp" />
     <ClCompile Include="MessageHandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

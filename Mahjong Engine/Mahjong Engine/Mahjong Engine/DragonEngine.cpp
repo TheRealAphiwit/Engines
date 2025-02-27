@@ -7,6 +7,7 @@
 #include <glm.hpp>
 #include "FlyingCamera.h"
 
+// Contructor diff - check what changes between these two
 Engine::DragonEngine::DragonEngine(GLFWwindow* aWindow, DotsRendering::Camera* aCamera)
 {
 	myInput = new Input(aWindow);
@@ -21,6 +22,21 @@ void Engine::DragonEngine::Update(const float& aDeltaTime)
 {
 	myFlyingCamera->Update(myWindow);
 	myTime->UpdateDeltaTime(aDeltaTime);
+}
+
+void Engine::DragonEngine::StartSimulating()
+{
+	ShouldSimulate = true;
+}
+
+void Engine::DragonEngine::StopSimulating()
+{
+	ShouldSimulate = false;
+}
+
+const bool& Engine::DragonEngine::IsSimulating()
+{
+	return ShouldSimulate;
 }
 
 std::vector<GameObject*> Engine::DragonEngine::GetGameObjects()

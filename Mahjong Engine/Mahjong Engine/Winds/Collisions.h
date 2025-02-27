@@ -10,29 +10,31 @@ namespace Winds
 	// This class does not init all vals as it is to be inherited from
 	class Collider
 	{
-	public: virtual ~Collider() {}
-		  template<typename T>
-		  bool IsOf() { return dynamic_cast<T*>(this) != NULL; } // Will be used for dynamic/static checks
+	public: 
+		virtual ~Collider() {}
+		virtual void ComputeInertia() = 0;
+		
+		template<typename T>
+		bool IsOf() { return dynamic_cast<T*>(this) != NULL; } // Will be used for dynamic/static checks
 	
-		  virtual void ComputeInertia() = 0;
 
-		  glm::vec3 Center;
-		  glm::vec3 Position;
-		  glm::mat4 Transform;
+		glm::vec3 Center;
+		glm::vec3 Position;
+		glm::mat4 Transform;
 
-		  glm::mat3 MomentOfInertia;
-		  glm::mat3 InverseMomentOfInertia;
+		glm::mat3 MomentOfInertia;
+		glm::mat3 InverseMomentOfInertia;
 
-		  bool HasGravity;
-		  bool IsKinematic;
-		  glm::vec3 Velocity;
-		  glm::vec3 AngularVelocity;
+		bool HasGravity;
+		bool IsKinematic;
+		glm::vec3 Velocity;
+		glm::vec3 AngularVelocity;
 #pragma region Potential Upgrades
-		  // linear drag
-		  // angular drag
-		  // friction
+		// linear drag
+		// angular drag
+		// friction
 #pragma endregion
-		  float Mass;
+		float Mass;
 	};
 
 	struct Collision
