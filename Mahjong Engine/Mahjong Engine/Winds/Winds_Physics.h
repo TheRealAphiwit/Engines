@@ -48,7 +48,7 @@ namespace Winds
 		std::vector<Collision> CheckIntersections(std::vector<Collider*> colliders);
 		void UpdateVisuals();
 
-		// bool MonkeyRaycast(const Ray& aRay, RayHit& aHit);
+		bool MahjongRaycast(const Ray& aRay, RayHit& aHit);
 
 	private:
 		std::vector<Collider*> colliders;

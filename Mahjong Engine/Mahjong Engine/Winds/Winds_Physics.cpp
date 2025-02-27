@@ -6,8 +6,8 @@
 #include <iostream>
 #include "VirtualObject.h" // This is fine
 #include <gtc/matrix_transform.hpp>
-// #include "MonkeyMath.h"
-// #include "Raycast.h"
+#include "MahjongMath.h"
+#include "Raycast.h"
 #include <gtx/string_cast.hpp>
 
 namespace Winds
@@ -22,16 +22,20 @@ namespace Winds
 
 	void Winds_Physics::Simulate(const float aDeltaTime)
 	{
-		float limitDt = glm::min(aDeltaTime, 0.01f);
+		float limitDt = glm::min(aDeltaTime, 0.02f);
+
+		for (Collider* collider : colliders) {
+			collider->ComputeInertia();
+		}
 
 		colliders = UpdatePhysicsScene();
-		//std::vector<Collision> collisions = CheckIntersections(colliders);
+		std::vector<Collision> collisions = CheckIntersections(colliders);
 
-		//ApplyGravity(colliders, limitDt);
+		ApplyGravity(colliders, limitDt);
 
-		//HandleCollisions(collisions);
+		HandleCollisions(collisions);
 
-		//ApplyVelocity(colliders, limitDt);
+		ApplyVelocity(colliders, limitDt);
 
 		UpdateVisuals();
 	}
@@ -98,7 +102,7 @@ namespace Winds
 		std::vector<Collision> dynamicDynamicCollisions;
 		std::vector<Collision> staticDynamicCollisions;
 
-		for (Collision c : collisions)
+		for (Collision c : collisions) // !?
 		{
 			bool A_isDynamic = !c.Col1->IsKinematic;
 			bool B_isDynamic = !c.Col2->IsKinematic;
@@ -117,14 +121,94 @@ namespace Winds
 		HandleStaticDynamic(staticDynamicCollisions);
 	}
 
+	void Winds_Physics::HandleStaticDynamic(std::vector<Collision> collisions)
+	{
+		const float SlidingFriction = 0.5f;
+
+		for (Collision c : collisions)
+		{
+			Collider* A = c.Col1;
+			Collider* B = c.Col2;
+
+			bool A_isDynamic = !A->IsKinematic;
+			bool B_isDynamic = !B->IsKinematic;
+
+			if (!A_isDynamic && !B_isDynamic) continue;
+
+			Collider* dynamicCollider = A_isDynamic ? A : B;
+			Collider* staticCollider = A_isDynamic ? B : A;
+
+			glm::vec3 n = glm::normalize(c.Normal);
+			glm::vec3 r = c.Point - dynamicCollider->Position;
+
+			glm::vec3 v = dynamicCollider->Velocity + glm::cross(dynamicCollider->AngularVelocity, r);
+			float vRelDotN = glm::dot(v, n);
+
+			if (vRelDotN > 0) continue;
+
+			float invMass = (dynamicCollider->Mass > 0) ? 1.0f / dynamicCollider->Mass : 0;
+			glm::vec3 r_cross_n = glm::cross(r, n);
+			float angularEffect = glm::dot(r_cross_n, dynamicCollider->InverseMomentOfInertia * r_cross_n);
+
+			float impulseMagnitude = -(1 + Restitution) * vRelDotN / (invMass + angularEffect);
+			glm::vec3 impulse = impulseMagnitude * n;
+
+			// Apply impulse to linear velocity
+			dynamicCollider->Velocity += impulse * invMass;
+
+			// angular velocity (considering moment of inertia)
+			dynamicCollider->AngularVelocity += dynamicCollider->InverseMomentOfInertia * glm::cross(r, impulse);
+
+			// sliding friction
+			glm::vec3 tangentVelocity = v - (n * glm::dot(v, n));
+			if (glm::length(tangentVelocity) > 0.0001f)
+			{
+				glm::vec3 frictionDirection = -glm::normalize(tangentVelocity);
+				glm::vec3 frictionImpulse = frictionDirection * SlidingFriction * glm::length(tangentVelocity);
+
+				dynamicCollider->Velocity += frictionImpulse * invMass;
+				dynamicCollider->AngularVelocity += dynamicCollider->InverseMomentOfInertia * glm::cross(r, frictionImpulse);
+			}
+		}
+	}
+
+	void Winds_Physics::HandleDynamicDynamic(std::vector<Collision> collisions)
+	{
+		for (Collision c : collisions)
+		{
+			glm::vec3 normal = c.Normal;
+
+			glm::vec3 relativeVelocity = c.Col2->Velocity - c.Col1->Velocity;
+			float velocityAlongNormal = glm::dot(relativeVelocity, normal);
+
+			if (velocityAlongNormal > 0) continue;
+
+			float impulse = (1 + Restitution) * velocityAlongNormal;
+
+			glm::vec3 impulseVector = impulse * normal;
+
+			c.Col1->Velocity += impulseVector;
+			c.Col2->Velocity -= impulseVector;
+
+			glm::vec3 r1 = c.Point - c.Col1->Position;
+			glm::vec3 r2 = c.Point - c.Col2->Position;
+
+			glm::vec3 torque1 = glm::cross(r1, impulseVector);
+			glm::vec3 torque2 = glm::cross(r2, impulseVector);
+
+			// Rotate! sort of....
+			c.Col1->AngularVelocity += c.Col1->InverseMomentOfInertia * torque1;
+			c.Col2->AngularVelocity -= c.Col2->InverseMomentOfInertia * torque2;
+		}
+	}
+
 	std::vector<Collider*> Winds_Physics::UpdatePhysicsScene()
 	{
 		// Get colliders
 		std::vector<Collider*> cols;
 		cols.push_back(main_plane);
 
-
-		for (GameObject* c : myEngine->GetGameObject())
+		for (GameObject* c : myEngine->GetGameObjects())
 		{
 			Collider* col = c->GetCollider();
 			if (col != nullptr)
@@ -169,5 +253,19 @@ namespace Winds
 				c->GetVirtualObject()->SetTransform(col->Transform);
 			}
 		}
+	}
+	bool Winds_Physics::MahjongRaycast(const Ray& aRay, RayHit& aHit)
+	{
+		for (Collider* c : colliders)
+		{
+			if (CheckRayIntersect(aRay, c))
+			{
+				aHit.Collider = c;
+				aHit.Point = glm::vec3(0, 0, 0);
+				aHit.Distance = 10;
+				return true;
+			}
+		}
+		return false;
 	}
 }
