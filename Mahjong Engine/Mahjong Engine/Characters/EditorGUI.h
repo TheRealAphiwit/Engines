@@ -30,17 +30,19 @@ namespace Characters
 	class EditorGUI
 	{
 	public:
-		EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler, DotsRendering::Camera* aCamera);
+		EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler, DotsRendering::Camera* aCamera, Engine::DragonEngine* aEngine);
 		~EditorGUI();
 		void Render(std::vector<VirtualObject*> someObjects);
 
 	private:
 		void UpdateHieracrhy(std::vector<VirtualObject*> someObjects);
 		void UpdateCameraSettings();
-
+		void UpdateSimulationPanel();
 		void RepopulateEntries(std::vector<VirtualObject*> someObjects);
+		
 		std::vector<ObjectEntry*> myObjectEntries;
 		
+		Engine::DragonEngine* myEngine;
 		DotsRendering::Camera* myCamera;
 		ResourceHandler* myResourceHandler;
 		ECurrentEditor myCurrentEditor;

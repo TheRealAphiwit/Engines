@@ -24,7 +24,7 @@ int main()
     entityHandler.Initialize();
     messageHandler.ProcessQueue("Entity");
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
-    Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources, renderData.camera);
+    Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources, renderData.camera, engine);
     Winds::Winds_Physics* Physics = new Winds::Winds_Physics(engine);
 
     glfwSetInputMode(renderData.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // GLFW_CURSOR diff

@@ -3,17 +3,20 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include <glm.hpp>
+
+#include "DragonEngine.h"
 #include "VirtualObject.h"
-#include <string>
 #include "ObjectEntry.h"
 #include "EntityHandler.h"
 #include "ResourceEditor.h"
+
+#include <glm.hpp>
+#include <string>
 #include <iostream>
 
 #define itoc(a) ((char*)(intptr_t)(a)) // Line here allows us to convert int's into char*'s
 
-Characters::EditorGUI::EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler, DotsRendering::Camera* aCamera)
+Characters::EditorGUI::EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler, DotsRendering::Camera* aCamera, Engine::DragonEngine* aEngine)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -22,6 +25,7 @@ Characters::EditorGUI::EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResource
 	ImGui_ImplGlfw_InitForOpenGL(aWindow, true); // Initializes ImGui to work with a GLFW window and OpenGL for rendering.
 	ImGui_ImplOpenGL3_Init("#version 330");
 
+	myEngine = aEngine;
 	myResourceHandler = aResourceHandler;
 	myResourceEditor = new ResourceEditor(myResourceHandler);
 	myCamera = aCamera;
@@ -64,9 +68,7 @@ void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects)
 	switch (myCurrentEditor)
 	{
 	case Characters::ECurrentEditor::EObjectHierarchy:
-
 		UpdateHieracrhy(someObjects);
-
 		break;
 	case Characters::ECurrentEditor::EShaderEditor:
 		break;
@@ -82,8 +84,10 @@ void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects)
 		break;
 	}
 
-
 	ImGui::End();
+
+	UpdateSimulationPanel();
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -167,6 +171,26 @@ void Characters::EditorGUI::UpdateCameraSettings()
 			myCamera->SetZoom(zoom);
 		}
 	}
+	ImGui::End();
+}
+
+void Characters::EditorGUI::UpdateSimulationPanel()
+{
+	ImGui::Begin("Simulation Controls"); // Creates a separate window
+
+	bool isSimulating = myEngine->IsSimulating();
+	ImGui::Text("Simulation State: %s", isSimulating ? "Running" : "Paused");
+
+	if (ImGui::Button("Start Simulation")) {
+		myEngine->StartSimulating();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Stop Simulation")) {
+		myEngine->StopSimulating();
+	}
+
 	ImGui::End();
 }
 
