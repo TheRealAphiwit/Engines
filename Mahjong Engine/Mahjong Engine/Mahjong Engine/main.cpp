@@ -51,7 +51,7 @@ int main()
         Gui->Render(objects);
         DotsRendering::End();
 
-        engine->Update(delta);
+        engine->Update(delta); 
 
         // 0 check first- currently it freezes
 		// messageHandler.ProcessQueue("Entity");

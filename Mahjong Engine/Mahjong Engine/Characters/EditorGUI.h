@@ -9,6 +9,11 @@ struct GLFWwindow;
 class ResourceEditor;
 class ShaderEditor;
 
+namespace Engine
+{
+	class DragonEngine;
+}
+
 namespace Characters
 {
 	enum class ECurrentEditor
