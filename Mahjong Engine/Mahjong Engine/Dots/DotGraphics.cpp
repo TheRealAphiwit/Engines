@@ -128,7 +128,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	glfwSwapInterval(1);
 
 	myTexture = ResourceHandler::GetInstance().GetTexture("Default");
-	//myShader = ResourceHandler::GetInstance().GetShader("myShader");
+	// myShader = ResourceHandler::GetInstance().GetShader("myShader");
 
 	return initData;
 }

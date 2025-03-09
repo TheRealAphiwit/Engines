@@ -24,7 +24,7 @@ void main()
 {
     // Placeholder color (red)
     vec4 texel = vec4(0.5, 0.5, 0.5, 1);
-    fragColor = vec4(1.0,0,0,texel.w); // Start at 0 lighting
+    fragColor = vec4(0.0,0,0,texel.w); // Start at 0 lighting
 
     // Ambient lighting
     vec4 materialAmbient = vec4(0.5, 0.5, 0.5, 0.1);
@@ -46,7 +46,7 @@ void main()
         float attenuation = 1.0 / max(0.001, light_attenuation.x + light_attenuation.y * distance + light_attenuation.z * pow(distance, 2)); 
         
         // Apply diffuse lighting
-        fragColor.xyz += diffusePart * attenuation;
+        // fragColor.xyz += diffusePart * attenuation;
 
         // Specular lighting
         vec3 vectorToEye = normalize(vecToEye);
@@ -57,7 +57,7 @@ void main()
         float totalBrightness = pow(initialBrightness, materialShininess);
 
         // Apply specular lighting
-        fragColor.xyz += totalBrightness * light_specular.xyz * attenuation * materialSpecular.xyz;
+        // fragColor.xyz += totalBrightness * light_specular.xyz * attenuation * materialSpecular.xyz;
     }
 
     // For debugging purp

@@ -237,7 +237,6 @@ namespace Winds
         {
             glm::vec3 collisionPoint = aSphere.Position - normal * distance;
 
-            // correct that position
             float penetrationDepth = aSphere.Radius - distance;
             glm::vec3 correction = normal * penetrationDepth;
             const_cast<SphereCollider*>(&aSphere)->Position += correction; // push the sphere out
@@ -265,27 +264,22 @@ namespace Winds
     }
     bool RaySphereIntersect(const Ray& aRay, const SphereCollider& aSphere) // This one I dont fully understand
     {
-        // vector between ray origin & sphere center
         glm::vec3 center = aSphere.Transform[3];
         glm::vec3 diff = center - aRay.Origin;
         
-        // project diff onto ray direction 
         float t0 = glm::dot(diff, aRay.Direction);
-        // perpendicular distance! ....? also dot on itself makes sense since diff is not normalized
         float dSquared = glm::dot(diff, diff) - t0 * t0;
 
-        // distance is greater than the sphere's radius squared, no intersection
         float radiusSquared = aSphere.Radius * aSphere.Radius;
         if (dSquared > radiusSquared)
         {
             return false;
         }
 
-        // distance from closest to the intersection point
         float t1 = glm::sqrt(radiusSquared - dSquared);
 
-        float Epsilon = 0.000001f; // just a small number to help with tiny floating point errors
-        float outIntersectionDistance = (t0 > t1 + Epsilon) ? t0 - t1 : t0 + t1; // could actually return this as the distance
+        float Epsilon = 0.000001f;
+        float outIntersectionDistance = (t0 > t1 + Epsilon) ? t0 - t1 : t0 + t1;
 
         // return true if intersection distance is positive
         return outIntersectionDistance > Epsilon;
