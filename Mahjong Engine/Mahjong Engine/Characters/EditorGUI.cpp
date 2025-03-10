@@ -6,6 +6,7 @@
 
 #include "DragonEngine.h"
 #include "VirtualObject.h"
+#include "GameObject.h"
 #include "ObjectEntry.h"
 #include "EntityHandler.h"
 #include "ResourceEditor.h"
@@ -60,6 +61,7 @@ void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects)
 			if (ImGui::MenuItem("Resource Viewer", "Ctrl+S")) { myCurrentEditor = ECurrentEditor::EResourceViewer; }
 			if (ImGui::MenuItem("Object Hierarchy", "Ctrl+W")) { myCurrentEditor = ECurrentEditor::EObjectHierarchy; }
 			if (ImGui::MenuItem("Camera Settings", "Ctrl+C")) { myCurrentEditor = ECurrentEditor::ECameraSettings; }
+			if (ImGui::MenuItem("GameObject Editor", "Ctrl+G")) { myCurrentEditor = ECurrentEditor::EGameObjectHierarchy; }  // New menu item
 			ImGui::EndMenu(); // Closes currrent menu context
 		}
 		ImGui::EndMenuBar(); // Closes menubar context
@@ -77,6 +79,9 @@ void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects)
 		break;
 	case Characters::ECurrentEditor::ECameraSettings:
 		UpdateCameraSettings();
+		break;
+	case Characters::ECurrentEditor::EGameObjectHierarchy:
+		// UpdateGOHierarchy();
 		break;
 	case Characters::ECurrentEditor::COUNT:
 		break;
@@ -146,6 +151,11 @@ void Characters::EditorGUI::UpdateHieracrhy(std::vector<VirtualObject*> someObje
 		}
 	}
 	ImGui::EndChild();
+}
+
+void Characters::EditorGUI::UpdateGameObjHierarchy(std::vector<GameObject*> someObjects)
+{
+
 }
 
 void Characters::EditorGUI::UpdateCameraSettings()

@@ -1,9 +1,13 @@
 #include "GameObjectHandler.h"
 #include "VirtualObject.h"
+#include "DotGraphics.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Cube.h"
 #include "Collisions.h"
+
+using namespace DotsRendering;
 
 void Engine::GameObjectHandler::ProcessMessages(MessageSystem::Message* aMessage)
 {
@@ -55,6 +59,29 @@ std::future<void> Engine::GameObjectHandler::DeleteGameObject(GameObject* object
                 myObjects_sPtr.end()
             );
         });
+}
+
+std::future<GameObject*> Engine::GameObjectHandler::CreateDefaultCube()
+{
+    return std::async
+    (
+        std::launch::async, [this]()
+        {
+            // Lock to ensure thread safety
+            std::lock_guard<std::mutex> lock(myObjectsMutex);
+
+            // Create the VirtualObject for the cube
+            VirtualObject* vo = new VirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+
+            // Create the GameObject
+            GameObject* newGameObject = new GameObject(vo, new Winds::BoxCollider(vo->Position, vo->GetExtents())); // This won't work - getExtents() not implemented
+
+            // Store the new objects
+            myObjects.push_back(newGameObject);
+
+            return newGameObject;
+        }
+    );
 }
 
 std::vector<GameObject*> Engine::GameObjectHandler::GetObjects()

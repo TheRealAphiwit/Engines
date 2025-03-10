@@ -5,7 +5,7 @@
 class VirtualObject;
 class ResourceHandler;
 struct GLFWwindow;
-
+class GameObject;
 class ResourceEditor;
 class ShaderEditor;
 
@@ -18,6 +18,7 @@ namespace Characters
 {
 	enum class ECurrentEditor
 	{
+		EGameObjectHierarchy,
 		EObjectHierarchy,
 		EShaderEditor,
 		EResourceViewer,
@@ -36,6 +37,7 @@ namespace Characters
 
 	private:
 		void UpdateHieracrhy(std::vector<VirtualObject*> someObjects);
+		void UpdateGameObjHierarchy(std::vector<GameObject*> someObjects);
 		void UpdateCameraSettings();
 		void UpdateSimulationPanel();
 		void RepopulateEntries(std::vector<VirtualObject*> someObjects);

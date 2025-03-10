@@ -50,6 +50,7 @@ public:
 	Shader* GetShader();
 	Texture* GetTexture();
 	glm::mat4 GetTrans();
+	glm::vec3 GetExtents(); // No logic yet
 
 	const std::string& GetTexureName() const;
 	const std::string& GetModelName() const;
