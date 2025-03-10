@@ -6,6 +6,7 @@
 #include "ResourceHandler.h"
 #include "EntityHandler.h"
 #include "MessageHandler.h"
+#include "GameObjectHandler.h"
 // #include "OpenGLFrameBuffer.h"
 
 #include <glfw3.h>
@@ -20,6 +21,7 @@ int main()
 	MessageSystem::MessageHandler& messageHandler = MessageSystem::MessageHandler::GetInstance();
     DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
 	DotsRendering::EntityHandler& entityHandler = DotsRendering::EntityHandler::GetInstance();
+    Engine::GameObjectHandler& gameObjectHandler = Engine::GameObjectHandler::GetInstance();
 
     entityHandler.Initialize();
     messageHandler.ProcessQueue("Entity");

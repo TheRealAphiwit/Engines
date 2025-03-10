@@ -156,6 +156,7 @@
     <ClCompile Include="ETime.cpp" />
     <ClCompile Include="FlyingCamera.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectHandler.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceHandler.cpp" />
