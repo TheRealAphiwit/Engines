@@ -42,14 +42,7 @@ std::future<void> Engine::GameObjectHandler::DeleteGameObject(GameObject* object
 
             std::lock_guard<std::mutex> lock(myObjectsMutex);
 
-            auto it = std::find(myObjects.begin(), myObjects.end(), object);
-            if (it != myObjects.end())
-            {
-                delete* it;
-                myObjects.erase(it);
-            }
-
-            // Remove corresponding VirtualObject if it exists
+            // Remove VirtualObject first
             myObjects_sPtr.erase(
                 std::remove_if(myObjects_sPtr.begin(), myObjects_sPtr.end(),
                     [object](const std::shared_ptr<VirtualObject>& vo)
@@ -58,6 +51,14 @@ std::future<void> Engine::GameObjectHandler::DeleteGameObject(GameObject* object
                     }),
                 myObjects_sPtr.end()
             );
+
+            // Find and delete the GameObject
+            auto it = std::find(myObjects.begin(), myObjects.end(), object);
+            if (it != myObjects.end())
+            {
+                delete* it;
+                myObjects.erase(it);
+            }
         });
 }
 

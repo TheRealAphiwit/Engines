@@ -172,6 +172,11 @@ glm::mat4 VirtualObject::GetTrans()
 	return glm::translate(glm::mat4(1.0f), Position) * rotation * glm::scale(glm::mat4(1.0f), Scale);
 }
 
+glm::vec3 VirtualObject::GetExtents()
+{
+	return Scale * 0.5f;
+}
+
 const std::string& VirtualObject::GetTexureName() const
 {
 	return myTextureName;
