@@ -45,6 +45,52 @@ void Characters::GameObjectEntry::Update()
 	ImGui::InputFloat3("Scale", *scale);
 	ImGui::SliderFloat3("Rotation", *rot, -glm::pi<float>(), glm::pi<float>());
 
+#pragma region Model
+	static std::string selectedModel = vObject->GetModelName();
+	std::unordered_map<std::string, Mesh*> meshes = ResourceHandler::GetInstance().GetMeshes();
+
+	if (ImGui::BeginCombo("Model", selectedModel.c_str()))
+	{
+		for (auto& mesh : meshes)
+		{
+			bool isSelected = (selectedModel == mesh.first);
+			if (ImGui::Selectable(mesh.first.c_str(), isSelected))
+			{
+				selectedModel = mesh.first;
+				vObject->SetMesh(*mesh.second, selectedModel);
+			}
+			if (isSelected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+#pragma endregion
+
+#pragma region Texture
+	static std::string selectedTextureName = vObject->GetTexureName();
+	std::unordered_map<std::string, Texture*> textures = ResourceHandler::GetInstance().GetTextures();
+
+	if (ImGui::BeginCombo("Texture", selectedTextureName.c_str()))
+	{
+		for (auto& texture : textures)
+		{
+			bool isSelected = (selectedTextureName == texture.first);
+			if (ImGui::Selectable(texture.first.c_str(), isSelected))
+			{
+				selectedTextureName = texture.first;
+				vObject->SetTexture(*texture.second, selectedTextureName);
+			}
+			if (isSelected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+#pragma endregion
+
 #pragma region Physics
 	ImGui::Separator();
 	ImGui::Text("Physics Properties");
@@ -62,15 +108,6 @@ void Characters::GameObjectEntry::Update()
 	if (ImGui::DragFloat("Mass", &colData.Mass, 0.1f, 0.1f, 100.0f))
 	{
 		myGameObject->SetData(colData);
-	}
-#pragma endregion
-
-#pragma region DeleteButton
-	if (ImGui::Button("Delete GameObject"))
-	{
-		DotsRendering::EntityHandler::GetInstance().DeleteVirtualObject(vObject);
-		myGameObject = nullptr;
-		Opened = false;
 	}
 #pragma endregion
 }

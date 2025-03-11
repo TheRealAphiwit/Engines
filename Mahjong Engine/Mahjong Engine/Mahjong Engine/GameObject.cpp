@@ -20,11 +20,6 @@ void GameObject::Update()
 	}
 }
 
-VirtualObject* GameObject::GetVirtualObject()
-{
-	return myVirtualObject;
-}
-
 Winds::Collider* GameObject::GetCollider()
 {
 	return myCollider;

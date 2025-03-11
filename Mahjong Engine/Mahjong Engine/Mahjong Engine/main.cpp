@@ -36,10 +36,12 @@ int main()
     float delta = 0;
 
     std::vector<VirtualObject*> objects;
+    std::vector<GameObject*> gameObjects;
 
     while (!DotsRendering::ShouldClose())
     {
 		objects = entityHandler.GetObjects();
+        gameObjects = gameObjectHandler.GetObjects();
         currentTime = glfwGetTime();
         delta = currentTime - lastTime;
         lastTime = currentTime;
@@ -50,7 +52,7 @@ int main()
         }
 
         DotsRendering::BeginRender(engine->myCamera);
-        Gui->Render(objects);
+        Gui->Render(objects, gameObjects);
         DotsRendering::End();
 
         engine->Update(delta); 

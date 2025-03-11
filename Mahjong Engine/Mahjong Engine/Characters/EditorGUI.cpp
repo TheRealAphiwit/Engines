@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "ObjectEntry.h"
 #include "EntityHandler.h"
+#include "GameObjectHandler.h"
 #include "ResourceEditor.h"
 
 #include <glm.hpp>
@@ -44,7 +45,7 @@ Characters::EditorGUI::~EditorGUI()
 int selectedItem = -1;
 bool alwaysTrue = true;
 
-void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects)
+void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects, std::vector<GameObject*> gameObjects)
 {
 	ImGui_ImplOpenGL3_NewFrame(); // Graphics setup
 	ImGui_ImplGlfw_NewFrame(); // Input setup
@@ -81,7 +82,7 @@ void Characters::EditorGUI::Render(std::vector<VirtualObject*> someObjects)
 		UpdateCameraSettings();
 		break;
 	case Characters::ECurrentEditor::EGameObjectHierarchy:
-		// UpdateGOHierarchy();
+		UpdateGameObjHierarchy(gameObjects);
 		break;
 	case Characters::ECurrentEditor::COUNT:
 		break;
@@ -155,7 +156,62 @@ void Characters::EditorGUI::UpdateHieracrhy(std::vector<VirtualObject*> someObje
 
 void Characters::EditorGUI::UpdateGameObjHierarchy(std::vector<GameObject*> someObjects)
 {
+	if (ImGui::Button("Create GameObject"))
+	{
+		// Create a new GameObject using the GameObjectHandler
+		std::future<GameObject*> future = Engine::GameObjectHandler::GetInstance().CreateDefaultCube();
 
+		try {
+			GameObject* createdObject = future.get(); // Wait for the object to be ready
+			std::cout << "Created GameObject: " << createdObject << std::endl;
+		}
+		catch (const std::exception& error) {
+			std::cerr << "Error creating GameObject: " << error.what() << std::endl;
+		}
+	}
+
+	// Ensure the list is up to date
+	if (someObjects.size() != myGameObjectEntries.size())
+	{
+		RepopulateGameObjectEntries(someObjects);
+	}
+
+	ImGui::BeginChild("GameObject Scrolling");
+
+	for (size_t i = 0; i < myGameObjectEntries.size(); i++)
+	{
+		std::string number = std::to_string(i);
+		std::string Title = number + ". GameObject";
+
+		if (ImGui::Button(Title.c_str()))
+		{
+			myGameObjectEntries[i]->Opened = !myGameObjectEntries[i]->Opened;
+			selectedItem = i;
+		}
+
+		if (!myGameObjectEntries[i]->Opened)
+		{
+			continue;
+		}
+
+		if (selectedItem == i)
+		{
+			myGameObjectEntries[i]->Update();
+
+			// Add a delete button for GameObjects
+			if (ImGui::Button("Delete GameObject"))
+			{
+				Engine::GameObjectHandler::GetInstance().DeleteGameObject(someObjects[i]);
+				RepopulateGameObjectEntries(someObjects);
+			}
+		}
+		else
+		{
+			myGameObjectEntries[i]->Opened = false;
+		}
+	}
+
+	ImGui::EndChild();
 }
 
 void Characters::EditorGUI::UpdateCameraSettings()
@@ -218,5 +274,22 @@ void Characters::EditorGUI::RepopulateEntries(std::vector<VirtualObject*> someOb
 		ObjectEntry* e = new ObjectEntry(someObjects[i]);
 
 		myObjectEntries.push_back(e);
+	}
+}
+
+void Characters::EditorGUI::RepopulateGameObjectEntries(std::vector<GameObject*> someObjects)
+{
+	for (size_t i = 0; i < myGameObjectEntries.size(); i++)
+	{
+		delete myGameObjectEntries[i];
+	}
+
+	myGameObjectEntries.clear();
+
+	for (size_t i = 0; i < someObjects.size(); i++)
+	{
+		GameObjectEntry* e = new GameObjectEntry(someObjects[i]);
+
+		myGameObjectEntries.push_back(e);
 	}
 }

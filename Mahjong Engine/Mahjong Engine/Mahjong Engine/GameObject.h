@@ -27,9 +27,7 @@ public:
 	~GameObject();
 
 	void Update();
-	VirtualObject* GetVirtualObject();
-
-
+	VirtualObject* GetVirtualObject() { return myVirtualObject; };
 
 	// -----------------------Collision properties-----------------------
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Camera.h"
+#include "GameObjectEntry.h"
 
 class VirtualObject;
 class ResourceHandler;
@@ -33,7 +34,7 @@ namespace Characters
 	public:
 		EditorGUI(GLFWwindow* aWindow, ResourceHandler* aResourceHandler, DotsRendering::Camera* aCamera, Engine::DragonEngine* aEngine);
 		~EditorGUI();
-		void Render(std::vector<VirtualObject*> someObjects);
+		void Render(std::vector<VirtualObject*> someObjects, std::vector<GameObject*> gameObjects);
 
 	private:
 		void UpdateHieracrhy(std::vector<VirtualObject*> someObjects);
@@ -41,8 +42,10 @@ namespace Characters
 		void UpdateCameraSettings();
 		void UpdateSimulationPanel();
 		void RepopulateEntries(std::vector<VirtualObject*> someObjects);
+		void RepopulateGameObjectEntries(std::vector<GameObject*> someObjects);
 		
 		std::vector<ObjectEntry*> myObjectEntries;
+		std::vector<GameObjectEntry*> myGameObjectEntries;
 		
 		Engine::DragonEngine* myEngine;
 		DotsRendering::Camera* myCamera;

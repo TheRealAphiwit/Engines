@@ -160,6 +160,7 @@
     <ClCompile Include="..\Dependencies\Imgui\include\imgui_tables.cpp" />
     <ClCompile Include="..\Dependencies\Imgui\include\imgui_widgets.cpp" />
     <ClCompile Include="EditorGUI.cpp" />
+    <ClCompile Include="GameObjectEntry.cpp" />
     <ClCompile Include="ObjectEntry.cpp" />
     <ClCompile Include="ResourceEditor.cpp" />
     <ClCompile Include="ShaderEditor.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="..\Dependencies\Imgui\include\imstb_textedit.h" />
     <ClInclude Include="..\Dependencies\Imgui\include\imstb_truetype.h" />
     <ClInclude Include="EditorGUI.h" />
+    <ClInclude Include="GameObjectEntry.h" />
     <ClInclude Include="ObjectEntry.h" />
     <ClInclude Include="ResourceEditor.h" />
     <ClInclude Include="ShaderEditor.h" />
