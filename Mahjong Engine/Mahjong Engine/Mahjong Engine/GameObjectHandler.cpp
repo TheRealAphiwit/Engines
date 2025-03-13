@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Cube.h"
 #include "Collisions.h"
+#include "ResourceHandler.h"
 
 using namespace DotsRendering;
 
@@ -64,25 +65,34 @@ std::future<void> Engine::GameObjectHandler::DeleteGameObject(GameObject* object
 
 std::future<GameObject*> Engine::GameObjectHandler::CreateDefaultCube()
 {
-    return std::async
-    (
-        std::launch::async, [this]()
+    return std::async(std::launch::async, []() -> GameObject*
         {
-            // Lock to ensure thread safety
-            std::lock_guard<std::mutex> lock(myObjectsMutex);
+            std::cout << "Creating default cube..." << std::endl;
 
-            // Create the VirtualObject for the cube
-            VirtualObject* vo = new VirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+            auto name = std::make_shared<std::string>("Cube");
+            Mesh* mesh = ResourceHandler::GetInstance().GetMesh("Cube");
+            Texture* texture = ResourceHandler::GetInstance().GetTexture("Default");
+            Shader* shader = ResourceHandler::GetInstance().GetShader("Default");
 
-            // Create the GameObject
-            GameObject* newGameObject = new GameObject(vo, new Winds::BoxCollider(vo->Position, vo->GetExtents())); // This won't work - getExtents() not implemented
+            if (!mesh || !texture || !shader)
+            {
+                std::cerr << "Failed to get resources for Cube!" << std::endl;
+                return nullptr;
+            }
 
-            // Store the new objects
-            myObjects.push_back(newGameObject);
+            GameObject* newObject = new GameObject(name, mesh, texture, shader, nullptr);
 
-            return newGameObject;
-        }
-    );
+            if (!newObject)
+            {
+                std::cerr << "Failed to create GameObject!" << std::endl;
+                return nullptr;
+            }
+
+            std::cout << "Registering GameObject in EntityHandler: " << newObject->GetVirtualObject() << std::endl;
+            DotsRendering::EntityHandler::GetInstance().AddVirtualObject(newObject->GetVirtualObject());
+
+            return newObject;
+        });
 }
 
 std::vector<GameObject*> Engine::GameObjectHandler::GetObjects()

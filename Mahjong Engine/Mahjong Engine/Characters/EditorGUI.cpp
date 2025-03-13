@@ -163,10 +163,18 @@ void Characters::EditorGUI::UpdateGameObjHierarchy(std::vector<GameObject*> some
 
 		try {
 			GameObject* createdObject = future.get(); // Wait for the object to be ready
-			std::cout << "Created GameObject: " << createdObject << std::endl;
+
+			if (createdObject)
+			{
+				std::cout << "Successfully created GameObject: " << createdObject << std::endl;
+			}
+			else
+			{
+				std::cerr << "Error: GameObject creation returned nullptr!" << std::endl;
+			}
 		}
 		catch (const std::exception& error) {
-			std::cerr << "Error creating GameObject: " << error.what() << std::endl;
+			std::cerr << "Exception while creating GameObject: " << error.what() << std::endl;
 		}
 	}
 

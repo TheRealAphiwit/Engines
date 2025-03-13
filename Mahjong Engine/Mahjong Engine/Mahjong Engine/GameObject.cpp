@@ -1,14 +1,27 @@
 #include "GameObject.h"
-#include "Collisions.h"
-#include "VirtualObject.h"
 
 GameObject::GameObject(VirtualObject* anObject, Winds::Collider* aCollider) : myVirtualObject(anObject), myCollider(aCollider)
 {
+	myVirtualObject = anObject;
+	myCollider = aCollider;
+}
+
+GameObject::GameObject(std::shared_ptr<std::string> name, Mesh* mesh, Texture* texture, Shader* shader, Winds::Collider* aCollider)
+{
+	myVirtualObject = new VirtualObject(name, mesh, texture, shader);
+	myCollider = aCollider;
+
+	// Register the same VirtualObject in EntityHandler
+	DotsRendering::EntityHandler::GetInstance().AddVirtualObject(myVirtualObject);
 }
 
 GameObject::~GameObject()
 {
 	myCollider = nullptr;
+
+	// Remove VirtualObject from EntityHandler before deleting it
+	DotsRendering::EntityHandler::GetInstance().DeleteVirtualObject(myVirtualObject);
+	delete myVirtualObject;
 }
 
 void GameObject::Update()

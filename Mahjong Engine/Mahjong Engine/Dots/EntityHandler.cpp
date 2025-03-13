@@ -114,6 +114,20 @@ std::future<VirtualObject*> DotsRendering::EntityHandler::ThreadCreateVirtualObj
 	*/
 }
 
+void DotsRendering::EntityHandler::AddVirtualObject(VirtualObject* object)
+{
+	if (object == nullptr)
+	{
+		std::cout << "Error: Trying to add a nullptr VirtualObject to EntityHandler!\n";
+		return;
+	}
+
+	std::lock_guard<std::mutex> lock(myObjectsMutex);
+	myObjects.push_back(object);
+
+	std::cout << "VirtualObject added: " << object << " Total objects: " << myObjects.size() << "\n";
+}
+
 std::future<void> DotsRendering::EntityHandler::ThreadDeleteVirtualObject(VirtualObject* object)
 {
 	return std::async
@@ -183,5 +197,13 @@ void DotsRendering::EntityHandler::CreateDefaultSphere()
 
 std::vector<VirtualObject*> DotsRendering::EntityHandler::GetObjects()
 {
+	std::lock_guard<std::mutex> lock(myObjectsMutex);
+
+	//Print out all objects
+	for (int i = 0; i < myObjects.size(); i++)
+	{
+		std::cout << "Object: " << myObjects[i]->GetName() << std::endl;
+	}
+
 	return myObjects;
 }

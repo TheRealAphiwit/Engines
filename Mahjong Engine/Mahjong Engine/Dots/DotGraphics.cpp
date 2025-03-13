@@ -141,6 +141,12 @@ void DotsRendering::BeginRender(Camera* camera)
 
 	for (int i = 0; i < objects.size(); i++)
 	{
+		if (objects[i] == nullptr)
+		{
+			std::cout << "Warning: Found nullptr object in EntityHandler!\n";
+			continue;
+		}
+
 		objects[i]->Draw(camera);
 	}
 
