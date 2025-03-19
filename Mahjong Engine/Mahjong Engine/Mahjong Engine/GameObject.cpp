@@ -19,9 +19,12 @@ GameObject::~GameObject()
 {
 	myCollider = nullptr;
 
-	// Remove VirtualObject from EntityHandler before deleting it
-	DotsRendering::EntityHandler::GetInstance().DeleteVirtualObject(myVirtualObject);
-	delete myVirtualObject;
+	if (myVirtualObject)
+	{
+		// Let EntityHandler handle deletion
+		DotsRendering::EntityHandler::GetInstance().DeleteVirtualObject(myVirtualObject);
+		myVirtualObject = nullptr;
+	}
 }
 
 void GameObject::Update()

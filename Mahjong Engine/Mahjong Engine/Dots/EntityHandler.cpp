@@ -36,17 +36,17 @@ void DotsRendering::EntityHandler::ProcessMessages(MessageSystem::Message* aMess
 void DotsRendering::EntityHandler::Initialize()
 {
 	// Move this to EntityHandler::Initialize() to see if it works
-	for (size_t i = 0; i < 3; i++)
-	{
-		// Normal version
-		//CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+	//for (size_t i = 0; i < 3; i++)
+	//{
+	//	// Normal version
+	//	//CreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
 
-		// Thread version
-		ThreadCreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
-	}
+	//	// Thread version
+	//	ThreadCreateVirtualObject(std::make_shared<std::string>("Cube"), myCube, myTexture, myShader);
+	//}
 
 	// Send request to create default cube
-	MessageSystem::MessageHandler::GetInstance().CreateMessage("Entity", "Request: Thread Create Default Cube Entity");
+	// MessageSystem::MessageHandler::GetInstance().CreateMessage("Entity", "Request: Thread Create Default Cube Entity");
 }
 
 void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
@@ -152,16 +152,14 @@ std::future<void> DotsRendering::EntityHandler::ThreadDeleteVirtualObject(Virtua
 
 void DotsRendering::EntityHandler::DeleteVirtualObject(VirtualObject* object)
 {
-	if (!object) { return; }
+	if (!object) return;
 
-	for (int i = 0; i < myObjects.size(); i++)
+	auto it = std::find(myObjects.begin(), myObjects.end(), object);
+	if (it != myObjects.end())
 	{
-		if (myObjects[i] == object)
-		{
-			myObjects.erase(myObjects.begin() + i);
-			delete object;
-			return;
-		}
+		myObjects.erase(it);
+		delete object;
+		object = nullptr; // Avoid dangling pointer issues
 	}
 }
 
@@ -200,10 +198,11 @@ std::vector<VirtualObject*> DotsRendering::EntityHandler::GetObjects()
 	std::lock_guard<std::mutex> lock(myObjectsMutex);
 
 	//Print out all objects
-	for (int i = 0; i < myObjects.size(); i++)
+	/*for (int i = 0; i < myObjects.size(); i++)
 	{
 		std::cout << "Object: " << myObjects[i]->GetName() << std::endl;
 	}
+	*/
 
 	return myObjects;
 }

@@ -7,12 +7,15 @@ class Texture;
 class Shader
 {
 private:
+	std::string myName;
+	unsigned int myShaderProgram;
+
 	std::string LoadShader(const char* shaderPath);
 	unsigned int LoadVertexShader(const char* vertexShaderPath);
 	unsigned int LoadFragmentShader(const char* fragmentShaderPath);
 
 public:
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader(const std::string& name, const char* vertexPath, const char* fragmentPath);
 	~Shader();
 
 	bool RecompileShader(const char* vertexPath, const char* fragmentPath);
@@ -26,6 +29,7 @@ public:
 	void SetFloat(float floatValue, const std::string& name);
 	void SetInt(int intValue, const std::string& name);
 
-	unsigned int myShaderProgram;
+	std::string GetName() const { return myName; }
+
 	void Use();
 };

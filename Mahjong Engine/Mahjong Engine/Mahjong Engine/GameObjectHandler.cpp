@@ -65,8 +65,11 @@ std::future<void> Engine::GameObjectHandler::DeleteGameObject(GameObject* object
 
 std::future<GameObject*> Engine::GameObjectHandler::CreateDefaultCube()
 {
-    return std::async(std::launch::async, []() -> GameObject*
+	std::cout << "GameObjectHandler.cpp: Outside lambda..." << std::endl;
+
+    return std::async(std::launch::deferred, []() -> GameObject*
         {
+            std::cout << "GameObjectHandler.cpp: Inside lambda..." << std::endl;
             std::cout << "Creating default cube..." << std::endl;
 
             auto name = std::make_shared<std::string>("Cube");
@@ -80,7 +83,11 @@ std::future<GameObject*> Engine::GameObjectHandler::CreateDefaultCube()
                 return nullptr;
             }
 
-            GameObject* newObject = new GameObject(name, mesh, texture, shader, nullptr);
+            // Create col
+            Winds::BoxCollider* collider = new Winds::BoxCollider(glm::vec3(0.0f), glm::vec3(0.5f));
+
+            // Create GO
+            GameObject* newObject = new GameObject(name, mesh, texture, shader, collider);
 
             if (!newObject)
             {
@@ -90,6 +97,12 @@ std::future<GameObject*> Engine::GameObjectHandler::CreateDefaultCube()
 
             std::cout << "Registering GameObject in EntityHandler: " << newObject->GetVirtualObject() << std::endl;
             DotsRendering::EntityHandler::GetInstance().AddVirtualObject(newObject->GetVirtualObject());
+			
+            // Add in the GameObjectHandler
+			{
+				std::lock_guard<std::mutex> lock(GameObjectHandler::GetInstance().myObjectsMutex);
+				GameObjectHandler::GetInstance().myObjects.push_back(newObject);
+			}
 
             return newObject;
         });

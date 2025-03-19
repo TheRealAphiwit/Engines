@@ -83,12 +83,12 @@ unsigned int Shader::LoadFragmentShader(const char* fragmentShaderPath)
     return shaderObject;
 }
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const std::string& name, const char* vertexPath, const char* fragmentPath) : myName(name)
 {
-    if (!RecompileShader(vertexPath, fragmentPath))
-    {
-        delete this;
-    }
+	if (!RecompileShader(vertexPath, fragmentPath))
+	{
+		delete this;
+	}
 }
 
 Shader::~Shader()

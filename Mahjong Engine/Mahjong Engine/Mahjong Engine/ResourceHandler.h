@@ -30,6 +30,7 @@ public:
 	void CreateTexture(const char* aTexturePath, bool shouldAlpha, std::string aName); // Should make a seperate one for 2D images
 	void CreateMesh(const char* aModelPath, std::string aName);
 	void RegisterMesh(Mesh* aMesh, std::string meshName);
+	void RegisterShader(Shader* aShader);
 
 	Shader* GetShader(std::string	aName);
 	Texture* GetTexture(std::string	aName);

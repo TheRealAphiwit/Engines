@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "ObjLoader.h"
+#include <iostream>
 
 ResourceHandler::ResourceHandler()
 {
@@ -27,11 +28,22 @@ void ResourceHandler::ProcessMessages(MessageSystem::Message* aMessage)
 
 void ResourceHandler::CreateShader(const char* aVertexPath, const char* aFragmentPath, std::string aName)
 {
-	Shader* newShader = new Shader(aVertexPath, aFragmentPath);
-	if (newShader->myShaderProgram != 0)
+	if (myShaders.find(aName) != myShaders.end())
 	{
-		myShaders.emplace(aName, newShader);
+		std::cerr << "Shader with name '" << aName << "' already exists!\n";
+		return;
 	}
+
+	Shader* newShader = new Shader(aName, aVertexPath, aFragmentPath);
+
+	if (!newShader)
+	{
+		std::cerr << "Failed to create shader: " << aName << std::endl;
+		return;
+	}
+
+	myShaders[aName] = newShader; // Store shader with the correct name
+	std::cout << "Shader '" << aName << "' created successfully!" << std::endl;
 }
 
 void ResourceHandler::CreateTexture(const char* aTexturePath, bool shouldAlpha, std::string aName)
@@ -51,6 +63,11 @@ void ResourceHandler::CreateMesh(const char* aModelPath, std::string aName)
 void ResourceHandler::RegisterMesh(Mesh* aMesh, std::string meshName)
 {
 	myMeshes.emplace(meshName, aMesh);
+}
+
+void ResourceHandler::RegisterShader(Shader* aShader)
+{
+	myShaders.emplace(aShader->GetName(), aShader);
 }
 
 Shader* ResourceHandler::GetShader(std::string aName)

@@ -24,7 +24,7 @@ int main()
     Engine::GameObjectHandler& gameObjectHandler = Engine::GameObjectHandler::GetInstance();
 
     entityHandler.Initialize();
-    messageHandler.ProcessQueue("Entity");
+    // messageHandler.ProcessQueue("Entity");
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
     Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources, renderData.camera, engine);
     Winds::Winds_Physics* Physics = new Winds::Winds_Physics(engine);
@@ -57,8 +57,14 @@ int main()
 
         engine->Update(delta); 
 
-        // 0 check first- currently it freezes
-		// messageHandler.ProcessQueue("Entity");
+        try
+        {
+			messageHandler.ProcessQueue("Entity");
+        }
+        catch (const std::exception&)
+        {
+			std::cout << "Error in messageHandler.ProcessQueue(\"Entity\")" << std::endl;
+        }
     }
 
 	glfwTerminate();
