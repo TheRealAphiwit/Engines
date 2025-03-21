@@ -94,9 +94,6 @@ std::future<GameObject*> Engine::GameObjectHandler::CreateDefaultCube()
                 std::cerr << "Failed to create GameObject!" << std::endl;
                 return nullptr;
             }
-
-            std::cout << "Registering GameObject in EntityHandler: " << newObject->GetVirtualObject() << std::endl;
-            DotsRendering::EntityHandler::GetInstance().AddVirtualObject(newObject->GetVirtualObject());
 			
             // Add in the GameObjectHandler
 			{
