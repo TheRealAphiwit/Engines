@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Winds_Physics.h"
 
 GameObject::GameObject(VirtualObject* anObject, Winds::Collider* aCollider) : myVirtualObject(anObject), myCollider(aCollider)
 {
@@ -13,6 +14,9 @@ GameObject::GameObject(std::shared_ptr<std::string> name, Mesh* mesh, Texture* t
 
 	// Register the same VirtualObject in EntityHandler
 	DotsRendering::EntityHandler::GetInstance().AddVirtualObject(myVirtualObject);
+
+	// Add collider to Winds_Physics
+	Winds::Winds_Physics::GetInstance().AddCollider(myCollider);
 }
 
 GameObject::~GameObject()
@@ -44,6 +48,9 @@ Winds::Collider* GameObject::GetCollider()
 void GameObject::CreateSphereCollider(const float& aRadius)
 {
 	myCollider = new Winds::SphereCollider(myVirtualObject->Position, aRadius);
+
+	// Add collider to Winds_Physics
+	Winds::Winds_Physics::GetInstance().AddCollider(myCollider);
 }
 
 void GameObject::CreateBoxCollider(const glm::vec3 someExtents)

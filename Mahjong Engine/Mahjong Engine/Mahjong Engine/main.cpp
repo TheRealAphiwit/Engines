@@ -27,7 +27,7 @@ int main()
     // messageHandler.ProcessQueue("Entity");
     Engine::DragonEngine* engine = new Engine::DragonEngine(renderData.window, renderData.camera);
     Characters::EditorGUI* Gui = new Characters::EditorGUI(renderData.window, &resources, renderData.camera, engine);
-    Winds::Winds_Physics* Physics = new Winds::Winds_Physics(engine);
+	Winds::Winds_Physics& Physics = Winds::Winds_Physics::GetInstance();
 
     glfwSetInputMode(renderData.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // GLFW_CURSOR diff
 
@@ -48,7 +48,7 @@ int main()
 
         if (engine->IsSimulating())
         {
-            Physics->Simulate(delta);
+			Physics.Simulate(delta);
         }
 
         DotsRendering::BeginRender(engine->myCamera);

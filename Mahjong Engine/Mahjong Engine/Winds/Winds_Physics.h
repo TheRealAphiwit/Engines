@@ -27,14 +27,21 @@ namespace Winds
 	class Collider;
 	class PlaneCollider;
 	struct Collision;
-}
 
-namespace Winds
-{
 	class Winds_Physics
 	{
 	public:
-		Winds_Physics(Engine::DragonEngine* aEngine);
+		//Singelton setup
+		static Winds_Physics& GetInstance()
+		{
+			static Winds_Physics instance;
+			return instance;
+		}
+
+		Winds_Physics(Winds_Physics const&) = delete;
+		Winds_Physics& operator=(Winds_Physics const&) = delete;
+
+		void Initialize(Engine::DragonEngine* aEngine);
 		void Simulate(const float aDeltaTime);
 
 		void ApplyGravity(std::vector<Collider*> colliders, const float& dt);
@@ -50,10 +57,16 @@ namespace Winds
 
 		bool MahjongRaycast(const Ray& aRay, RayHit& aHit);
 
-	private:
-		std::vector<Collider*> colliders;
-		Engine::DragonEngine* myEngine;
+		std::vector<Collider*> GetColliders() { return colliders; }
+		void AddCollider(Collider* aCollider) { colliders.push_back(aCollider); }
 
-		PlaneCollider* main_plane;
+	private:
+		Winds_Physics() = default;
+		~Winds_Physics() = default;
+
+		std::vector<Collider*> colliders;
+		Engine::DragonEngine* myEngine = nullptr;
+		PlaneCollider* main_plane = nullptr;
+		std::mutex myMutex;
 	};
 }

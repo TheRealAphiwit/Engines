@@ -12,7 +12,7 @@
 
 namespace Winds
 {
-	Winds_Physics::Winds_Physics(Engine::DragonEngine* aEngine)
+	void Winds_Physics::Initialize(Engine::DragonEngine* aEngine)
 	{
 		myEngine = aEngine;
 
