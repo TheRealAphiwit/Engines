@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm.hpp>
+#include <mutex>
 #include <vector>
 #include <optional>
 #include "Raycast.h"

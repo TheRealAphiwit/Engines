@@ -3,6 +3,7 @@
 #include "../Mahjong Engine/GameObject.h"
 #include "Collisions.h"
 #include "Intersections.h"
+#include "../Mahjong Engine/GameObjectHandler.h"
 #include <iostream>
 #include "VirtualObject.h" // This is fine
 #include <gtc/matrix_transform.hpp>
@@ -208,7 +209,7 @@ namespace Winds
 		std::vector<Collider*> cols;
 		cols.push_back(main_plane);
 
-		for (GameObject* c : myEngine->GetGameObjects())
+		for (GameObject* c : Engine::GameObjectHandler::GetInstance().GetObjects())
 		{
 			Collider* col = c->GetCollider();
 			if (col != nullptr)
@@ -245,7 +246,7 @@ namespace Winds
 	}
 	void Winds_Physics::UpdateVisuals()
 	{
-		for (GameObject* c : myEngine->GetGameObjects())
+		for (GameObject* c : Engine::GameObjectHandler::GetInstance().GetObjects())
 		{
 			Collider* col = c->GetCollider();
 			if (col != nullptr)
