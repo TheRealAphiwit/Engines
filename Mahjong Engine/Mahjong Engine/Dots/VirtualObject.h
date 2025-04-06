@@ -28,6 +28,8 @@ public:
 	void SetMesh(Mesh& mesh, std::string& name);
 	void SetTexture(Texture& texture, std::string& name);
 	void SetShader(Shader& shader, std::string& name);
+	void SetAlbedoTexture(Texture& texture, std::string& name);
+	void SetSpecularTexture(Texture& texture, std::string& name);
 
 	// Transforms
 	void SetRotation(const glm::vec3& aRotation);
@@ -39,7 +41,6 @@ public:
 	void SetTextureName(std::string name);
 	void SetShaderName(std::string name);
 #pragma endregion
-
 
 	void Draw(DotsRendering::Camera* camera);
 
@@ -55,6 +56,7 @@ public:
 	const std::string& GetTexureName() const;
 	const std::string& GetModelName() const;
 	const std::string& GetShaderName() const;
+	const std::string& GetTextureName() const; // Using name since we'll store texture with name and value
 
 	glm::mat4 GetModelMatrix() const;
 
@@ -75,6 +77,9 @@ private:
 	std::string myShaderName;
 	
 	Mesh* myMesh;
-	Texture* myTexture;
 	Shader* myShader;
+	Texture* myTexture;
+	Texture* albedoTexture;
+	Texture* specularTexture;
+	float shininess;
 };

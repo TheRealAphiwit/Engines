@@ -192,6 +192,11 @@ const std::string& VirtualObject::GetShaderName() const
 	return myShaderName;
 }
 
+const std::string& VirtualObject::GetTextureName() const
+{
+	return myTextureName;
+}
+
 glm::mat4 VirtualObject::GetModelMatrix() const
 {
 	glm::mat4 model = glm::mat4(1.0f);
