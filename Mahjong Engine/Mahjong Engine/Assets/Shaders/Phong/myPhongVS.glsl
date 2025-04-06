@@ -10,8 +10,8 @@ in vec2 in_UV;
 in vec3 in_Normal;
 
 // Output data for the fragment shader
-out vec3 v_normal;  // Transformed normals
 out vec2 UV_Coord;  
+out vec3 v_normal;  // Transformed normals
 out vec3 position;  // World-space position of the vertex
 out vec3 vecToEye;  // Vector from vertex to the camera
 
