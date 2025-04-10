@@ -4,6 +4,7 @@
 #include <glm.hpp>
 #include <thread>
 #include "ISerializable.h"
+#include "Material.h"
 
 class Mesh;
 class Texture;
