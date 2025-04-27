@@ -1,4 +1,5 @@
 #version 410
+uniform Material material;
 
 uniform sampler2D diffuseMap; // New
 uniform sampler2D albedoMap; // New
@@ -23,6 +24,13 @@ in vec3 position;
 in vec3 vecToEye;
 
 out vec4 fragColor;
+
+struct Material {
+    sampler2D albedo;
+    sampler2D specular;
+    sampler2D normal;
+    float shininess;
+};
 
 void main() 
 {

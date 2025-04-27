@@ -150,13 +150,14 @@ void Shader::SetVector2(glm::vec2 vector2Value, const std::string& name)
 {
 }
 
-void Shader::SetFloat(float floatValue, const std::string& name)
+void Shader::SetFloat(const std::string& name, float floatValue)
 {
     glUniform1f(glGetUniformLocation(myShaderProgram, name.c_str()), floatValue);
 }
 
-void Shader::SetInt(int intValue, const std::string& name)
+void Shader::SetInt(const std::string& name, int intValue)
 {
+	glUniform1i(glGetUniformLocation(myShaderProgram, name.c_str()), intValue);
 }
 
 void Shader::Use()

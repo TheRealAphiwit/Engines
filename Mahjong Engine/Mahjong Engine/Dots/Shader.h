@@ -26,8 +26,8 @@ public:
 	void SetVector4(glm::vec4 vector4Value, const std::string& name);
 	void SetVector3(glm::vec3 vector3Value, const std::string& name);
 	void SetVector2(glm::vec2 vector2Value, const std::string& name);
-	void SetFloat(float floatValue, const std::string& name);
-	void SetInt(int intValue, const std::string& name);
+	void SetFloat(const std::string& name, float floatValue);
+	void SetInt(const std::string& name, int intValue);
 
 	std::string GetName() const { return myName; }
 

@@ -18,7 +18,7 @@ namespace DotsRendering
 class VirtualObject : public ISerializable
 {
 public:
-	VirtualObject(std::shared_ptr<std::string> name, Mesh* mesh, Texture* texture, Shader* shader); // This is the updated one we'll try to use
+	VirtualObject(std::shared_ptr<std::string> name, Mesh* mesh, Material* material, Shader* shader); // This is the updated one we'll try to use
 
 	const std::string& GetName() const;
 	std::shared_ptr<std::string> GetNamePtr();

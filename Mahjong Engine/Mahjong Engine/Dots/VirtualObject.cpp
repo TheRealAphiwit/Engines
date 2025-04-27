@@ -21,7 +21,8 @@
 //	Scale = glm::vec3(1, 1, 1);
 //}
 
-VirtualObject::VirtualObject(std::shared_ptr<std::string> name, Mesh * mesh, Texture * texture, Shader * shader) : myName(std::move(name)), myMesh(mesh), myTexture(texture), myShader(shader), myModelName("None"), myShaderName("None"), myTextureName("None")
+VirtualObject::VirtualObject(std::shared_ptr<std::string> name, Mesh* mesh, Material* material, Shader* shader)
+	: myName(std::move(name)), myMesh(mesh), myMaterial(material), myShader(shader), myModelName("None"), myShaderName("None")
 {
 	Position = glm::vec3(0, 0, 0);
 	Rotation = glm::vec3(0, 0, 0);
@@ -47,24 +48,6 @@ void VirtualObject::SetMesh(Mesh& mesh, std::string& name)
 {
 	myMesh = &mesh;
 	myModelName = name;
-}
-
-void VirtualObject::SetTexture(Texture& texture, std::string& name)
-{
-	myTexture = &texture;
-	myTextureName = name;
-}
-
-void VirtualObject::SetAlbedoTexture(Texture& texture, std::string& name)
-{
-	myTexture = &texture;
-	myTextureName = name;
-}
-
-void VirtualObject::SetSpecularTexture(Texture& texture, std::string& name)
-{
-	myTexture = &texture;
-	myTextureName = name;
 }
 
 void VirtualObject::SetShader(Shader& shader, std::string& name)
@@ -109,7 +92,24 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	trans = glm::scale(trans, Scale);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, myMaterial->myTexture->TextureObject); // This needs to be updated to use the correct texture
+	#pragma region Alt Version
+	//glBindTexture(GL_TEXTURE_2D, myMaterial->GetAlbedoMap()->GetTextureID());
+	#pragma endregion
+	myMaterial->GetAlbedoMap()->Bind();
+	myShader->SetInt("material.albedo", 0);
+
+	// Specular map
+	glActiveTexture(GL_TEXTURE1);
+	myMaterial->GetSpecularMap()->Bind();
+	myShader->SetInt("material.specular", 1);
+
+	// Normal map (if you use it)
+	glActiveTexture(GL_TEXTURE2);
+	myMaterial->GetNormalMap()->Bind();
+	myShader->SetInt("material.normal", 2);
+
+	// Set shininess
+	myShader->SetFloat("material.shininess", myMaterial->GetShininess());
 
 	// Default version
 	myShader->SetMatrix4(trans, "transform");
