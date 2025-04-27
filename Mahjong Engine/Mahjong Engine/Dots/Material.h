@@ -17,8 +17,13 @@ public:
 	// Getters - todo: add name getters
 	float GetShininess() const { return Shininess; }
 	Texture* GetAlbedoMap() const { return AlbedoMap; }
+	std::string GetAlbedoMapName() const { return AlbedoMapName; }
+
 	Texture* GetSpecularMap() const { return SpecularMap; }
+	std::string GetSpecularMapName() const { return SpecularMapName; }
+	
 	Texture* GetNormalMap() const { return NormalMap; }
+	std::string GetNormalMapName() const { return NormalMapName; }
 
 protected:
 	float Shininess = 0.0f;

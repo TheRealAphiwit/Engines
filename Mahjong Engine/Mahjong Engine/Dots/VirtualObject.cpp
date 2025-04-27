@@ -55,6 +55,18 @@ void VirtualObject::SetTexture(Texture& texture, std::string& name)
 	myTextureName = name;
 }
 
+void VirtualObject::SetAlbedoTexture(Texture& texture, std::string& name)
+{
+	myTexture = &texture;
+	myTextureName = name;
+}
+
+void VirtualObject::SetSpecularTexture(Texture& texture, std::string& name)
+{
+	myTexture = &texture;
+	myTextureName = name;
+}
+
 void VirtualObject::SetShader(Shader& shader, std::string& name)
 {
 	myShader = &shader;
@@ -81,11 +93,6 @@ void VirtualObject::SetMeshName(std::string name)
 	myModelName = name;
 }
 
-void VirtualObject::SetTextureName(std::string name)
-{
-	myTextureName = name;
-}
-
 void VirtualObject::SetShaderName(std::string name)
 {
 	myShaderName = name;
@@ -102,14 +109,14 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	trans = glm::scale(trans, Scale);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, myTexture->TextureObject);
+	glBindTexture(GL_TEXTURE_2D, myMaterial->myTexture->TextureObject); // This needs to be updated to use the correct texture
 
 	// Default version
 	myShader->SetMatrix4(trans, "transform");
 	myShader->SetMatrix4(camera->myView, "view");
 	myShader->SetMatrix4(camera->myProjection, "projection");
 
-#pragma region Phong Version
+	#pragma region Phong Version
 	//// Bind transformation matrices
 	//myShader->SetMatrix4(trans, "modelMatrix");
 	//myShader->SetMatrix4(camera->myView, "viewMatrix");
@@ -145,7 +152,7 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	//// Set primary color for debugging or tinting
 	//glm::vec4 primaryColor(1.0f, 1.0f, 1.0f, 1.0f); // White by default
 	//myShader->SetVector4(primaryColor, "primaryColorVec4");
-#pragma endregion
+	#pragma endregion
 
 	// Camera pos = light pos
 	//myShader->SetVector3(camera->GetCameraPosition(), "light_position");
@@ -160,11 +167,6 @@ Shader* VirtualObject::GetShader()
 	return myShader;
 }
 
-Texture* VirtualObject::GetTexture()
-{
-	return myTexture;
-}
-
 glm::mat4 VirtualObject::GetTrans()
 {
 	glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
@@ -177,11 +179,6 @@ glm::vec3 VirtualObject::GetExtents()
 	return Scale * 0.5f;
 }
 
-const std::string& VirtualObject::GetTexureName() const
-{
-	return myTextureName;
-}
-
 const std::string& VirtualObject::GetModelName() const
 {
 	return myModelName;
@@ -190,11 +187,6 @@ const std::string& VirtualObject::GetModelName() const
 const std::string& VirtualObject::GetShaderName() const
 {
 	return myShaderName;
-}
-
-const std::string& VirtualObject::GetTextureName() const
-{
-	return myTextureName;
 }
 
 glm::mat4 VirtualObject::GetModelMatrix() const

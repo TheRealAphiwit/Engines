@@ -24,24 +24,20 @@ public:
 	std::shared_ptr<std::string> GetNamePtr();
 	void SetName(const std::string& name); // #? Might be used when I make a handler that oversees objects with same name
 
-#pragma region Setters
+	#pragma region Setters
 	// Visuals
 	void SetMesh(Mesh& mesh, std::string& name);
-	void SetTexture(Texture& texture, std::string& name);
 	void SetShader(Shader& shader, std::string& name);
-	void SetAlbedoTexture(Texture& texture, std::string& name);
-	void SetSpecularTexture(Texture& texture, std::string& name);
 
 	// Transforms
 	void SetRotation(const glm::vec3& aRotation);
 	void SetTransform(const glm::mat4& aTransform);
-#pragma endregion
+	#pragma endregion
 
-#pragma region Setters For Names
+	#pragma region Setters for Mesh and Shader names
 	void SetMeshName(std::string name);
-	void SetTextureName(std::string name);
 	void SetShaderName(std::string name);
-#pragma endregion
+	#pragma endregion
 
 	void Draw(DotsRendering::Camera* camera);
 
@@ -50,14 +46,11 @@ public:
 	glm::vec3 Rotation;
 
 	Shader* GetShader();
-	Texture* GetTexture();
 	glm::mat4 GetTrans();
 	glm::vec3 GetExtents(); // No logic yet
 
-	const std::string& GetTexureName() const;
 	const std::string& GetModelName() const;
 	const std::string& GetShaderName() const;
-	const std::string& GetTextureName() const; // Using name since we'll store texture with name and value
 
 	glm::mat4 GetModelMatrix() const;
 
@@ -73,14 +66,11 @@ public:
 
 private:
 	std::shared_ptr<std::string> myName;
-	std::string myTextureName;
 	std::string myModelName;
 	std::string myShaderName;
 	
 	Mesh* myMesh;
 	Shader* myShader;
-	Texture* myTexture;
-	Texture* albedoTexture;
-	Texture* specularTexture;
+	Material* myMaterial;
 	float shininess;
 };
