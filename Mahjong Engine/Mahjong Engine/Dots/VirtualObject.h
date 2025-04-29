@@ -37,6 +37,7 @@ public:
 	#pragma region Setters for Mesh and Shader names
 	void SetMeshName(std::string name);
 	void SetShaderName(std::string name);
+	void SetMaterialName(std::string name) { myMaterialName = name; } // Added for material name
 	#pragma endregion
 
 	void Draw(DotsRendering::Camera* camera);
@@ -51,6 +52,7 @@ public:
 
 	const std::string& GetModelName() const;
 	const std::string& GetShaderName() const;
+	const std::string& GetMaterialName() const { return myMaterialName; } // Added for material name
 
 	glm::mat4 GetModelMatrix() const;
 
@@ -68,6 +70,7 @@ private:
 	std::shared_ptr<std::string> myName;
 	std::string myModelName;
 	std::string myShaderName;
+	std::string myMaterialName;
 	
 	Mesh* myMesh;
 	Shader* myShader;

@@ -215,14 +215,33 @@ bool VirtualObject::WriteTo(std::ofstream& outFile) const
 	outFile.write(reinterpret_cast<const char*>(&Scale), sizeof(Scale));
 	outFile.write(reinterpret_cast<const char*>(&Rotation), sizeof(Rotation));
 
-	// Serialize model, texture and shader names - we'll use names as identifiers
+	// Serialize model, material and shader names - we'll use names as identifiers
 	size_t modelNameSize = myModelName.size();
 	outFile.write(reinterpret_cast<const char*>(&modelNameSize), sizeof(modelNameSize));
 	outFile.write(myModelName.c_str(), modelNameSize);
 
-	size_t textureNameSize = myTextureName.size();
-	outFile.write(reinterpret_cast<const char*>(&textureNameSize), sizeof(textureNameSize));
-	outFile.write(myTextureName.c_str(), textureNameSize);
+	std::string albedoName = myMaterial->GetAlbedoMapName();
+	std::string specularName = myMaterial->GetSpecularMapName();
+	std::string normalName = myMaterial->GetNormalMapName();
+	float shininess = myMaterial->GetShininess();
+
+	size_t albedoNameSize = albedoName.size();
+	outFile.write(reinterpret_cast<const char*>(&albedoNameSize), sizeof(albedoNameSize));
+	outFile.write(albedoName.c_str(), albedoNameSize);
+
+	size_t specularNameSize = specularName.size();
+	outFile.write(reinterpret_cast<const char*>(&specularNameSize), sizeof(specularNameSize));
+	outFile.write(specularName.c_str(), specularNameSize);
+
+	size_t normalNameSize = normalName.size();
+	outFile.write(reinterpret_cast<const char*>(&normalNameSize), sizeof(normalNameSize));
+	outFile.write(normalName.c_str(), normalNameSize);
+
+	size_t materialNameSize = myMaterialName.size();
+	outFile.write(reinterpret_cast<const char*>(&materialNameSize), sizeof(materialNameSize));
+	outFile.write(myMaterialName.c_str(), materialNameSize);
+
+	outFile.write(reinterpret_cast<const char*>(&shininess), sizeof(shininess));
 
 	size_t shaderNameSize = myShaderName.size();
 	outFile.write(reinterpret_cast<const char*>(&shaderNameSize), sizeof(shaderNameSize));
@@ -253,10 +272,26 @@ bool VirtualObject::ReadFrom(std::ifstream& inFile)
 	myModelName.resize(modelNameSize);
 	inFile.read(&myModelName[0], modelNameSize);
 
-	size_t textureNameSize = 0;
-	inFile.read(reinterpret_cast<char*>(&textureNameSize), sizeof(textureNameSize));
-	myTextureName.resize(textureNameSize);
-	inFile.read(&myTextureName[0], textureNameSize);
+	std::string albedoName, specularname, normalName;
+	size_t albedoNameSize = 0, specularSize = 0, normalSize = 0;
+
+	inFile.read(reinterpret_cast<char*>(&albedoNameSize), sizeof(albedoNameSize));
+	albedoName.resize(albedoNameSize);
+	inFile.read(&albedoName[0], albedoNameSize);
+	inFile.read(reinterpret_cast<char*>(&specularSize), sizeof(specularSize));
+	specularname.resize(specularSize);
+	inFile.read(&specularname[0], specularSize);
+	inFile.read(reinterpret_cast<char*>(&normalSize), sizeof(normalSize));
+	normalName.resize(normalSize);
+	inFile.read(&normalName[0], normalSize);
+
+	float shininess = 0.0f;
+	inFile.read(reinterpret_cast<char*>(&shininess), sizeof(shininess));
+
+	if (myMaterial)
+	{
+		// Setting won't work unless we access it from resourcehandler
+	}
 
 	size_t shaderNameSize = 0;
 	inFile.read(reinterpret_cast<char*>(&shaderNameSize), sizeof(shaderNameSize));
