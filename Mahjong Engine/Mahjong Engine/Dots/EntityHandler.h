@@ -10,6 +10,7 @@
 // Needed components for entity handling
 class VirtualObject;
 class Mesh;
+class Material;
 class Texture;
 class Shader;
 
@@ -32,7 +33,7 @@ namespace DotsRendering
 		void ProcessMessages(MessageSystem::Message* aMessage);
 
 		void Initialize();
-		void CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader); // NEW
+		void CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Material* aMaterial, Shader* aShader); // NEW
 		void CreateVirtualObject(std::shared_ptr<std::string> name, std::string meshName, std::string textureName, std::string shaderName); // ALT VERSION
 
 		// void ThreadCreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader);

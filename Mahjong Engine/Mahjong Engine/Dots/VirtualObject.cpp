@@ -56,6 +56,12 @@ void VirtualObject::SetShader(Shader& shader, std::string& name)
 	myShaderName = name;
 }
 
+void VirtualObject::SetMaterial(Material& material, std::string& name)
+{
+	myMaterial = &material;
+	myMaterialName = name;
+}
+
 void VirtualObject::SetRotation(const glm::vec3& aRotation)
 {
 	Rotation = aRotation;

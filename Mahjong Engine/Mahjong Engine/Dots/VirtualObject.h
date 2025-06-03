@@ -28,6 +28,7 @@ public:
 	// Visuals
 	void SetMesh(Mesh& mesh, std::string& name);
 	void SetShader(Shader& shader, std::string& name);
+	void SetMaterial(Material& material, std::string& name);
 
 	// Transforms
 	void SetRotation(const glm::vec3& aRotation);

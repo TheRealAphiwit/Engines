@@ -104,6 +104,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Grass.png", true, "Grass");
 	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Concrete.png", false, "Concrete");
 	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Default.png", false, "Default");
+	// ResourceHandler::GetInstance().CreateMaterial();
 	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl", "myShader");
 	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl", "myBillboard");
 	

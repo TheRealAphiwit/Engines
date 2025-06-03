@@ -1,5 +1,6 @@
 #include "ResourceHandler.h"
 #include "Shader.h"
+#include "Material.h"
 #include "Texture.h"
 #include "Mesh.h"
 #include "ObjLoader.h"
@@ -53,6 +54,33 @@ void ResourceHandler::CreateTexture(const char* aTexturePath, bool shouldAlpha, 
 	myTextures.emplace(aName, newTexture);
 }
 
+void ResourceHandler::CreateMaterial(const char* albedoPath, const char* specularPath, const char* normalPath, float shininess, std::string aName)
+{
+	if (myMaterials.find(aName) != myMaterials.end())
+	{
+		std::cerr << "[ResourceHandler] Material with name '" << aName << "' already exists!\n";
+		return;
+	}
+
+	// Create different textures
+	Texture* albedoTex = new Texture(albedoPath, true);    // assuming albedo has alpha
+	Texture* specularTex = new Texture(specularPath, false);
+	Texture* normalTex = new Texture(normalPath, false);
+
+	// Create the material
+	Material* newMaterial = new Material(albedoTex, specularTex, normalTex, shininess);
+
+	if (!newMaterial)
+	{
+		std::cerr << "[ResourceHandler] Failed to create material: " << aName << std::endl;
+		return;
+	}
+
+	myMaterials[aName] = newMaterial;
+
+	std::cout << "[ResourceHandler] Material '" << aName << "' created successfully!\n";
+}
+
 void ResourceHandler::CreateMesh(const char* aModelPath, std::string aName)
 {
 	Mesh* newMesh = DotsRendering::LoadObjMesh(aModelPath);
@@ -80,6 +108,11 @@ Texture* ResourceHandler::GetTexture(std::string aName)
 	return myTextures[aName];
 }
 
+Material* ResourceHandler::GetMaterial(std::string aName)
+{
+	return myMaterials[aName];
+}
+
 Mesh* ResourceHandler::GetMesh(std::string aName)
 {
 	return myMeshes[aName];
@@ -101,7 +134,15 @@ const std::string ResourceHandler::GetTextureName(Texture* aTexture)
 {
 	for (auto& texture : myTextures)
 	{
-		if (texture.second == aTexture) {return texture.first;}
+		if (texture.second == aTexture) { return texture.first; }
+	}
+}
+
+const std::string ResourceHandler::GetMaterialName(Material* aMaterial)
+{
+	for (auto& material : myMaterials)
+	{
+		if (material.second == aMaterial) { return material.first; }
 	}
 }
 
@@ -127,7 +168,7 @@ std::vector<std::string> ResourceHandler::GetAllResources()
 		ReturnVector.push_back(s.first);
 	}
 
-	for (auto& t : myTextures)
+	for (auto& t : myMaterials)
 	{
 		ReturnVector.push_back(t.first);
 	}

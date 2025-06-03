@@ -1,6 +1,7 @@
 #include "EntityHandler.h"
 #include "VirtualObject.h"
 #include "Shader.h"
+#include "Material.h"
 #include "Triangle.h"
 #include "Cube.h"
 #include "Square.h"
@@ -49,14 +50,14 @@ void DotsRendering::EntityHandler::Initialize()
 	// MessageSystem::MessageHandler::GetInstance().CreateMessage("Entity", "Request: Thread Create Default Cube Entity");
 }
 
-void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Texture* aTexture, Shader* aShader)
+void DotsRendering::EntityHandler::CreateVirtualObject(std::shared_ptr<std::string> name, Mesh* aMesh, Material* aMaterial, Shader* aShader)
 {
 	// How I currently have done it
-	VirtualObject* newObject = new VirtualObject(name, aMesh, aTexture, aShader);
+	VirtualObject* newObject = new VirtualObject(name, aMesh, aMaterial, aShader);
 
 	// This currently doesn't work since type diff
 	newObject->SetMeshName(ResourceHandler::GetInstance().GetMeshName(aMesh));
-	newObject->SetTextureName(ResourceHandler::GetInstance().GetTextureName(aTexture));
+	newObject->SetMaterial(aMaterial, ResourceHandler::GetInstance().GetMaterialName(aMaterial));
 	newObject->SetShaderName(ResourceHandler::GetInstance().GetShaderName(aShader));
 	myObjects.push_back(newObject);
 }
