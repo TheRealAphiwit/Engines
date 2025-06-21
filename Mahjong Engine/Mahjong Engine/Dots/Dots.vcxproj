@@ -149,6 +149,7 @@
     <ClInclude Include="DotGraphics.h" />
     <ClInclude Include="EntityHandler.h" />
     <ClInclude Include="ISerializable.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="Shader.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="EntityHandler.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="ISerializable.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="Shader.cpp" />
