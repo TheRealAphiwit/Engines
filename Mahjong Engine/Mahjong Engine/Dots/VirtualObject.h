@@ -5,11 +5,11 @@
 #include <glm.hpp>
 #include <thread>
 #include "ISerializable.h"
-#include "Component.h"
 
 class Mesh;
 class Texture;
 class Shader;
+class Component;
 
 namespace DotsRendering
 {
@@ -54,7 +54,7 @@ public:
 	glm::mat4 GetTrans();
 	glm::vec3 GetExtents(); // No logic yet
 
-	const std::string& GetTexureName() const;
+	const std::string& GetTextureName() const;
 	const std::string& GetModelName() const;
 	const std::string& GetShaderName() const;
 

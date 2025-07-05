@@ -69,7 +69,7 @@ void Characters::GameObjectEntry::Update()
 #pragma endregion
 
 #pragma region Texture
-	static std::string selectedTextureName = vObject->GetTexureName();
+	static std::string selectedTextureName = vObject->GetTextureName();
 	std::unordered_map<std::string, Texture*> textures = ResourceHandler::GetInstance().GetTextures();
 
 	if (ImGui::BeginCombo("Texture", selectedTextureName.c_str()))

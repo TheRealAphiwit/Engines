@@ -178,7 +178,7 @@ glm::vec3 VirtualObject::GetExtents()
 	return Scale * 0.5f;
 }
 
-const std::string& VirtualObject::GetTexureName() const
+const std::string& VirtualObject::GetTextureName() const
 {
 	return myTextureName;
 }
