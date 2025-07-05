@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Texture.h"
+#include "Component.h"
 #include <string>
 
 // Future imp: not every material will have normal maps sent in -> we'll make some default files for a white material
 
-class Material
+class Material : public Component
 {
 public:
 	// Constructor

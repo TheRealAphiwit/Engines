@@ -1,6 +1,7 @@
 #include "EntityHandler.h"
 #include "VirtualObject.h"
 #include "Shader.h"
+#include "Material.h"
 #include "Triangle.h"
 #include "Cube.h"
 #include "Square.h"

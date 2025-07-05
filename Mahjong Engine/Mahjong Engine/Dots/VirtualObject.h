@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <vector>
 #include <glm.hpp>
 #include <thread>
 #include "ISerializable.h"
+#include "Component.h"
 
 class Mesh;
 class Texture;
@@ -68,6 +70,24 @@ public:
 	void LoadFromFile(const std::string& filePath);
 	#pragma endregion
 
+	#pragma region Component Setup
+	template <typename T, typename... Args>
+	T* AddComponent(Args&&... args) {
+		T* comp = new T(std::forward<Args>(args)...);
+		components.push_back(std::unique_ptr<Component>(comp));
+		return comp;
+	}
+
+	template <typename T>
+	T* GetComponent() {
+		for (auto& comp : components) {
+			if (T* match = dynamic_cast<T*>(comp.get()))
+				return match;
+		}
+		return nullptr;
+	}
+	#pragma endregion
+
 private:
 	std::shared_ptr<std::string> myName;
 	std::string myTextureName;
@@ -77,4 +97,6 @@ private:
 	Mesh* myMesh;
 	Texture* myTexture;
 	Shader* myShader;
+
+	std::vector<std::unique_ptr<Component>> components;
 };
