@@ -71,6 +71,7 @@ public:
 	#pragma endregion
 
 	#pragma region Component Setup
+	// REREAD
 	template <typename T, typename... Args>
 	T* AddComponent(Args&&... args) {
 		T* comp = new T(std::forward<Args>(args)...);

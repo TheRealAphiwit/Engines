@@ -60,6 +60,7 @@ namespace Winds
 
 		std::vector<Collider*> GetColliders() { return colliders; }
 		void AddCollider(Collider* aCollider) { colliders.push_back(aCollider); }
+		void RemoveCollider(Collider* aCollider);
 
 	private:
 		Winds_Physics() = default;

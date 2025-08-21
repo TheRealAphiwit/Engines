@@ -98,6 +98,16 @@ namespace Winds
 		}
 	}
 
+	void Winds_Physics::RemoveCollider(Collider* aCollider)
+	{
+		// NEW
+		auto it = std::find(colliders.begin(), colliders.end(), aCollider);
+		if (it != colliders.end())
+		{
+			colliders.erase(it);
+		}
+	}
+
 	void Winds_Physics::HandleCollisions(std::vector<Collision> collisions)
 	{
 		std::vector<Collision> dynamicDynamicCollisions;

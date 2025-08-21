@@ -56,6 +56,8 @@ void GameObject::CreateSphereCollider(const float& aRadius)
 void GameObject::CreateBoxCollider(const glm::vec3 someExtents)
 {
 	myCollider = new Winds::BoxCollider(myVirtualObject->Position, someExtents);
+
+	Winds::Winds_Physics::GetInstance().AddCollider(myCollider);
 }
 
 void GameObject::SetData(const ColliderData& colData)
@@ -121,6 +123,7 @@ bool GameObject::IsBoxCollider()
 
 void GameObject::RemoveCollider()
 {
+	Winds::Winds_Physics::GetInstance().RemoveCollider(myCollider);
 	delete myCollider;
 	myCollider = nullptr;
 }
