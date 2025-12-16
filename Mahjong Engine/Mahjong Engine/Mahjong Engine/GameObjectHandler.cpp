@@ -1,3 +1,4 @@
+#include "EntityHandler.h"
 #include "GameObjectHandler.h"
 #include "VirtualObject.h"
 #include "DotGraphics.h"
@@ -20,6 +21,10 @@ std::future<GameObject*> Engine::GameObjectHandler::CreateGameObject(std::shared
         {
             // Create VirtualObject first
             std::shared_ptr<VirtualObject> virtualObject = std::make_shared<VirtualObject>(name, mesh, texture, shader);
+
+            virtualObject->SetMeshName(ResourceHandler::GetInstance().GetMeshName(mesh));
+            virtualObject->SetTextureName(ResourceHandler::GetInstance().GetTextureName(texture));
+            virtualObject->SetShaderName(ResourceHandler::GetInstance().GetShaderName(shader));
 
             // Create GameObject
             GameObject* newGameObject = new GameObject(virtualObject.get(), collider);

@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include "Camera.h"
 #include "Mesh.h"
+#include "Cube.h"
 #include "Material.h"
 #include "Shader.h"
 #include "Texture.h"

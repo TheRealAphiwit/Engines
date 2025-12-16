@@ -44,7 +44,7 @@ public:
 	void CreateBoxCollider(const glm::vec3 someExtents);
 
 	void SetData(const ColliderData& colData);
-	const ColliderData& GetData();
+	ColliderData GetData();
 	bool IsSphereCollider();
 	bool IsBoxCollider();
 

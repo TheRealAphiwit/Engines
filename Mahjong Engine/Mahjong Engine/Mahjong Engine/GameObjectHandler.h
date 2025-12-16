@@ -38,10 +38,11 @@ namespace Engine
 		#pragma endregion
 
 		void ProcessMessages(MessageSystem::Message* aMessage);
-
+		
 		std::future<GameObject*> CreateGameObject(std::shared_ptr<std::string> name, Mesh* mesh, Texture* texture, Shader* shader, Winds::Collider* collider);
 		std::future<void> DeleteGameObject(GameObject* object);
-		std::future<GameObject*> CreateDefaultCube();
+
+		std::future<GameObject*> CreateDefaultCube(); // This the default one that we should use
 
 		std::vector<GameObject*> GetObjects();
 

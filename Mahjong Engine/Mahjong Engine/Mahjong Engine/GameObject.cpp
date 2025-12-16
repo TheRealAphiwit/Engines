@@ -1,10 +1,17 @@
 #include "GameObject.h"
 #include "Winds_Physics.h"
+#include <algorithm>
 
 GameObject::GameObject(VirtualObject* anObject, Winds::Collider* aCollider) : myVirtualObject(anObject), myCollider(aCollider)
 {
 	myVirtualObject = anObject;
 	myCollider = aCollider;
+
+	// Register the same VirtualObject in EntityHandler
+	DotsRendering::EntityHandler::GetInstance().AddVirtualObject(myVirtualObject);
+
+	// Add collider to Winds_Physics
+	Winds::Winds_Physics::GetInstance().AddCollider(myCollider);
 }
 
 GameObject::GameObject(std::shared_ptr<std::string> name, Mesh* mesh, Texture* texture, Shader* shader, Winds::Collider* aCollider)
@@ -21,7 +28,10 @@ GameObject::GameObject(std::shared_ptr<std::string> name, Mesh* mesh, Texture* t
 
 GameObject::~GameObject()
 {
-	myCollider = nullptr;
+	if (myCollider)
+	{
+		RemoveCollider();
+	}
 
 	if (myVirtualObject)
 	{
@@ -83,9 +93,9 @@ void GameObject::SetData(const ColliderData& colData)
 	}
 }
 
-const ColliderData& GameObject::GetData()
+ColliderData GameObject::GetData()
 {
-	ColliderData d;
+	ColliderData d{};
 
 	// Returns diff type of data depending on collider type
 	// Downcasting with dynamic_cast is used once again
