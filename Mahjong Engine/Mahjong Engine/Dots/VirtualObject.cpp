@@ -167,6 +167,11 @@ Texture* VirtualObject::GetTexture()
 	return myTexture;
 }
 
+Mesh* VirtualObject::GetMesh()
+{
+	return myMesh;
+}
+
 glm::mat4 VirtualObject::GetTrans()
 {
 	glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));

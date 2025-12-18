@@ -51,6 +51,7 @@ public:
 
 	Shader* GetShader();
 	Texture* GetTexture();
+	Mesh* GetMesh();
 	glm::mat4 GetTrans();
 	glm::vec3 GetExtents(); // No logic yet
 

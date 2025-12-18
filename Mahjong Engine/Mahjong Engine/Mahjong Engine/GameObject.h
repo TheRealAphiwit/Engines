@@ -48,6 +48,7 @@ public:
 	bool IsSphereCollider();
 	bool IsBoxCollider();
 
+	void MatchCollider();
 	void RemoveCollider();
 
 private:

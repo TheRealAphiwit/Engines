@@ -131,6 +131,35 @@ bool GameObject::IsBoxCollider()
 	return myCollider->IsOf<Winds::BoxCollider>();
 }
 
+void GameObject::MatchCollider()
+{
+	if (!myVirtualObject || !myCollider)
+		return;
+
+	Mesh* mesh = myVirtualObject->GetMesh();
+
+	if (!mesh)
+		return;
+
+	// Updates collider pos to virtual object pos
+	if (myCollider != nullptr)
+	{
+		myCollider->Position = myVirtualObject->Position;
+		
+		//// Update the collider bounds based on mesh
+		//if (myCollider->IsOf<Winds::SphereCollider>())
+		//{
+		//	Winds::SphereCollider* sc = dynamic_cast<Winds::SphereCollider*>(myCollider);
+		//	sc->Radius = glm::length(mesh->GetBoundingSphereRadius() * myVirtualObject->Scale);
+		//}
+		//else if (myCollider->IsOf<Winds::BoxCollider>())
+		//{
+		//	Winds::BoxCollider* bc = dynamic_cast<Winds::BoxCollider*>(myCollider);
+		//	bc->Extents = mesh->GetBoundingBoxExtents() * myVirtualObject->Scale;
+		//}
+	}
+}
+
 void GameObject::RemoveCollider()
 {
 	Winds::Winds_Physics::GetInstance().RemoveCollider(myCollider);

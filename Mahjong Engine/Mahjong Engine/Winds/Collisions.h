@@ -1,6 +1,7 @@
 #pragma once
 #include <glm.hpp>
 #include <iostream>
+#include <vector>
 
 namespace Winds
 {
@@ -111,5 +112,24 @@ namespace Winds
 		}
 
 		void ComputeInertia() {}
+	};
+
+	class MeshCollider : public Collider
+	{
+	public:
+		// Instead of storing a mesh, we store its vertices and indices - this like extents for box collider or center + radius for sphere collider
+		std::vector<glm::vec3> Vertices;
+		std::vector<uint32_t> Indices;
+
+		MeshCollider()
+		{
+			Velocity = glm::vec3(0, 0, 0);
+			AngularVelocity = glm::vec3(0, 0, 0);
+			Position = glm::vec3(0, 0, 0);
+			HasGravity = false;
+			IsKinematic = true;
+			Mass = 1;
+		}
+		void ComputeInertia() override {}
 	};
 }
