@@ -269,7 +269,9 @@ namespace Winds
 	{
 		for (Collider* c : colliders)
 		{
-			if (CheckRayIntersect(aRay, c))
+			Ray ray = Ray(glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+			RayHit hit;
+			if (CheckRayIntersect(aRay, c, hit))
 			{
 				aHit.Collider = c;
 				aHit.Point = glm::vec3(0, 0, 0);
