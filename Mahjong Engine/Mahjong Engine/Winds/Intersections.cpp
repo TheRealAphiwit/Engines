@@ -247,26 +247,39 @@ namespace Winds
         return { nullptr, nullptr, glm::vec3(), glm::vec3() };
     }
 
-    bool CheckRayIntersect(const Ray& aRay, Collider* aCollider)
+    bool CheckRayIntersect(const Ray& aRay, Collider* aCollider, RayHit& outHit)
     {
+        float distance = 0.0f;
+
         if (aCollider->IsOf<SphereCollider>())
         {
-            SphereCollider* sphere = dynamic_cast<SphereCollider*>(aCollider);
-            return RaySphereIntersect(aRay, *sphere);
+            if (!RaySphereIntersect(aRay, *static_cast<SphereCollider*>(aCollider), distance))
+                return false;
         }
         else if (aCollider->IsOf<BoxCollider>())
         {
-            BoxCollider* box = dynamic_cast<BoxCollider*>(aCollider);
-            return RayBoxIntersect(aRay, *box);
+            if (!RayOBBIntersect(aRay, *static_cast<BoxCollider*>(aCollider), distance))
+                return false;
         }
+        else if (aCollider->IsOf<MeshCollider>())
+        {
+            // Comming soon
+            // return RayMeshIntersect(aRay, *meshCollider);
+        }
+        else
+            return false;
 
-        return false;
+        outHit.Distance = distance;
+        outHit.Point = aRay.Origin + aRay.Direction * distance;
+        outHit.Collider = aCollider;
+        return true;
     }
-    bool RaySphereIntersect(const Ray& aRay, const SphereCollider& aSphere) // This one I dont fully understand
+
+    bool RaySphereIntersect(const Ray& aRay, const SphereCollider& aSphere, float& outDistance)
     {
         glm::vec3 center = aSphere.Transform[3];
         glm::vec3 diff = center - aRay.Origin;
-        
+
         float t0 = glm::dot(diff, aRay.Direction);
         float dSquared = glm::dot(diff, diff) - t0 * t0;
 
@@ -281,10 +294,13 @@ namespace Winds
         float Epsilon = 0.000001f;
         float outIntersectionDistance = (t0 > t1 + Epsilon) ? t0 - t1 : t0 + t1;
 
+		outDistance = outIntersectionDistance;
+
         // return true if intersection distance is positive
         return outIntersectionDistance > Epsilon;
     }
-    bool RayBoxIntersect(const Ray& aRay, const BoxCollider& aBox)
+
+    bool RayBoxIntersect(const Ray& aRay, const BoxCollider& aBox, float& outDistance)
     {
         glm::vec3 min = glm::vec3(aBox.Transform[3]) - aBox.Extents;
         glm::vec3 max = glm::vec3(aBox.Transform[3]) + aBox.Extents;
@@ -301,9 +317,18 @@ namespace Winds
         float tmin = std::max(std::max(std::min(t1, t2), std::min(t3, t4)), std::min(t5, t6));
         float tmax = std::min(std::min(std::max(t1, t2), std::max(t3, t4)), std::max(t5, t6));
 
-        return tmax >= std::max(0.0f, tmin);
+        if (tmax < 0.0f || tmin > tmax)
+            return false;
+
+        outDistance = (tmin >= 0.0f) ? tmin : tmax;
+        return outDistance >= 0.0f;
+
+        // Martin version
+		/*outDistance = tmin;
+        return tmax >= std::max(0.0f, tmin);*/
     }
-    bool RayOBBIntersect(const Ray& aRay, const BoxCollider& aBox)
+
+    bool RayOBBIntersect(const Ray& aRay, const BoxCollider& aBox, float& outDistance)
     {
         glm::vec3 center = glm::vec3(aBox.Transform[3]);
         glm::mat3 rotation = glm::mat3(aBox.Transform);
@@ -315,6 +340,7 @@ namespace Winds
         localBox.Extents = aBox.Extents;
 
         Ray localRay(localOrigin, localDirection);
-        return RayBoxIntersect(localRay, localBox);
+
+        return RayBoxIntersect(localRay, localBox, outDistance);
     }
 }

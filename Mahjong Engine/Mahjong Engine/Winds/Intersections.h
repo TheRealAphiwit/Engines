@@ -14,8 +14,8 @@ namespace Winds
 	Collision PlaneSphereIntersect(const PlaneCollider& aPlane, const SphereCollider& aSphere);
 
 	// Rays 
-	bool CheckRayIntersect(const Ray& aRay, Collider* aCollider);
-	bool RaySphereIntersect(const Ray& aRay, const SphereCollider& aSphere);
-	bool RayBoxIntersect(const Ray& aRay, const BoxCollider& aBox);
-	bool RayOBBIntersect(const Ray& aRay, const BoxCollider& aBox);
+	bool CheckRayIntersect(const Ray& aRay, Collider* aCollider, RayHit& outHit);
+	bool RaySphereIntersect(const Ray& aRay, const SphereCollider& aSphere, float& outDistance);
+	bool RayBoxIntersect(const Ray& aRay, const BoxCollider& aBox, float& outDistance);
+	bool RayOBBIntersect(const Ray& aRay, const BoxCollider& aBox, float& outDistance);
 }
