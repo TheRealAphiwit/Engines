@@ -249,17 +249,17 @@ namespace Winds
 
     bool CheckRayIntersect(const Ray& aRay, Collider* aCollider, RayHit& outHit)
     {
-        float distance = 0.0f;
+        float distance = 10.0f;
 
         if (aCollider->IsOf<SphereCollider>())
         {
-            if (!RaySphereIntersect(aRay, *static_cast<SphereCollider*>(aCollider), distance))
-                return false;
+			SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(aCollider);
+			return RaySphereIntersect(aRay, *sphereCollider, distance);
         }
         else if (aCollider->IsOf<BoxCollider>())
         {
-            if (!RayOBBIntersect(aRay, *static_cast<BoxCollider*>(aCollider), distance))
-                return false;
+			BoxCollider* boxCollider = dynamic_cast<BoxCollider*>(aCollider);
+			return RayBoxIntersect(aRay, *boxCollider, distance);
         }
         else if (aCollider->IsOf<MeshCollider>())
         {
@@ -267,7 +267,7 @@ namespace Winds
             // return RayMeshIntersect(aRay, *meshCollider);
         }
         else
-            return false;
+            return false; // will always return false - duh
 
         outHit.Distance = distance;
         outHit.Point = aRay.Origin + aRay.Direction * distance;
@@ -317,15 +317,16 @@ namespace Winds
         float tmin = std::max(std::max(std::min(t1, t2), std::min(t3, t4)), std::min(t5, t6));
         float tmax = std::min(std::min(std::max(t1, t2), std::max(t3, t4)), std::max(t5, t6));
 
-        if (tmax < 0.0f || tmin > tmax)
+        // Alt version
+        /*if (tmax < 0.0f || tmin > tmax)
             return false;
 
         outDistance = (tmin >= 0.0f) ? tmin : tmax;
-        return outDistance >= 0.0f;
+        return outDistance >= 0.0f;*/
 
         // Martin version
-		/*outDistance = tmin;
-        return tmax >= std::max(0.0f, tmin);*/
+		outDistance = tmin;
+        return tmax >= std::max(0.0f, tmin);
     }
 
     bool RayOBBIntersect(const Ray& aRay, const BoxCollider& aBox, float& outDistance)
@@ -340,7 +341,6 @@ namespace Winds
         localBox.Extents = aBox.Extents;
 
         Ray localRay(localOrigin, localDirection);
-
         return RayBoxIntersect(localRay, localBox, outDistance);
     }
 }

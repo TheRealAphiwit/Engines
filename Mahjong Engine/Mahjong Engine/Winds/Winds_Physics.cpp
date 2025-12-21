@@ -32,6 +32,14 @@ namespace Winds
 		colliders = UpdatePhysicsScene();
 		std::vector<Collision> collisions = CheckIntersections(colliders);
 
+		// Raycast check by applying gravity to first hit object - Martin example
+		Ray ray(glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+		RayHit hit;
+		if (MahjongRaycast(ray, hit))
+		{
+			hit.Collider->HasGravity = true; // This is Martin's example of raycast usage - I made a std::cout inside MahjongRaycast to verify its hits
+		}
+
 		ApplyGravity(colliders, limitDt);
 
 		HandleCollisions(collisions);
@@ -113,7 +121,7 @@ namespace Winds
 		std::vector<Collision> dynamicDynamicCollisions;
 		std::vector<Collision> staticDynamicCollisions;
 
-		for (Collision c : collisions) // !?
+		for (Collision c : collisions)
 		{
 			bool A_isDynamic = !c.Col1->IsKinematic;
 			bool B_isDynamic = !c.Col2->IsKinematic;
@@ -267,18 +275,39 @@ namespace Winds
 	}
 	bool Winds_Physics::MahjongRaycast(const Ray& aRay, RayHit& aHit)
 	{
+		// Martin version
 		for (Collider* c : colliders)
 		{
-			Ray ray = Ray(glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
-			RayHit hit;
-			if (CheckRayIntersect(aRay, c, hit))
+			if (CheckRayIntersect(aRay, c, aHit))
 			{
 				aHit.Collider = c;
 				aHit.Point = glm::vec3(0, 0, 0);
 				aHit.Distance = 10;
+
+				std::cout << "Raycast hit collider at position: " << glm::to_string(c->Position) << std::endl;
+
 				return true;
 			}
 		}
 		return false;
+
+		// Alt version
+		/*bool hitAnything = false;
+		float closestT = FLT_MAX;
+
+		for (Collider* c : colliders)
+		{
+			RayHit hit;
+			if (CheckRayIntersect(aRay, c, hit))
+			{
+				if (hit.Distance < closestT)
+				{
+					closestT = hit.Distance;
+					aHit = hit;
+					hitAnything = true;
+				}
+			}
+		}
+		return hitAnything;*/
 	}
 }
