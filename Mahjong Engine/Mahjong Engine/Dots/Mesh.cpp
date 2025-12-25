@@ -106,6 +106,13 @@ Mesh::Mesh(DotsRendering::ObjData objData)
 	#pragma endregion
 }
 
+void Mesh::SetPrivates(std::vector<Vertex> newVertices, std::vector<unsigned int> newIndices, int newIndicesSize)
+{
+	myVertices = newVertices;
+	myIndices = newIndices;
+	IndicesSize = newIndicesSize;
+}
+
 Mesh::~Mesh()
 {
 	glDeleteVertexArrays(1, &VAO);

@@ -95,6 +95,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myTexture = new Texture("../Assets/Images/Default.png", false);
 	
 	myShader = new Shader("Default", "../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
+	// #! Use phong when we have lighting set up
 	// myShader = new Shader("../Assets/Shaders/Phong/PhongVertexShader.glsl", "../Assets/Shaders/Phong/PhongFragmentShader.glsl");
 	// myShader = new Shader("../Assets/Shaders/Phong/myPhongVS.glsl", "../Assets/Shaders/Phong/myPhongFS.glsl");
 	

@@ -23,6 +23,7 @@ class Mesh : public ISerializable
 public:
 	Mesh(const float* meshVertices, size_t vertexSize, unsigned int* indices, size_t indexSize);
 	Mesh(DotsRendering::ObjData objData);
+	void SetPrivates(std::vector<Vertex> newVertices, std::vector<unsigned int> newIndices, int newIndicesSize);
 
 	~Mesh();
 	void Draw(Shader* shader);
