@@ -8,6 +8,7 @@
 #include <Windows.h>
 #include "Triangle.h"
 #include "Cube.h"
+#include "Sphere.h"
 #include <glm.hpp>
 #include <fwd.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -31,11 +32,11 @@ namespace DotsRendering
 	Square* mySquare = nullptr;
 	Triangle* myTriangle = nullptr;
 	Cube* myCube = nullptr;
+	Sphere* mySphere = nullptr;
 	Texture* myTexture = nullptr;
 	Texture* myGrassTexture = nullptr;
 	Texture* myConcreteTexture = nullptr;
 	Mesh* FlagMesh = nullptr;
-	Mesh* mySphere = nullptr;
 	Mesh* myPlane = nullptr;
 
 	float myWidth = 0.0f;
@@ -84,6 +85,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	}
 
 	myCube = new Cube();
+	mySphere = new Sphere();
 	mySquare = new Square();
 	myTriangle = new Triangle();
 
@@ -111,6 +113,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	ResourceHandler::GetInstance().CreateMesh("Flag", "Flag Mesh");
 
 	ResourceHandler::GetInstance().RegisterMesh(myCube, "Cube");
+	ResourceHandler::GetInstance().RegisterMesh(mySphere, "Sphere");
 	ResourceHandler::GetInstance().RegisterMesh(mySquare, "Square");
 	ResourceHandler::GetInstance().RegisterMesh(myTriangle, "Triangle");
 	

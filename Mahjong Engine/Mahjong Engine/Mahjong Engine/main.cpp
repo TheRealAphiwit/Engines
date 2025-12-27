@@ -52,7 +52,7 @@ int main()
 			Physics.Simulate(delta);
         }
 
-        DotsRendering::BeginRender(engine->myCamera);
+        DotsRendering::BeginRender(engine->myCamera); // Crash here when we switch to use sphere model instead of existing ones
         Gui->Render(objects, gameObjects);
         DotsRendering::End();
 

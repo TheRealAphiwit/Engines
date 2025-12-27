@@ -10,6 +10,7 @@ class Mesh;
 class Texture;
 class Shader;
 class Cube;
+class Sphere;
 class Triangle;
 class Square;
 
@@ -37,11 +38,11 @@ namespace DotsRendering
 	extern Square* mySquare;
 	extern Triangle* myTriangle;
 	extern Cube* myCube;
+	extern Sphere* mySphere;
 	extern Texture* myTexture;
 	extern Texture* myGrassTexture;
 	extern Texture* myConcreteTexture;
 	extern Mesh* FlagMesh;
-	extern Mesh* mySphere;
 	extern Mesh* myPlane;
 
 	extern float myWidth;

@@ -4,6 +4,7 @@
 #include "Material.h"
 #include "Triangle.h"
 #include "Cube.h"
+#include "Sphere.h"
 #include "Square.h"
 #include "DotGraphics.h"
 
@@ -170,6 +171,12 @@ void DotsRendering::EntityHandler::CreateDefaultCube()
 	myObjects.push_back(newObject);
 }
 
+void DotsRendering::EntityHandler::CreateDefaultSphere()
+{
+	VirtualObject* newObject = new VirtualObject(std::make_shared<std::string>("Sphere"), mySphere, myTexture, myShader);
+	myObjects.push_back(newObject);
+}
+
 std::future<VirtualObject*> DotsRendering::EntityHandler::ThreadCreateDefaultCube()
 {
 	return std::async
@@ -186,12 +193,6 @@ std::future<VirtualObject*> DotsRendering::EntityHandler::ThreadCreateDefaultCub
 			return newObject; // Return the created VirtualObject
 		}
 	);
-}
-
-void DotsRendering::EntityHandler::CreateDefaultSphere()
-{
-	VirtualObject* newObject = new VirtualObject(std::make_shared < std::string>("Sphere"), mySphere, myTexture, myShader);
-	myObjects.push_back(newObject);
 }
 
 std::vector<VirtualObject*> DotsRendering::EntityHandler::GetObjects()

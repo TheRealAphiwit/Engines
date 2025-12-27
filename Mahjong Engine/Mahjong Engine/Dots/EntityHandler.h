@@ -42,8 +42,8 @@ namespace DotsRendering
 		void AddVirtualObject(VirtualObject* aObject);
 		void DeleteVirtualObject(VirtualObject* object);
 		void CreateDefaultCube();
-		std::future<VirtualObject*> ThreadCreateDefaultCube();
 		void CreateDefaultSphere();
+		std::future<VirtualObject*> ThreadCreateDefaultCube();
 
 		std::vector<VirtualObject*> GetObjects();
 
