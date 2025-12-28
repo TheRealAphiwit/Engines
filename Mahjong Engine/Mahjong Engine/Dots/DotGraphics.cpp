@@ -37,6 +37,7 @@ namespace DotsRendering
 	Texture* myGrassTexture = nullptr;
 	Texture* myConcreteTexture = nullptr;
 	Mesh* FlagMesh = nullptr;
+	Mesh* OrbMesh = nullptr;
 	Mesh* myPlane = nullptr;
 
 	float myWidth = 0.0f;
@@ -84,6 +85,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 		return initData;
 	}
 
+	std::cout << "Creating objects" << std::endl;
 	myCube = new Cube();
 	mySphere = new Sphere();
 	mySquare = new Square();
@@ -110,10 +112,12 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl", "myShader");
 	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl", "myBillboard");
 	
-	ResourceHandler::GetInstance().CreateMesh("Flag", "Flag Mesh");
+	ResourceHandler::GetInstance().CreateMesh("Flag", "FlagMesh");
+	ResourceHandler::GetInstance().CreateMesh("Orb", "OrbMesh");
 
 	ResourceHandler::GetInstance().RegisterMesh(myCube, "Cube");
 	ResourceHandler::GetInstance().RegisterMesh(mySphere, "Sphere");
+	ResourceHandler::GetInstance().RegisterMesh(OrbMesh, "OrbMesh");
 	ResourceHandler::GetInstance().RegisterMesh(mySquare, "Square");
 	ResourceHandler::GetInstance().RegisterMesh(myTriangle, "Triangle");
 	

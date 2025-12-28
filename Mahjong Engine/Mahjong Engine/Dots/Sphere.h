@@ -4,5 +4,6 @@
 class Sphere : public Mesh
 {
 public:
-    Sphere(float radius = 0.5f, int rings = 16, int sectors = 32);
+    Sphere();
+    // Sphere(float radius = 0.5f, int rings = 16, int sectors = 32);
 };

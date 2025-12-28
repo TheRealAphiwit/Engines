@@ -122,6 +122,12 @@ Mesh::~Mesh()
 
 void Mesh::Draw(Shader* shader)
 {
+	if (VAO, VBO, EBO == 0)
+	{
+		std::cout << "ERROR: Mesh has no VAO!\n";
+		return;
+	}
+
 	shader->Use();
 	glBindVertexArray(VAO); 
 
