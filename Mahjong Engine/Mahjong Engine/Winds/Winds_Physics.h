@@ -5,6 +5,7 @@
 #include <vector>
 #include <optional>
 #include "Raycast.h"
+#include <unordered_map>
 
 const float GravityMultiplier = -9.82f;
 const float Restitution = 0.2f;
@@ -58,6 +59,7 @@ namespace Winds
 
 		bool MahjongRaycast(const Ray& aRay, RayHit& aHit);
 
+		std::unordered_map<std::string, Collider*> GetMyColliders() { return RegisteredColliders; }
 		std::vector<Collider*> GetColliders() { return colliders; }
 		void AddCollider(Collider* aCollider) { colliders.push_back(aCollider); }
 		void RemoveCollider(Collider* aCollider);
@@ -66,9 +68,15 @@ namespace Winds
 		Winds_Physics() = default;
 		~Winds_Physics() = default;
 
-		std::vector<Collider*> colliders;
+		std::vector<Collider*> colliders; // Needed for physics update
 		Engine::DragonEngine* myEngine = nullptr;
 		PlaneCollider* main_plane = nullptr;
 		std::mutex myMutex;
+
+		// For model selecting in UI
+		std::unordered_map<std::string, Collider*> RegisteredColliders;
+
+		void RegisterDefaultColliders();
+		void RegisterCollider(const std::string& name, Collider* collider);
 	};
 }

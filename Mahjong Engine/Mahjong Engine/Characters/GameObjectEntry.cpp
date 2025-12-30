@@ -2,10 +2,13 @@
 #include "GameObjectEntry.h"
 #include "GameObject.h"
 #include "VirtualObject.h"
-#include "../Mahjong Engine/ResourceHandler.h"
+#include "../Winds/Collisions.h"
 #include <iostream>
 #include <gtc/constants.hpp>
 #include <EntityHandler.h>
+#include <GameObjectHandler.h>
+#include "../Mahjong Engine/ResourceHandler.h"
+#include "../Winds/Winds_Physics.h"
 
 Characters::GameObjectEntry::GameObjectEntry() : myGameObject(nullptr), Opened(false) {}
 
@@ -22,7 +25,7 @@ void Characters::GameObjectEntry::Update()
 	}
 
 	VirtualObject* vObject = myGameObject->GetVirtualObject();
-	ColliderData colData = myGameObject->GetData();
+	ColliderData colData = myGameObject->GetData(); // This is great - maybe we can make a way to set collider data later
 
 	char nameBuffer[128];
 	strncpy_s(nameBuffer, vObject->GetName().c_str(), sizeof(nameBuffer));
@@ -94,6 +97,35 @@ void Characters::GameObjectEntry::Update()
 #pragma region Physics
 	ImGui::Separator();
 	ImGui::Text("Physics Properties");
+
+	// Add selectable collider type
+	static std::string selectedCollider = myGameObject->GetColliderName();
+	if (ImGui::BeginCombo("Collider", selectedCollider.c_str()))
+	{
+		if (ImGui::Selectable("None"))
+		{
+			std::string nullName = "Null";
+			myGameObject->SetCollider(nullptr, nullName);
+		}
+
+		if (ImGui::Selectable("Box"))
+		{
+			std::string boxName = "Box";
+			myGameObject->SetCollider(new Winds::BoxCollider(colData.Center, colData.Extents), boxName);
+		}
+
+		if (ImGui::Selectable("Sphere"))
+		{
+			std::string sphereName = "Sphere";
+			myGameObject->SetCollider(new Winds::SphereCollider(colData.Center, 1), sphereName);
+
+			// Print current collider type
+			std::cout << "[EDITOR] Changed collider to Sphere" << std::endl;
+			std::cout << "[EDITOR] Collider Radius: " << colData.Radius << std::endl;
+		}
+
+		ImGui::EndCombo();
+	}
 
 	if (ImGui::Checkbox("Is Kinematic", &colData.IsKinematic))
 	{

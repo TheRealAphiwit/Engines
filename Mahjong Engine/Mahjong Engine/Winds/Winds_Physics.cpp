@@ -310,4 +310,17 @@ namespace Winds
 		}
 		return hitAnything;*/
 	}
+
+	// New UI collider select support functions - not needed?
+	void Winds_Physics::RegisterDefaultColliders()
+	{
+		// Register cube collider
+		RegisterCollider("Plane Collider", main_plane);
+		RegisterCollider("Sphere Collider", new SphereCollider(glm::vec3(0, 0, 0), 1.0f));
+	}
+
+	void Winds_Physics::RegisterCollider(const std::string& name, Collider* collider)
+	{
+		RegisteredColliders[name] = collider;
+	}
 }

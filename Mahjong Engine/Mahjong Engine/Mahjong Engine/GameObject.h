@@ -39,10 +39,12 @@ public:
 	// -----------------------Collision properties-----------------------
 
 	Winds::Collider* GetCollider();
+	const std::string GetColliderName() const;
 
 	void CreateSphereCollider(const float& aRadius);
 	void CreateBoxCollider(const glm::vec3 someExtents);
 
+	void SetCollider(Winds::Collider* collider, std::string& name);
 	void SetData(const ColliderData& colData);
 	ColliderData GetData();
 	bool IsSphereCollider();
@@ -54,5 +56,6 @@ public:
 private:
 	// Self refs
 	Winds::Collider* myCollider;
+	std::string myColliderName;
 	VirtualObject* myVirtualObject;
 };

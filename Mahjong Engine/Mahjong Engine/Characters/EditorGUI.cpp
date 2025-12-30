@@ -154,7 +154,7 @@ void Characters::EditorGUI::UpdateHieracrhy(std::vector<VirtualObject*> someObje
 	ImGui::EndChild();
 }
 
-void Characters::EditorGUI::UpdateGameObjHierarchy(std::vector<GameObject*> someObjects)
+void Characters::EditorGUI::UpdateGameObjHierarchy(std::vector<GameObject*> someObjects) // Start here tomorrow
 {
 	if (ImGui::Button("Create GameObject"))
 	{

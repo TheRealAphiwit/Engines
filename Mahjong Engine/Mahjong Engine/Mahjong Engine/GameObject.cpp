@@ -55,6 +55,11 @@ Winds::Collider* GameObject::GetCollider()
 	return myCollider;
 }
 
+const std::string GameObject::GetColliderName() const
+{
+	return myColliderName;
+}
+
 void GameObject::CreateSphereCollider(const float& aRadius)
 {
 	myCollider = new Winds::SphereCollider(myVirtualObject->Position, aRadius);
@@ -67,6 +72,15 @@ void GameObject::CreateBoxCollider(const glm::vec3 someExtents)
 {
 	myCollider = new Winds::BoxCollider(myVirtualObject->Position, someExtents);
 
+	Winds::Winds_Physics::GetInstance().AddCollider(myCollider);
+}
+
+void GameObject::SetCollider(Winds::Collider* collider, std::string& name)
+{
+	myCollider = collider;
+	myColliderName = name;
+
+	// Add collider to Winds_Physics
 	Winds::Winds_Physics::GetInstance().AddCollider(myCollider);
 }
 
