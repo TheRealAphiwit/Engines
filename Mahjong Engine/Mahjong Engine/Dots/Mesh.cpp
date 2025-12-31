@@ -25,85 +25,79 @@ Mesh::Mesh(const float* someVertices, size_t aVertexSize, unsigned int* someIndi
 
 	// FIX: Use new glEnableVertexArrayAttrib later!
 	// We're setting up 2 vertex attributes that uses different channels
-	glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, 5 * sizeof(float), (void*)0);
+	/*glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)( 3* sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);*/
+
+	constexpr GLsizei stride = 8 * sizeof(float);
+
+	// Position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	// UV
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
 	glBindVertexArray(0);
 }
 
 Mesh::Mesh(DotsRendering::ObjData objData)
 {
+	myVertices.resize(objData.vertices.size());
+
+	for (size_t i = 0; i < objData.vertices.size(); ++i)
+	{
+		myVertices[i].Position = objData.vertices[i];
+		myVertices[i].TexCoords = (i < objData.textCoords.size()) ? objData.textCoords[i] : glm::vec2(0.0f);
+		myVertices[i].Normal = (i < objData.normals.size()) ? objData.normals[i] : glm::vec3(0, 1, 0);
+	}
+
+	myIndices = std::move(objData.indices);
+	IndicesSize = (int)myIndices.size();
+
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	#pragma region Explaination
-	// For every vertex; we're creating data for VBOs  
-	#pragma endregion
-	std::vector<float> vertexData;
-	for (size_t i = 0; i < objData.vertices.size(); ++i) 
-	{
-		#pragma region Positions
-		vertexData.push_back(objData.vertices[i].x);
-		vertexData.push_back(objData.vertices[i].y);
-		vertexData.push_back(objData.vertices[i].z);
-
-		if (i < objData.textCoords.size())
-		{
-			vertexData.push_back(objData.textCoords[i].x);
-			vertexData.push_back(objData.textCoords[i].y);
-		}
-		else
-		{
-			vertexData.push_back(0.0f);
-			vertexData.push_back(0.0f);
-		}
-		#pragma endregion
-
-		#pragma region Normals
-		if (i < objData.normals.size())
-		{
-			vertexData.push_back(objData.normals[i].x);
-			vertexData.push_back(objData.normals[i].y);
-			vertexData.push_back(objData.normals[i].z);
-		}
-		else
-		{
-			vertexData.push_back(0.0f);
-			vertexData.push_back(0.0f);
-			vertexData.push_back(1.0f); // Default at 1 to point upwards
-		}
-		#pragma endregion
-	}
-
-	#pragma region VBO and EBO setup
-	//VBO Creation
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float), vertexData.data(), GL_STATIC_DRAW);
-
-	// Why repeat the following 3 times?
-	#pragma region Explaination
-	// We're setting up the vertex position, texture coords, and normals 
-	#pragma endregion
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		myVertices.size() * sizeof(Vertex),
+		myVertices.data(),
+		GL_STATIC_DRAW
+	);
 
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, objData.indices.size() * sizeof(unsigned int), objData.indices.data(), GL_STATIC_DRAW);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER,
+		myIndices.size() * sizeof(unsigned int),
+		myIndices.data(),
+		GL_STATIC_DRAW
+	);
+
+	// Position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// UV
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+	glEnableVertexAttribArray(1);
+
+	// Normal
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
-
-	IndicesSize = objData.indices.size();
-	#pragma endregion
 }
 
 void Mesh::SetPrivates(std::vector<Vertex> newVertices, std::vector<unsigned int> newIndices, int newIndicesSize)
@@ -122,32 +116,16 @@ Mesh::~Mesh()
 
 void Mesh::Draw(Shader* shader)
 {
-	if (VAO, VBO, EBO == 0)
-	{
-		std::cout << "ERROR: Mesh has no VAO!\n";
-		return;
-	}
-
 	shader->Use();
-	glBindVertexArray(VAO); 
+	glBindVertexArray(VAO);
+
+	glActiveTexture(GL_TEXTURE0);
+	shader->SetInt(0, "Default"); // new
 
 	if (IndicesSize > 0)
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-		glDrawElements(GL_TRIANGLES, IndicesSize, GL_UNSIGNED_INT, (void*)0);
-
-		glBindVertexArray(0);
-	}
-
-	if (EBO == 0)
-	{
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-	}
+		glDrawElements(GL_TRIANGLES, IndicesSize, GL_UNSIGNED_INT, nullptr);
 	else
-	{
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	}
+		glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(myVertices.size()));
 
 	glBindVertexArray(0);
 }

@@ -130,6 +130,9 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 
 	#pragma endregion
 
+	myTexture = ResourceHandler::GetInstance().GetTexture("Default");
+	// myShader = ResourceHandler::GetInstance().GetShader("myShader");
+
 	Camera* camera = new Camera(width, height);
 
 	initData.camera = camera;
@@ -137,9 +140,6 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 
 	glEnable(GL_DEPTH_TEST);
 	glfwSwapInterval(1);
-
-	myTexture = ResourceHandler::GetInstance().GetTexture("Default");
-	// myShader = ResourceHandler::GetInstance().GetShader("myShader");
 
 	return initData;
 }

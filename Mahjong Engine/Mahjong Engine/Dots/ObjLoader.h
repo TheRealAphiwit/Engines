@@ -11,6 +11,7 @@ namespace DotsRendering
 	{
 		std::vector<glm::vec3> vertices;
 		std::vector<glm::vec2> textCoords;
+
 		std::vector<glm::vec3> normals;
 		std::vector<unsigned int> indices;
 	};
@@ -20,8 +21,4 @@ namespace DotsRendering
 
 	bool SerializeObjData(const std::string& filename, const ObjData& data);
 	bool DeserializeObjData(const std::string& filename, ObjData& outData);
-
-	#pragma region Goal
-	// Check also before loading and creating a binary file if the file already exists
-	#pragma endregion
 }

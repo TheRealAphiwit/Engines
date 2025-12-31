@@ -14,73 +14,112 @@ bool DotsRendering::LoadOBJ(const std::string& filename, ObjData& outData)
 		return false;
 	}
 
+	std::vector<glm::vec3> tempPositions;
+	std::vector<glm::vec3> tempNormals;
+	std::vector<glm::vec2> tempUVs;
+
+	std::vector<Vertex> finalVertices;
+	std::vector<unsigned int> finalIndices;
+
 	std::string line;
 	while (std::getline(file, line))
 	{
-		std::istringstream ss(line); 
+		std::stringstream ss(line);
 		std::string prefix;
 		ss >> prefix;
 
-		if (prefix == "v") // Vertices
+		if (prefix == "v")
 		{
-			glm::vec3 vertex;
-			ss >> vertex.x >> vertex.y >> vertex.z;
-			outData.vertices.push_back(vertex);
+			glm::vec3 v;
+			ss >> v.x >> v.y >> v.z;
+			tempPositions.push_back(v);
 		}
-		else if (prefix == "vn") //Vertex normals
+		else if (prefix == "vn")
 		{
-			glm::vec3 normal;
-			ss >> normal.x >> normal.y >> normal.z;
-			outData.normals.push_back(normal);
+			glm::vec3 n;
+			ss >> n.x >> n.y >> n.z;
+			tempNormals.push_back(n);
 		}
-		else if (prefix == "vt") // Vertex texture
+		else if (prefix == "vt")
 		{
-			glm::vec2 textCoord;
-			ss >> textCoord.x >> textCoord.y;
-			outData.textCoords.push_back(textCoord);
+			glm::vec2 uv;
+			ss >> uv.x >> uv.y;
+			uv.y = 1.0f - uv.y; 
+			tempUVs.push_back(uv);
 		}
-		else if (prefix == "f") // Face definitions
+		else if (prefix == "f")
 		{
-			std::vector<unsigned int> vIndices, tIndices, nIndices;
-			std::string vertexData;
+			std::vector<std::string> faceVerts;
+			std::string v;
+			while (ss >> v)
+				faceVerts.push_back(v);
 
-			while (ss >> vertexData)
+			// triangulate 
+			for (size_t i = 1; i + 1 < faceVerts.size(); ++i)
 			{
-				std::replace(vertexData.begin(), vertexData.end(), '/', ' '); // Replace '/' with space
-				std::istringstream vss(vertexData);
-				unsigned int vIdx = 0, tIdx = 0, nIdx = 0;
-				vss >> vIdx;
+				std::string tri[3] =
+				{
+					faceVerts[0],
+					faceVerts[i],
+					faceVerts[i + 1]
+				};
 
-				if (vss.peek() == ' ') vss.ignore(); // Skip space
-				if (vss >> tIdx) {}
-				else tIdx = 0;  // Optional texture coordinate
-				if (vss.peek() == ' ') vss.ignore();
-				if (vss >> nIdx) {}
-				else nIdx = 0;  // Optional normal
+				for (int k = 0; k < 3; ++k)
+				{
+					std::stringstream vss(tri[k]);
+					std::string token;
+					int indices[3] = { -1, -1, -1 };
+					int idx = 0;
 
-				vIndices.push_back(vIdx - 1); // Convert to 0-based indexing
-				if (tIdx > 0) tIndices.push_back(tIdx - 1);
-				if (nIdx > 0) nIndices.push_back(nIdx - 1);
-			}
+					while (std::getline(vss, token, '/'))
+					{
+						if (!token.empty())
+							indices[idx] = std::stoi(token) - 1;
+						idx++;
+					}
 
-			// Triangulate if more than 3 vertices in a face
-			for (size_t i = 1; i + 1 < vIndices.size(); i++)
-			{
-				outData.indices.push_back(vIndices[0]);
-				outData.indices.push_back(vIndices[i]);
-				outData.indices.push_back(vIndices[i + 1]);
+					Vertex vert{};
+					vert.Position = tempPositions[indices[0]];
+
+					if (indices[1] >= 0 && indices[1] < (int)tempUVs.size())
+						vert.TexCoords = tempUVs[indices[1]];
+					else
+						vert.TexCoords = glm::vec2(0.0f);
+
+					if (indices[2] >= 0 && indices[2] < (int)tempNormals.size())
+						vert.Normal = tempNormals[indices[2]];
+					else
+						vert.Normal = glm::vec3(0.0f, 1.0f, 0.0f);
+
+					finalVertices.push_back(vert);
+					finalIndices.push_back((unsigned int)finalVertices.size() - 1);
+				}
 			}
 		}
 	}
 
-	// Print out the data
-	std::cout << "(ObjLoader) OBJ file: " << filename << std::endl;
-	std::cout << "Vertices: " << outData.vertices.size() << std::endl;
-	std::cout << "Normals: " << outData.normals.size() << std::endl;
-	std::cout << "TextCoords: " << outData.textCoords.size() << std::endl;
-	std::cout << "Indices: " << outData.indices.size() << std::endl;
-
 	file.close();
+
+	outData.vertices.clear();
+	outData.textCoords.clear();
+	outData.normals.clear();
+	outData.indices.clear();
+
+	outData.vertices.reserve(finalVertices.size());
+	outData.indices = finalIndices;
+
+	// FLATTEN Vertex -> ObjData
+	for (const Vertex& v : finalVertices)
+	{
+		outData.vertices.push_back(v.Position);
+		outData.textCoords.push_back(v.TexCoords);
+		outData.normals.push_back(v.Normal);
+	}
+
+	std::cout << "(OBJ) Loaded "
+		<< finalVertices.size() << " vertices, "
+		<< finalIndices.size() << " indices\n";
+
     return true;
 }
 
@@ -95,10 +134,10 @@ Mesh* DotsRendering::LoadObjMesh(const std::string& filename)
 	try
 	{
 		// First: Try loading binary file
-		if (DeserializeObjData(binaryPath, objData))
+		/*if (DeserializeObjData(binaryPath, objData))
 		{return new Mesh(objData);} 
 		else 
-		{std::cout << "Failed to load binary file: " << binaryPath << std::endl;}
+		{std::cout << "Failed to load binary file: " << binaryPath << std::endl;}*/
 
 		// Second: Try loading OBJ file
 		if (LoadOBJ(objPath, objData))
