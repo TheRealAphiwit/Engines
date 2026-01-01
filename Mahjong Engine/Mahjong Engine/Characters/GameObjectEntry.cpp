@@ -98,7 +98,7 @@ void Characters::GameObjectEntry::Update()
 	ImGui::Separator();
 	ImGui::Text("Physics Properties");
 
-	// Add selectable collider type
+	// Add selectable collider type - this is super rushed and hard coded but I need to get this done for demo #1
 	static std::string selectedCollider = myGameObject->GetColliderName();
 	if (ImGui::BeginCombo("Collider", selectedCollider.c_str()))
 	{
@@ -111,13 +111,14 @@ void Characters::GameObjectEntry::Update()
 		if (ImGui::Selectable("Box"))
 		{
 			std::string boxName = "Box";
-			myGameObject->SetCollider(new Winds::BoxCollider(colData.Center, colData.Extents), boxName);
+			myGameObject->SetCollider(new Winds::BoxCollider(colData.Center, glm::vec3(1, 1, 1)), boxName);
 		}
 
+		// Demo #1
 		if (ImGui::Selectable("Sphere"))
 		{
 			std::string sphereName = "Sphere";
-			myGameObject->SetCollider(new Winds::SphereCollider(colData.Center, 1), sphereName);
+			myGameObject->SetCollider(new Winds::SphereCollider(colData.Center, 1.f), sphereName);
 
 			// Print current collider type
 			std::cout << "[EDITOR] Changed collider to Sphere" << std::endl;

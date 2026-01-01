@@ -25,6 +25,7 @@ namespace Winds
 	{
 		float limitDt = glm::min(aDeltaTime, 0.02f);
 
+		// Demo #1
 		for (Collider* collider : colliders) {
 			collider->ComputeInertia();
 		}
@@ -284,7 +285,7 @@ namespace Winds
 				aHit.Point = glm::vec3(0, 0, 0);
 				aHit.Distance = 10;
 
-				std::cout << "Raycast hit collider at position: " << glm::to_string(c->Position) << std::endl;
+				std::cout << "Raycast hit!" << std::endl;
 
 				return true;
 			}
@@ -314,9 +315,7 @@ namespace Winds
 	// New UI collider select support functions - not needed?
 	void Winds_Physics::RegisterDefaultColliders()
 	{
-		// Register cube collider
-		RegisterCollider("Plane Collider", main_plane);
-		RegisterCollider("Sphere Collider", new SphereCollider(glm::vec3(0, 0, 0), 1.0f));
+		RegisterCollider("Sphere Collider", new SphereCollider(glm::vec3(0, 0, 0), 0.5f));
 	}
 
 	void Winds_Physics::RegisterCollider(const std::string& name, Collider* collider)
