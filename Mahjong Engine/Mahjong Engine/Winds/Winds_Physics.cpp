@@ -216,7 +216,6 @@ namespace Winds
 			glm::vec3 torque1 = glm::cross(r1, impulseVector);
 			glm::vec3 torque2 = glm::cross(r2, impulseVector);
 
-			// Rotate! sort of....
 			c.Col1->AngularVelocity += c.Col1->InverseMomentOfInertia * torque1;
 			c.Col2->AngularVelocity -= c.Col2->InverseMomentOfInertia * torque2;
 		}

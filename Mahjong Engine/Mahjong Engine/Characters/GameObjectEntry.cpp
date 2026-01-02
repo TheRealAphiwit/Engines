@@ -111,14 +111,14 @@ void Characters::GameObjectEntry::Update()
 		if (ImGui::Selectable("Box"))
 		{
 			std::string boxName = "Box";
-			myGameObject->SetCollider(new Winds::BoxCollider(colData.Center, glm::vec3(1, 1, 1)), boxName);
+			myGameObject->SetCollider(new Winds::BoxCollider(colData.Center, glm::vec3(0.5, 0.5, 0.5)), boxName); // Hardcoded extents for demo
 		}
 
 		// Demo #1
 		if (ImGui::Selectable("Sphere"))
 		{
 			std::string sphereName = "Sphere";
-			myGameObject->SetCollider(new Winds::SphereCollider(colData.Center, 1.f), sphereName);
+			myGameObject->SetCollider(new Winds::SphereCollider(colData.Center, 0.5f), sphereName); // Hardcoded for demo
 
 			// Print current collider type
 			std::cout << "[EDITOR] Changed collider to Sphere" << std::endl;
