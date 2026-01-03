@@ -7,6 +7,7 @@ class VirtualObject;
 class ResourceHandler;
 struct GLFWwindow;
 class GameObject;
+class Texture;
 class ResourceEditor;
 class ShaderEditor;
 

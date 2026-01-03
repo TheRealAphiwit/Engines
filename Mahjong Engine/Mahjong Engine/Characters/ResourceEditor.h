@@ -1,7 +1,7 @@
 #pragma once
 
 class ResourceHandler;
-class __declspec(dllimport) Texture;
+class Texture; // Forward declaration if it maybe helps
 
 enum class EResource
 {

@@ -1,5 +1,5 @@
 #pragma once
-class __declspec(dllexport) Texture // new tweak
+class Texture // new tweak
 {
 public:
 	Texture(const char* path, const bool& shouldAlpha);

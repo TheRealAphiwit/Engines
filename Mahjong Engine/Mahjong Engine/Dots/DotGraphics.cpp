@@ -96,8 +96,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	// How do we make it so that texture loads different .png's later in engine while running?
 	myGrassTexture = new Texture("../Assets/Images/Grass.png", true);
 	myConcreteTexture = new Texture("../Assets/Images/Concrete.png", false);
-	myTexture = new Texture("../Assets/Images/Default.png", false); - commenting out for now as it might be duplicationg issue going on - [!]
-	
+	myTexture = new Texture("../Assets/Images/Default.png", false); 
 	myShader = new Shader("Default", "../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
 	// #! Use phong when we have lighting set up
 	// myShader = new Shader("../Assets/Shaders/Phong/PhongVertexShader.glsl", "../Assets/Shaders/Phong/PhongFragmentShader.glsl");
