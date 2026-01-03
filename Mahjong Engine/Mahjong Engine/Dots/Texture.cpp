@@ -6,6 +6,7 @@
 
 Texture::Texture(const char* path, const bool& shouldAlpha)
 {
+	UsesMipmaps = true;
 	int Channels = 0;
 	Width = 0;
 	Height = 0;
@@ -51,6 +52,7 @@ Texture::~Texture()
 	glDeleteTextures(1, &TextureObject);
 }
 
+// [!] This function causes linker errors when called from outside this file for some reason
 void Texture::SetUseMipmaps(bool enabled)
 {
 	UsesMipmaps = enabled;
@@ -64,6 +66,7 @@ void Texture::SetUseMipmaps(bool enabled)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

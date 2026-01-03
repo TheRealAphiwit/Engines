@@ -1,11 +1,12 @@
 #pragma once
-class Texture
+class __declspec(dllexport) Texture // new tweak
 {
 public:
 	Texture(const char* path, const bool& shouldAlpha);
 	~Texture();
 
 	void SetUseMipmaps(bool enabled);
+	bool GetUseMipmaps() const { return UsesMipmaps; }
 	unsigned int GetID() const { return TextureObject; }
 
 	bool UsesMipmaps;

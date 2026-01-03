@@ -1,6 +1,7 @@
 #pragma once
 
 class ResourceHandler;
+class __declspec(dllimport) Texture;
 
 enum class EResource
 {

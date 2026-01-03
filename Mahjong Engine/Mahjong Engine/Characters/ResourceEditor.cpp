@@ -8,6 +8,7 @@
 #include <../Mahjong Engine/ResourceHandler.h>
 
 #include "Shader.h"
+#include "../Dots/Texture.h"
 
 char vPath[256];
 char fPath[256];
@@ -92,10 +93,41 @@ void ResourceEditor::Update()
 	ImGui::BeginChild("Scrolling");
 
 	std::vector<std::string> allResources = myResources->GetAllResources();
+	static std::string selectedResource;
 
 	for (int n = 0; n < allResources.size(); n++)
 	{
-		ImGui::Text(allResources[n].c_str(), n);
+		// ImGui::Text(allResources[n].c_str(), n); - old unclickable version
+
+		// New clickable versions - A
+		/*if (ImGui::Button(allResources[n].c_str()))
+		{
+			std::string resourceName = allResources[n];
+		}*/
+
+		// New clickable versions - B
+		if (ImGui::Selectable(allResources[n].c_str(), selectedResource == allResources[n]))
+		{
+			selectedResource = allResources[n];
+		}
+	}
+
+	if (!selectedResource.empty())
+	{
+		Texture* tex = myResources->GetTexture(selectedResource);
+
+		if (tex)
+		{
+			ImGui::Separator();
+			ImGui::Text("Texture Settings");
+
+			bool useMipmaps = tex->GetUseMipmaps();
+			if (ImGui::Checkbox("Use Mipmaps", &useMipmaps))
+			{
+				// [!] This causes link errors somehow
+				// tex->SetUseMipmaps(useMipmaps);
+			}
+		}
 	}
 
 	ImGui::EndChild();
