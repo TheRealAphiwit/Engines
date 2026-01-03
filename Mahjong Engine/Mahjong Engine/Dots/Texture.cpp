@@ -51,6 +51,22 @@ Texture::~Texture()
 	glDeleteTextures(1, &TextureObject);
 }
 
+void Texture::SetUseMipmaps(bool enabled)
+{
+	UsesMipmaps = enabled;
+
+	glBindTexture(GL_TEXTURE_2D, TextureObject);
+	if (enabled)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	}
+	else
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void Texture::Bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, TextureObject);

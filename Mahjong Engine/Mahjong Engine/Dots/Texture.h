@@ -5,6 +5,10 @@ public:
 	Texture(const char* path, const bool& shouldAlpha);
 	~Texture();
 
+	void SetUseMipmaps(bool enabled);
+	unsigned int GetID() const { return TextureObject; }
+
+	bool UsesMipmaps;
 	int Width;
 	int Height;
 
