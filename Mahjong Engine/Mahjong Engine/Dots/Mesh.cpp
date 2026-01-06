@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include <iostream>
+#include "LightHandler.h"
 
 Mesh::Mesh(const float* someVertices, size_t aVertexSize, unsigned int* someIndices, size_t aIndexSize)
 {
@@ -128,7 +129,10 @@ void Mesh::Draw(Shader* shader)
 		return;
 	}
 
+	// [!] Uncomment when lights are implemented
+	// LightHandler::GetInstance().UploadLightsToShader(*shader);
 	shader->Use();
+
 	glBindVertexArray(VAO); 
 
 	if (IndicesSize > 0)
