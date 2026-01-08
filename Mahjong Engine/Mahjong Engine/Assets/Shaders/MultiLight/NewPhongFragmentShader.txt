@@ -3,6 +3,7 @@
 
 // Lights
 uniform int lightCount;
+uniform Light lights[MAX_LIGHTS];
 
 const int LIGHT_POINT = 0;
 const int LIGHT_DIRECTIONAL = 1;
