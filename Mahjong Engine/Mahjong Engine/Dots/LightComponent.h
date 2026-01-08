@@ -13,7 +13,7 @@ class LightComponent : public Component
 {
 public:
 	LightComponent();
-	~LightComponent() override = default;
+	~LightComponent();
 
 	ELightType LightType = ELightType::Point; // Starting with point - following Emil task order
 

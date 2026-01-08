@@ -27,7 +27,7 @@ void LightHandler::UploadLightsToShader(Shader& shader) const
 		const LightComponent* light = myLights[i];
 		std::string baseName = "lights[" + std::to_string(i) + "]";
 		shader.SetInt(static_cast<int>(light->GetLightType()), baseName + ".Type");
-		shader.SetVector3(light->Position, baseName + ".Position");
+		shader.SetVector3(light->Owner->Position, baseName + ".Position"); // Use Owner's position
 		shader.SetVector3(light->Color, baseName + ".Color");
 		shader.SetFloat(light->Intensity, baseName + ".Intensity");
 		if (light->IsPoint() || light->IsSpot())

@@ -30,6 +30,8 @@ struct Light {
     vec3 Color;
     float Intensity;
     float Range;
+    float InnerCone;
+    float OuterCone;
 };
 
 // New multiple light support
@@ -42,10 +44,7 @@ const int LIGHT_SPOT = 2;
 
 void main() 
 {
-    // Placeholder color (red)
-    // vec4 texel = vec4(0.5, 0.5, 0.5, 1); - Commented out since version was made for testing
     vec4 texel = texture(diffuseMap, UV_Coord);
-    
     fragColor = vec4(0.0,0,0,texel.w); // Start at 0 lighting
 
     // Ambient lighting
@@ -61,7 +60,6 @@ void main()
     if (difIntensity > 0) 
     {
         float distance = length(light_position - position);
-        
         float attenuation = 1.0 / max(0.001, light_attenuation.x + light_attenuation.y * distance + light_attenuation.z * pow(distance, 2)); 
         vec3 diffusePart = difIntensity * light_diffuse.xyz * materialDiffuse.xyz * texel.rgb;
         

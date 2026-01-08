@@ -7,6 +7,7 @@
 #include "EntityHandler.h"
 #include "MessageHandler.h"
 #include "GameObjectHandler.h"
+#include "LightHandler.h"
 // #include "OpenGLFrameBuffer.h"
 
 #include <glfw3.h>
@@ -18,6 +19,7 @@
 int main()
 {
 	ResourceHandler& resources = ResourceHandler::GetInstance();
+	LightHandler& lightHandler = LightHandler::GetInstance(); // Create light handler instance
 	MessageSystem::MessageHandler& messageHandler = MessageSystem::MessageHandler::GetInstance();
     DotsRendering::DotsInitData renderData = DotsRendering::Initialize(1200, 720);
 	DotsRendering::EntityHandler& entityHandler = DotsRendering::EntityHandler::GetInstance();
