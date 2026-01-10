@@ -1,5 +1,17 @@
-#version 410
+#version 330 core
 #define MAX_LIGHTS 16
+
+struct Light 
+{
+    int Type; // 0 = point, 1 = directional, 2 = spot
+    vec3 Position;
+    vec3 Direction;
+    vec3 Color;
+    float Intensity;
+    float Range;
+    float InnerCone;
+    float OuterCone;
+};
 
 // Lights
 uniform int lightCount;
@@ -21,17 +33,8 @@ in vec2 UV_Coord;
 in vec3 position;
 in vec3 vecToEye;
 
-struct Light 
-{
-    int Type; // 0 = point, 1 = directional, 2 = spot
-    vec3 Position;
-    vec3 Direction;
-    vec3 Color;
-    float Intensity;
-    float Range;
-    float InnerCone;
-    float OuterCone;
-};
+// Output
+out vec4 fragColor;
 
 void main()
 {
@@ -42,7 +45,7 @@ void main()
     vec3 result = vec3(0.0);
 
     // Ambient (global, cheap) - ambient is hardcoded right now with a set value
-    vec3 ambient = texel.rgb * 0.05;
+    vec3 ambient = texel.rgb * 0.25;
     result += ambient;
 
     for (int i = 0; i < lightCount && i < MAX_LIGHTS; ++i)
@@ -58,7 +61,8 @@ void main()
             vec3 toLight = light.Position - position;
             float distance = length(toLight);
             L = normalize(toLight);
-
+		
+	    // Light gets weaker the further we are
             attenuation = clamp(1.0 - distance / light.Range, 0.0, 1.0);
         }
         else // Directional

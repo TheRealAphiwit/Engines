@@ -9,6 +9,7 @@
 #include <GameObjectHandler.h>
 #include "../Mahjong Engine/ResourceHandler.h"
 #include "../Winds/Winds_Physics.h"
+#include <LightComponent.h>
 
 Characters::GameObjectEntry::GameObjectEntry() : myGameObject(nullptr), Opened(false) {}
 
@@ -141,6 +142,65 @@ void Characters::GameObjectEntry::Update()
 	if (ImGui::DragFloat("Mass", &colData.Mass, 0.1f, 0.1f, 100.0f))
 	{
 		myGameObject->SetData(colData);
+	}
+#pragma endregion
+
+#pragma region Lighting
+	ImGui::Separator();
+	ImGui::Text("Lighting");
+
+	// Check if object already has a light
+	LightComponent* light = vObject->GetComponent<LightComponent>();
+
+	bool hasLight = (light != nullptr);
+
+	// Toggle light on/off
+	if (ImGui::Checkbox("Enable Light", &hasLight))
+	{
+		if (hasLight && !light)
+		{
+			light = vObject->AddComponent<LightComponent>();
+			light->Owner = vObject;
+		}
+		else if (!hasLight && light)
+		{
+			light->Intensity = 0.0f;
+		}
+	}
+
+	if (light)
+	{
+		// --- Light Type ---
+		const char* lightTypes[] = { "Point", "Directional", "Spot" };
+		int currentType = static_cast<int>(light->LightType);
+
+		if (ImGui::Combo("Light Type", &currentType, lightTypes, IM_ARRAYSIZE(lightTypes)))
+		{
+			light->LightType = static_cast<ELightType>(currentType);
+		}
+
+		// --- Common properties ---
+		ImGui::ColorEdit3("Color", &light->Color.x);
+		ImGui::DragFloat("Intensity", &light->Intensity, 0.1f, 0.0f, 100.0f);
+
+		// --- Point & Spot ---
+		if (light->IsPoint() || light->IsSpot())
+		{
+			ImGui::DragFloat("Range", &light->Range, 0.1f, 0.1f, 1000.0f);
+		}
+
+		// --- Spot only ---
+		if (light->IsSpot())
+		{
+			ImGui::DragFloat("Inner Cone", &light->InnerCone, 0.01f, 0.0f, glm::pi<float>());
+			ImGui::DragFloat("Outer Cone", &light->OuterCone, 0.01f, 0.0f, glm::pi<float>());
+		}
+
+		// --- Directional only ---
+		if (light->IsDirectional())
+		{
+			ImGui::DragFloat3("Direction", &light->LocalDirection.x, 0.01f);
+		}
 	}
 #pragma endregion
 }

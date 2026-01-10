@@ -123,15 +123,24 @@ Mesh::~Mesh()
 
 void Mesh::Draw(Shader* shader)
 {
-	if (VAO, VBO, EBO == 0)
+	if (VAO == 0)
 	{
 		std::cout << "ERROR: Mesh has no VAO!\n";
 		return;
 	}
 
-	// [!] Uncomment when lights are implemented
-	// LightHandler::GetInstance().UploadLightsToShader(*shader);
-	shader->Use();
+	/*glBindVertexArray(VAO);
+
+	if (IndicesSize > 0)
+	{
+		glDrawElements(GL_TRIANGLES, IndicesSize, GL_UNSIGNED_INT, nullptr);
+	}
+	else
+	{
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+	}
+
+	glBindVertexArray(0);*/
 
 	glBindVertexArray(VAO); 
 

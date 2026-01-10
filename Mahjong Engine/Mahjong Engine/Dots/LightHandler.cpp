@@ -19,7 +19,7 @@ void LightHandler::UnregisterLight(LightComponent* light)
 void LightHandler::UploadLightsToShader(Shader& shader) const
 {
 	// Upload light data to the shader
-	shader.Use();
+	// shader.Use(); - currently using per object 
 	int lightCount = static_cast<int>(myLights.size());
 	shader.SetInt(lightCount, "lightCount");
 	for (int i = 0; i < lightCount; ++i)

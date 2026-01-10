@@ -22,7 +22,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DotsGL", "Dots\Dots.vcxproj
 		{A9B6C19C-3C3F-4642-934F-A90CD5BFC346} = {A9B6C19C-3C3F-4642-934F-A90CD5BFC346}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Winds", "Winds\Winds.vcxproj", "{26332B3E-F92F-46E9-9719-33EC47BC5660}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Winds_Physics", "Winds\Winds.vcxproj", "{26332B3E-F92F-46E9-9719-33EC47BC5660}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utility_Library", "Utility_Library\Utility_Library.vcxproj", "{A9B6C19C-3C3F-4642-934F-A90CD5BFC346}"
 EndProject

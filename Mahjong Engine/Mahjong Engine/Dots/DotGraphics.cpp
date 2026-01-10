@@ -97,10 +97,10 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myGrassTexture = new Texture("../Assets/Images/Grass.png", true);
 	myConcreteTexture = new Texture("../Assets/Images/Concrete.png", false);
 	myTexture = new Texture("../Assets/Images/Default.png", false); 
-	myShader = new Shader("Default", "../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl");
-	// #! Use phong when we have lighting set up
-	// myShader = new Shader("../Assets/Shaders/Phong/PhongVertexShader.glsl", "../Assets/Shaders/Phong/PhongFragmentShader.glsl");
-	// myShader = new Shader("../Assets/Shaders/Phong/myPhongVS.glsl", "../Assets/Shaders/Phong/myPhongFS.glsl");
+	// myShader = new Shader("Default", "../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl"); // This is the default shader (working)
+	
+	// New shader
+	myShader = new Shader("Default", "../Assets/Shaders/NewPhongVertexShader.glsl", "../Assets/Shaders/NewPhongFragmentShader.glsl");
 	
 	myBillboard = new Shader("Billboard", "../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
 
@@ -108,7 +108,8 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Grass.png", true, "Grass");
 	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Concrete.png", false, "Concrete");
 	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Default.png", false, "Default");
-	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl", "myShader");
+	// ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl", "myShader"); - old line (working)
+	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/NewPhongVertexShader.glsl", "../Assets/Shaders/NewPhongFragmentShader.glsl", "myShader");
 	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl", "myBillboard");
 	
 	ResourceHandler::GetInstance().CreateMesh("Flag", "FlagMesh");
