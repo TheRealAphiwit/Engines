@@ -1,6 +1,7 @@
 #include "LightHandler.h"
 #include "Shader.h"
 #include "LightComponent.h"
+#include <iostream>
 
 void LightHandler::RegisterLight(LightComponent* light)
 {
@@ -22,6 +23,9 @@ void LightHandler::UploadLightsToShader(Shader& shader) const
 	// shader.Use(); - currently using per object 
 	int lightCount = static_cast<int>(myLights.size());
 	shader.SetInt(lightCount, "lightCount");
+
+	// std::cout << "[LightHandler] Uploading " << lightCount << " lights to shader.\n";
+
 	for (int i = 0; i < lightCount; ++i)
 	{
 		const LightComponent* light = myLights[i];

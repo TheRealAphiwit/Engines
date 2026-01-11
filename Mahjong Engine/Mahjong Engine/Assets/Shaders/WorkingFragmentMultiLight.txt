@@ -25,8 +25,7 @@ const int LIGHT_SPOT = 2;
 uniform vec4 materialDiffuse;
 uniform vec4 materialSpecular;
 uniform float materialShininess;
-uniform sampler2D diffuseMap; // texture
-uniform sampler2D specularMap; // how light behaves
+uniform sampler2D diffuseMap;
 
 // Input from vertex shader
 in vec3 v_normal;
@@ -39,7 +38,7 @@ out vec4 fragColor;
 
 void main()
 {
-    vec4 texel = texture(specularMap, UV_Coord);
+    vec4 texel = texture(diffuseMap, UV_Coord);
     vec3 N = normalize(v_normal);
     vec3 V = normalize(vecToEye);
 
@@ -82,7 +81,7 @@ void main()
         // --- Specular (Blinn-Phong) ---
         vec3 H = normalize(L + V);
         float spec = pow(max(dot(N, H), 0.0), 1);
-        vec3 specular = spec * materialSpecular.rgb;
+        //vec3 specular = spec * materialSpecular.rgb;
 
         // --- Spotlight cone ---
         if (light.Type == LIGHT_SPOT)
@@ -93,8 +92,9 @@ void main()
             attenuation *= coneFactor;
         }
 
-        result += (specular + diffuse) * attenuation * texel.rgb;   
-     }
+        // result += specular * diffuse * attenuation * texel.rgb; - og version
+        result += diffuse * attenuation * texel.rgb;
+    }
 
     fragColor = vec4(result, texel.a);
 }

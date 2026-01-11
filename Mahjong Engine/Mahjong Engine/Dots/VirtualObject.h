@@ -29,6 +29,7 @@ public:
 	// Visuals
 	void SetMesh(Mesh& mesh, std::string& name);
 	void SetTexture(Texture& texture, std::string& name);
+	void SetSpecularTexture(Texture& texture, std::string& name);
 	void SetShader(Shader& shader, std::string& name);
 
 	// Transforms
@@ -39,9 +40,9 @@ public:
 #pragma region Setters For Names
 	void SetMeshName(std::string name);
 	void SetTextureName(std::string name);
+	void SetSpecularTextureName(std::string name);
 	void SetShaderName(std::string name);
 #pragma endregion
-
 
 	void Draw(DotsRendering::Camera* camera);
 
@@ -56,6 +57,7 @@ public:
 	glm::vec3 GetExtents(); // No logic yet
 
 	const std::string& GetTextureName() const;
+	const std::string& GetSpecularTextureName() const { return mySpecularTextureName; };
 	const std::string& GetModelName() const;
 	const std::string& GetShaderName() const;
 
@@ -93,11 +95,13 @@ public:
 private:
 	std::shared_ptr<std::string> myName;
 	std::string myTextureName;
+	std::string mySpecularTextureName;
 	std::string myModelName;
 	std::string myShaderName;
 	
 	Mesh* myMesh;
 	Texture* myTexture;
+	Texture* mySpecularTexture;
 	Shader* myShader;
 
 	std::vector<std::unique_ptr<Component>> components;

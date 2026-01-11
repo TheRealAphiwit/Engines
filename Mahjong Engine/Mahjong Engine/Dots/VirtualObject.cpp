@@ -26,6 +26,7 @@
 
 VirtualObject::VirtualObject(std::shared_ptr<std::string> name, Mesh * mesh, Texture * texture, Shader * shader) : myName(std::move(name)), myMesh(mesh), myTexture(texture), myShader(shader), myModelName("None"), myShaderName("None"), myTextureName("None")
 {
+	mySpecularTexture = texture;
 	Position = glm::vec3(0, 0, 0);
 	Rotation = glm::vec3(0, 0, 0);
 	Scale = glm::vec3(1, 1, 1);
@@ -56,6 +57,12 @@ void VirtualObject::SetTexture(Texture& texture, std::string& name)
 {
 	myTexture = &texture;
 	myTextureName = name;
+}
+
+void VirtualObject::SetSpecularTexture(Texture& texture, std::string& name)
+{
+	mySpecularTexture = &texture;
+	mySpecularTextureName = name;
 }
 
 void VirtualObject::SetShader(Shader& shader, std::string& name)
@@ -89,6 +96,11 @@ void VirtualObject::SetTextureName(std::string name)
 	myTextureName = name;
 }
 
+void VirtualObject::SetSpecularTextureName(std::string name)
+{
+	mySpecularTextureName = name;
+}
+
 void VirtualObject::SetShaderName(std::string name)
 {
 	myShaderName = name;
@@ -116,6 +128,9 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	// glBindTexture(GL_TEXTURE_2D, 0);
 
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mySpecularTexture->TextureObject);
+
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, myTexture->TextureObject);
 
 	myMesh->Draw(myShader);

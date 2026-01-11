@@ -74,6 +74,7 @@ void Characters::GameObjectEntry::Update()
 
 #pragma region Texture
 	static std::string selectedTextureName = vObject->GetTextureName();
+	static std::string selectedSpecTextureName = vObject->GetSpecularTextureName();
 	std::unordered_map<std::string, Texture*> textures = ResourceHandler::GetInstance().GetTextures();
 
 	if (ImGui::BeginCombo("Texture", selectedTextureName.c_str()))
@@ -85,6 +86,24 @@ void Characters::GameObjectEntry::Update()
 			{
 				selectedTextureName = texture.first;
 				vObject->SetTexture(*texture.second, selectedTextureName);
+			}
+			if (isSelected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	if (ImGui::BeginCombo("Specular Texture", selectedSpecTextureName.c_str()))
+	{
+		for (auto& specTexture : textures)
+		{
+			bool isSelected = (selectedSpecTextureName == specTexture.first);
+			if (ImGui::Selectable(specTexture.first.c_str(), isSelected))
+			{
+				selectedSpecTextureName = specTexture.first;
+				vObject->SetSpecularTexture(*specTexture.second, selectedSpecTextureName);
 			}
 			if (isSelected)
 			{
