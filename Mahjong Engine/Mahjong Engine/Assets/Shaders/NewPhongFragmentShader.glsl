@@ -72,12 +72,13 @@ void main()
         }
 
         // --- Diffuse ---
-        float NdotL = max(dot(N, L), 0.0);
-        if (NdotL > 0.0) // Must be above 0
-            continue;
+        if (dot(L, N) < 0.0) 
+        {
+            N = -N;
+        }
 
-        // vec3 diffuse = NdotL * light.Color * light.Intensity; - og version
-        vec3 diffuse = light.Color * 0.25;
+        float NdotL = max(dot(N, L), light.Intensity); 
+        vec3 diffuse = NdotL * light.Color * light.Intensity;
 
         // --- Specular (Blinn-Phong) ---
         vec3 H = normalize(L + V);
@@ -93,7 +94,7 @@ void main()
             attenuation *= coneFactor;
         }
 
-        result += (specular + diffuse) * attenuation * texel.rgb;   
+        result += (specular + diffuse * texel.rgb) * attenuation;   
      }
 
     fragColor = vec4(result, texel.a);
