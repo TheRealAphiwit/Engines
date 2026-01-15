@@ -1,8 +1,12 @@
 #version 410
+#define MAX_SHADOWS 8 // needed for handling light space positions
+
 uniform mat4 modelMatrix = mat4(1.0);
 uniform mat4 viewMatrix = mat4(1.0);
 uniform mat4 projectionMatrix = mat4(1.0);
 uniform vec3 eyePosition;  
+uniform int shadowCount;
+uniform mat4 lightSpaceMatrices[MAX_SHADOWS];
 
 // Mesh data incoming
 in vec3 in_Position;
@@ -14,6 +18,7 @@ out vec2 UV_Coord;
 out vec3 v_normal;  // Transformed normals
 out vec3 position;  // World-space position of the vertex
 out vec3 vecToEye;  // Vector from vertex to the camera
+out vec4 fragPosLightSpace[MAX_SHADOWS]; // Light space positions for shadow mapping
 
 void main()
 {
@@ -33,4 +38,10 @@ void main()
 
     // Compute vector to the eye (camera)
     vecToEye = eyePosition - position; // No normalization here now - only in fragment GLSL
+
+    // Compute light space positions for shadow mapping
+    for (int i = 0; i < shadowCount && i < MAX_SHADOWS; ++i)
+    {
+        fragPosLightSpace[i] = lightSpaceMatrices[i] * vec4(position, 1.0);
+    }
 }

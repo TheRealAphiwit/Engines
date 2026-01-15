@@ -1,5 +1,6 @@
 #version 330 core
 #define MAX_LIGHTS 16
+#define MAX_SHADOWS 8 // also defined here for consistency
 
 struct Light 
 {
@@ -34,8 +35,31 @@ in vec2 UV_Coord;
 in vec3 position;
 in vec3 vecToEye;
 
+// Shadows
+uniform int shadowCount;
+uniform sampler2D shadowMaps[MAX_SHADOWS];
+
+// Shadow inputs from vertex shader
+in vec4 fragPosLightSpace[MAX_SHADOWS];
+
 // Output
 out vec4 fragColor;
+
+// Shadow calculation function 
+float CalculateShadow(int index, vec3 normal, vec3 lightDir)
+{
+    vec3 projCoords = fragPosLightSpace[index].xyz / fragPosLightSpace[index].w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    if (projCoords.z > 1.0)
+        return 0.0;
+
+    float closestDepth = texture(shadowMaps[index], projCoords.xy).r;
+    float currentDepth = projCoords.z;
+
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+}
 
 void main()
 {
@@ -48,6 +72,9 @@ void main()
     // Ambient
     vec3 ambient = texel.rgb;
     result += ambient;
+
+    // Shadow
+    float shadow = 0.0;
 
     for (int i = 0; i < lightCount && i < MAX_LIGHTS; ++i)
     {
@@ -69,6 +96,9 @@ void main()
         else // Directional
         {
             L = normalize(-light.Direction);
+
+            // Calc shadow
+            shadow = CalculateShadow(i, N, L);
         }
 
         // --- Diffuse ---

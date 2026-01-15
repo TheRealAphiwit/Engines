@@ -12,6 +12,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx/quaternion.hpp>
 #include "LightHandler.h"
+#include "ShadowHandler.h"
 
 // VirtualObject::VirtualObject(const std::string& name, Mesh* mesh, Texture* texture, Shader* shader)
 //{
@@ -119,6 +120,7 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	myShader->Use();
 
 	LightHandler::GetInstance().UploadLightsToShader(*myShader);
+	ShadowHandler::GetInstance().UploadShadowData(*myShader); // Now the shadar fully knows both shadows and light when rendering
 
 	// Bind transformation matrices
 	myShader->SetMatrix4(trans, "modelMatrix");
@@ -134,6 +136,20 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	glBindTexture(GL_TEXTURE_2D, myTexture->TextureObject);
 
 	myMesh->Draw(myShader);
+}
+
+void VirtualObject::DrawShadow(Shader* shadowShader)
+{
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, Position);
+	model = glm::rotate(model, Rotation.x, glm::vec3(1, 0, 0));
+	model = glm::rotate(model, Rotation.y, glm::vec3(0, 1, 0));
+	model = glm::rotate(model, Rotation.z, glm::vec3(0, 0, 1));
+	model = glm::scale(model, Scale);
+
+	shadowShader->SetMatrix4(model, "modelMatrix");
+
+	myMesh->Draw(shadowShader);
 }
 
 Shader* VirtualObject::GetShader()

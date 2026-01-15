@@ -34,6 +34,7 @@ namespace DotsRendering
 
 	extern GLFWwindow* window;
 	extern Shader* myShader;
+	extern Shader* myShadowShader;
 	extern Shader* myBillboard;
 	extern Square* mySquare;
 	extern Triangle* myTriangle;

@@ -17,6 +17,7 @@
 #include "Texture.h"
 #include "Square.h"
 #include "EntityHandler.h"
+#include "ShadowHandler.h"
 
 #include <fstream>
 #include <sstream>
@@ -28,6 +29,7 @@ namespace DotsRendering
 {
 	GLFWwindow* window = nullptr;
 	Shader* myShader = nullptr;
+	Shader* myShadowShader = nullptr;
 	Shader* myBillboard = nullptr;
 	Square* mySquare = nullptr;
 	Triangle* myTriangle = nullptr;
@@ -99,9 +101,9 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myTexture = new Texture("../Assets/Images/Default.png", false); 
 	// myShader = new Shader("Default", "../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl"); // This is the default shader (working)
 	
-	// New shader
+	// New shader - now working
 	myShader = new Shader("Default", "../Assets/Shaders/NewPhongVertexShader.glsl", "../Assets/Shaders/NewPhongFragmentShader.glsl");
-	
+	myShadowShader = new Shader("ShadowMapShader", "../Assets/Shaders/ShadowVert.glsl", "../Assets/Shaders/ShadowFrag.glsl");
 	myBillboard = new Shader("Billboard", "../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl");
 
 	// This section can be moved to ResourceHandler
@@ -110,6 +112,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	ResourceHandler::GetInstance().CreateTexture("../Assets/Images/Default.png", false, "Default");
 	// ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexShader.glsl", "../Assets/Shaders/FragmentShader.glsl", "myShader"); - old line (working)
 	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/NewPhongVertexShader.glsl", "../Assets/Shaders/NewPhongFragmentShader.glsl", "myShader");
+	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/ShadowVert.glsl", "../Assets/Shaders/ShadowFrag.glsl", "ShadowMapShader");
 	ResourceHandler::GetInstance().CreateShader("../Assets/Shaders/VertexBillboard.glsl", "../Assets/Shaders/FragmentShader.glsl", "myBillboard");
 	
 	ResourceHandler::GetInstance().CreateMesh("Flag", "FlagMesh");
@@ -122,6 +125,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	ResourceHandler::GetInstance().RegisterMesh(myTriangle, "Triangle");
 	
 	ResourceHandler::GetInstance().RegisterShader(myShader);
+	ResourceHandler::GetInstance().RegisterShader(myShadowShader);
 	ResourceHandler::GetInstance().RegisterShader(myBillboard);
 	#pragma endregion
 
@@ -141,11 +145,19 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	myTexture = ResourceHandler::GetInstance().GetTexture("Default");
 	// myShader = ResourceHandler::GetInstance().GetShader("myShader");
 
+	// Setup shadow handler
+	ShadowHandler::GetInstance().Init(myShadowShader);
+
 	return initData;
 }
 
 void DotsRendering::BeginRender(Camera* camera)
 {
+	ShadowHandler::GetInstance().ShadowPass(); 
+
+	// For safety - bind default framebuffer again
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, static_cast<int>(myWidth), static_cast<int>(myHeight));
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	std::vector<VirtualObject*> objects = EntityHandler::GetInstance().GetObjects();

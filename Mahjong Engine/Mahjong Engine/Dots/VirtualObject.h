@@ -45,6 +45,7 @@ public:
 #pragma endregion
 
 	void Draw(DotsRendering::Camera* camera);
+	void DrawShadow(Shader* shadowShader); // Since my VO will contain light component - it can also handle drawing it's own shadows ontop of existing draw method
 
 	glm::vec3 Position;
 	glm::vec3 Scale;

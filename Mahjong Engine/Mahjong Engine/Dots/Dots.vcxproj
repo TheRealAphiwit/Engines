@@ -156,6 +156,8 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShadowHandler.h" />
+    <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="stb_image.h" />
@@ -178,6 +180,8 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShadowHandler.cpp" />
+    <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Square.cpp" />
     <ClCompile Include="stb_image.cpp" />
