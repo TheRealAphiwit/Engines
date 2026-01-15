@@ -2,11 +2,19 @@
 #include "LightHandler.h"
 #include <MahjongMath.h>
 #include <iostream>
+#include "ShadowMap.h"
+#include "ShadowHandler.h"
 
 LightComponent::LightComponent()
 {
 	// Auto register to the light handler
 	LightHandler::GetInstance().RegisterLight(this);
+
+	// Register for shadow mapping aswell
+	ShadowMap* newShadowMap = new ShadowMap();
+	newShadowMap->OwnerLight = this;
+	newShadowMap->Init();
+	ShadowHandler::GetInstance().RegisterShadowMap(newShadowMap);
 
 	std::cout << "LightComponent created and registered.\n";
 }

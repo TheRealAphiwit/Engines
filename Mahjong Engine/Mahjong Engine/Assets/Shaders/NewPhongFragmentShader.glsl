@@ -59,6 +59,8 @@ float CalculateShadow(int index, vec3 normal, vec3 lightDir)
 
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+
+    return shadow;
 }
 
 void main()
@@ -73,12 +75,14 @@ void main()
     vec3 ambient = texel.rgb;
     result += ambient;
 
-    // Shadow
-    float shadow = 0.0;
+    
 
     for (int i = 0; i < lightCount && i < MAX_LIGHTS; ++i)
     {
         Light light = lights[i];
+
+        // Shadow
+        float shadow = 0.0;
 
         vec3 L;
         float attenuation = 1.0;
@@ -96,9 +100,6 @@ void main()
         else // Directional
         {
             L = normalize(-light.Direction);
-
-            // Calc shadow
-            shadow = CalculateShadow(i, N, L);
         }
 
         // --- Diffuse ---
@@ -124,7 +125,8 @@ void main()
             attenuation *= coneFactor;
         }
 
-        result += (specular + diffuse * texel.rgb) * attenuation;   
+        shadow = 0.0; // debug
+        result += (1.0 - shadow) * (specular + diffuse * texel.rgb) * attenuation;   
      }
 
     fragColor = vec4(result, texel.a);

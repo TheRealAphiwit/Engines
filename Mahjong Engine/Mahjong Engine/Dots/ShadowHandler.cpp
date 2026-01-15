@@ -3,6 +3,7 @@
 #include <MahjongMath.h>
 #include "EntityHandler.h" 
 
+
 void ShadowHandler::Init(Shader* shadowShader)
 {
 	myShadowShader = shadowShader;
