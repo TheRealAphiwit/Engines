@@ -155,10 +155,17 @@ void DotsRendering::BeginRender(Camera* camera)
 {
 	ShadowHandler::GetInstance().ShadowPass(); 
 
+	// Initialize depthmaps first so that we can use it in glBindTexture();
+
 	// For safety - bind default framebuffer again
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, static_cast<int>(myWidth), static_cast<int>(myHeight));
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// ConfigureShaderAndMatrices();
+	// glBindTexture(GL_TEXTURE_2D, shadowMap);
+
+	// --- Scene render below ---
 
 	std::vector<VirtualObject*> objects = EntityHandler::GetInstance().GetObjects();
 

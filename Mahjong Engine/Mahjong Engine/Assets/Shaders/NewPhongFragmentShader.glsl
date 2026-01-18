@@ -26,8 +26,8 @@ const int LIGHT_SPOT = 2;
 uniform vec4 materialDiffuse;
 uniform vec4 materialSpecular;
 uniform float materialShininess;
-uniform sampler2D diffuseMap; // texture
-uniform sampler2D specularMap; // how light behaves
+uniform sampler2D specularMap; // used for lighting and shadow calculations
+uniform sampler2D diffuseMap; // visual only - not used for calculations
 
 // Input from vertex shader
 in vec3 v_normal;
@@ -75,14 +75,12 @@ void main()
     vec3 ambient = texel.rgb;
     result += ambient;
 
-    
-
     for (int i = 0; i < lightCount && i < MAX_LIGHTS; ++i)
     {
-        Light light = lights[i];
-
         // Shadow
         float shadow = 0.0;
+
+        Light light = lights[i];
 
         vec3 L;
         float attenuation = 1.0;
@@ -94,24 +92,29 @@ void main()
             float distance = length(toLight);
             L = normalize(toLight);
 		
-	    // Light gets weaker the further we are
+	        // Light gets weaker the further we are
             attenuation = clamp(1.0 - distance / light.Range, 0.0, 1.0);
         }
         else // Directional
         {
             L = normalize(-light.Direction);
+
+            // New - shadow tweaks [2026-01-16]
+
+            // Directional lights have no attenuation
+            attenuation = 1.0;
         }
 
-        // --- Diffuse ---
+        // --- Diffuse --- (handle diffuse of normals before calc shadow)
         if (dot(L, N) < 0.0) 
         {
             N = -N;
         }
 
-        float NdotL = max(dot(N, L), light.Intensity); 
+        float NdotL = max(dot(N, L), light.Intensity); // changed from using light.intensity to 0.0 
         vec3 diffuse = NdotL * light.Color * light.Intensity;
 
-        // --- Specular (Blinn-Phong) ---
+        // --- Specular ---
         vec3 H = normalize(L + V);
         float spec = pow(max(dot(N, H), 0.0), 1);
         vec3 specular = spec * materialSpecular.rgb;
@@ -125,9 +128,20 @@ void main()
             attenuation *= coneFactor;
         }
 
-        shadow = 0.0; // debug
-        result += (1.0 - shadow) * (specular + diffuse * texel.rgb) * attenuation;   
+        if (light.Type == LIGHT_DIRECTIONAL)
+        {
+            // Calculate shadows for directional lights
+            for (int i = 0; i < shadowCount && i < MAX_SHADOWS; ++i)
+            {
+                shadow += CalculateShadow(i, N, L);
+            }
+
+            result += (1.0 - shadow) * (specular + diffuse * texel.rgb) * attenuation;   
+        }
+
+        result += (specular + diffuse * texel.rgb) * attenuation; // Default calc for any light type but directional shall ignore shadows
      }
 
     fragColor = vec4(result, texel.a);
+    // fragColor = vec4(vec3(1.0 - shadow), 1.0);
 }

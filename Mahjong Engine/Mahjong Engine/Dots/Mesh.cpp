@@ -27,10 +27,14 @@ Mesh::Mesh(const float* someVertices, size_t aVertexSize, unsigned int* someIndi
 	// FIX: Use new glEnableVertexArrayAttrib later!
 	// We're setting up 2 vertex attributes that uses different channels
 	glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(0); // Channel 0 handles position
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)( 3* sizeof(float)));
-	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
+	glEnableVertexAttribArray(1); // Channel 1 handles UV
+
+	// I need channel 2 -> handle in_Normal (shadows upadte: 2026-01-17)
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -123,13 +127,8 @@ Mesh::~Mesh()
 
 void Mesh::Draw(Shader* shader)
 {
-	if (VAO == 0)
-	{
-		std::cout << "ERROR: Mesh has no VAO!\n";
-		return;
-	}
-
-	/*glBindVertexArray(VAO);
+	/*
+	glBindVertexArray(VAO);
 
 	if (IndicesSize > 0)
 	{
@@ -137,10 +136,32 @@ void Mesh::Draw(Shader* shader)
 	}
 	else
 	{
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(myVertices.size()));
 	}
 
-	glBindVertexArray(0);*/
+	glBindVertexArray(0);
+	*/
+
+	#pragma region Original Draw
+	
+	if (VAO == 0)
+	{
+		std::cout << "ERROR: Mesh has no VAO!\n";
+		return;
+	}
+
+	// glBindVertexArray(VAO);
+
+	//if (IndicesSize > 0)
+	//{
+	//	glDrawElements(GL_TRIANGLES, IndicesSize, GL_UNSIGNED_INT, nullptr);
+	//}
+	//else
+	//{
+	//	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//}
+
+	glBindVertexArray(0);
 
 	glBindVertexArray(VAO); 
 
@@ -163,6 +184,8 @@ void Mesh::Draw(Shader* shader)
 	}
 
 	glBindVertexArray(0);
+	
+	#pragma endregion
 }
 
 bool Mesh::WriteTo(std::ofstream& outFile) const

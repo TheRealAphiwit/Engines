@@ -2,6 +2,8 @@
 #include "Shader.h"
 #include <MahjongMath.h>
 #include "EntityHandler.h" 
+#include <iostream>
+#include <gtx/string_cast.hpp>
 
 
 void ShadowHandler::Init(Shader* shadowShader)
@@ -34,9 +36,6 @@ void ShadowHandler::ShadowPass()
 	for (const auto& shadowMap : Shadows)
 	{
 		shadowMap->BindForWriting();
-
-		// Clear depth buffer
-		glClear(GL_DEPTH_BUFFER_BIT);
 		
 		// Compute light space matrix
 		glm::mat4 lightSpaceMatrix = ComputeLightSpaceMatrix(*shadowMap);
@@ -55,6 +54,9 @@ void ShadowHandler::ShadowPass()
 // [DONE]
 void ShadowHandler::UploadShadowData(Shader& mainShader)
 {
+	// Is being called [check]
+	// std::cout << "Uploading shadow data for " << Shadows.size() << " shadows.\n";
+
 	int shadowIndex = 0;
 
 	for (auto& shadow : Shadows)
@@ -66,11 +68,11 @@ void ShadowHandler::UploadShadowData(Shader& mainShader)
 		glBindTexture(GL_TEXTURE_2D, shadow->DepthTexture);
 
 		// Set the shadow map in the shader GLSL
-		mainShader.SetInt(shadowIndex, "shadowMaps[" + index + "]");
+		mainShader.SetInt(shadowIndex, "shadowMaps[" + index + "]"); // frag part
 
 		// Compute and upload light space matrix
 		glm::mat4 lightSpaceMatrix = ComputeLightSpaceMatrix(*shadow);
-		mainShader.SetMatrix4(lightSpaceMatrix, "lightSpaceMatrices[" + index + "]");
+		mainShader.SetMatrix4(lightSpaceMatrix, "lightSpaceMatrices[" + index + "]"); // vert part
 
 		shadowIndex++;
 	}
@@ -78,15 +80,25 @@ void ShadowHandler::UploadShadowData(Shader& mainShader)
 	mainShader.SetInt(static_cast<int>(Shadows.size()), "shadowCount");
 }
 
-// [DONE]
 glm::mat4 ShadowHandler::ComputeLightSpaceMatrix(ShadowMap& shadowMap)
 {
 	LightComponent* light = shadowMap.OwnerLight; 
 
-	glm::vec3 lightDir = glm::normalize(light->LocalDirection);
-	glm::vec3 lightPos = -lightDir * light->Range;
+	// A little bit more complex math (regular vec3 did not work and so I had to do normalization w added security checks)
+	glm::vec3 lightDir = light->LocalDirection;
+	
+	/*if (glm::length(lightDir) < 0.0001f)
+		lightDir = glm::vec3(0, -1, 0);*/
 
-	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	lightDir = glm::normalize(lightDir);
+
+	float range = glm::max(light->Range, 0.1f);
+	glm::vec3 lightPos = -lightDir * range;
+
+	// sus
+	glm::vec3 up = glm::abs(lightDir.y) > 0.99f ? glm::vec3(0, 0, 1) : glm::vec3(0, 1, 0);
+
+	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), up); 
 
 	float nearPlane = 0.1f;
 	float farPlane = light->Range;
@@ -98,18 +110,18 @@ glm::mat4 ShadowHandler::ComputeLightSpaceMatrix(ShadowMap& shadowMap)
 		glm::mat4 lightProjection = glm::ortho(-orthoSize, orthoSize, -orthoSize, orthoSize, nearPlane, farPlane);
 		return lightProjection * lightView;
 	}
-	else if (light->IsSpot())
-	{
-		float aspectRatio = 1.0f; // Assuming square shadow map
-		float fov = light->OuterCone; 
-		glm::mat4 lightProjection = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
-		return lightProjection * lightView;
-	}
-	else if (light->IsPoint())
-	{
-		// Temporary placeholder for point lights
-		return glm::mat4(1.0f);
-	}
+	//else if (light->IsSpot())
+	//{
+	//	float aspectRatio = 1.0f; // Assuming square shadow map
+	//	float fov = light->OuterCone; 
+	//	glm::mat4 lightProjection = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
+	//	return lightProjection * lightView;
+	//}
+	//else if (light->IsPoint())
+	//{
+	//	// Temporary placeholder for point lights
+	//	return glm::mat4(1.0f);
+	//}
 
 	// Default projection (orthographic)
 	glm::mat4 lightProjection = glm::ortho(-light->Range, light->Range, -light->Range, light->Range, nearPlane, farPlane);

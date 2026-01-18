@@ -118,6 +118,8 @@ void VirtualObject::Draw(DotsRendering::Camera* camera)
 	trans = glm::scale(trans, Scale);
 
 	myShader->Use();
+	myShader->SetInt(0, "specularMap");
+	myShader->SetInt(1, "diffuseMap"); // Diffuse map is currently not really used in GLSL - this is a half implementation that is not done
 
 	LightHandler::GetInstance().UploadLightsToShader(*myShader);
 	ShadowHandler::GetInstance().UploadShadowData(*myShader); // Now the shadar fully knows both shadows and light when rendering

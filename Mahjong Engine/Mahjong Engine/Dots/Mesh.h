@@ -5,11 +5,6 @@
 #include "ISerializable.h"
 class Shader;
 
-#pragma region Old Texture Implementation
-// class Texture;
-// We no longer need Texture ref here since that'll be in the 'Virtual Object'  
-#pragma endregion
-
 struct Vertex {
 	glm::vec3 Position;
 	glm::vec3 Normal;
@@ -18,8 +13,6 @@ struct Vertex {
 
 class Mesh : public ISerializable
 {
-	// friend class DotsRendering::OptmizedLoader;
-
 public:
 	Mesh(const float* meshVertices, size_t vertexSize, unsigned int* indices, size_t indexSize);
 	Mesh(DotsRendering::ObjData objData);
@@ -42,6 +35,6 @@ private:
 	int IndicesSize = 0;
 
 protected:
-	std::string meshName; // This should be able to be overwritten by its children
+	std::string meshName; 
 	unsigned int VBO, VAO, EBO;
 };

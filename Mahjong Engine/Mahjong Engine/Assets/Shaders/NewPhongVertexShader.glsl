@@ -9,9 +9,9 @@ uniform int shadowCount;
 uniform mat4 lightSpaceMatrices[MAX_SHADOWS];
 
 // Mesh data incoming
-in vec3 in_Position;
-in vec2 in_UV;
-in vec3 in_Normal;
+layout (location = 0) in vec3 in_Position; // shares same layout locations as ShadowVert - may help?
+layout (location = 1) in vec2 in_UV;
+layout (location = 2) in vec3 in_Normal;
 
 // Output data for the fragment shader
 out vec2 UV_Coord;  
@@ -42,6 +42,6 @@ void main()
     // Compute light space positions for shadow mapping
     for (int i = 0; i < shadowCount && i < MAX_SHADOWS; ++i)
     {
-        fragPosLightSpace[i] = lightSpaceMatrices[i] * vec4(position, 1.0);
+        fragPosLightSpace[i] = lightSpaceMatrices[i] * vec4(position, 1.0); // should be correct since position is already in world space
     }
 }

@@ -11,9 +11,8 @@ LightComponent::LightComponent()
 	LightHandler::GetInstance().RegisterLight(this);
 
 	// Register for shadow mapping aswell
-	ShadowMap* newShadowMap = new ShadowMap();
+	ShadowMap* newShadowMap = new ShadowMap(); // Init() automatically called here
 	newShadowMap->OwnerLight = this;
-	newShadowMap->Init();
 	ShadowHandler::GetInstance().RegisterShadowMap(newShadowMap);
 
 	std::cout << "LightComponent created and registered.\n";

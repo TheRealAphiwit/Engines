@@ -29,7 +29,7 @@ public:
 	float OuterCone = glm::radians(25.0f);
 
 	// For directional lights
-	glm::vec3 LocalDirection = glm::vec3(0.0f, -1.0f, 0.0f); // Default pointing downwards (having 1 instead of negative sets it upwards)
+	glm::vec3 LocalDirection = glm::vec3(0.0f, -1.0f, 0.0f); // Now pointing up to match glm::lookAt() - since it needs up
 
 	void Update() override;
 

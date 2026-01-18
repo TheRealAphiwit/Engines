@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include "LightComponent.h"
 
-class ShadowMap // Equivalent of ShadowData
+class ShadowMap // Equivalent of ShadowData/OpenGL depthMap
 {
 public:
 	ShadowMap();
