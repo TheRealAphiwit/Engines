@@ -161,8 +161,6 @@ void Mesh::Draw(Shader* shader)
 	//	glDrawArrays(GL_TRIANGLES, 0, 3);
 	//}
 
-	glBindVertexArray(0);
-
 	glBindVertexArray(VAO); 
 
 	if (IndicesSize > 0)

@@ -162,6 +162,9 @@ void DotsRendering::BeginRender(Camera* camera)
 	glViewport(0, 0, static_cast<int>(myWidth), static_cast<int>(myHeight));
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	myShader->Use();
+	ShadowHandler::GetInstance().UploadShadowData(*myShader);
+
 	// ConfigureShaderAndMatrices();
 	// glBindTexture(GL_TEXTURE_2D, shadowMap);
 

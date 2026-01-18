@@ -54,21 +54,19 @@ void ShadowHandler::ShadowPass()
 // [DONE]
 void ShadowHandler::UploadShadowData(Shader& mainShader)
 {
-	// Is being called [check]
-	// std::cout << "Uploading shadow data for " << Shadows.size() << " shadows.\n";
-
 	int shadowIndex = 0;
+	int startSlot = 10; // Adding shadows to a higher texture
 
 	for (auto& shadow : Shadows)
 	{
 		std::string index = std::to_string(shadowIndex);
 
 		// Bind shadow map texture to appropriate texture unit
-		glActiveTexture(GL_TEXTURE0 + shadowIndex);
+		glActiveTexture(GL_TEXTURE0 + startSlot + shadowIndex);
 		glBindTexture(GL_TEXTURE_2D, shadow->DepthTexture);
 
 		// Set the shadow map in the shader GLSL
-		mainShader.SetInt(shadowIndex, "shadowMaps[" + index + "]"); // frag part
+		mainShader.SetInt(startSlot + shadowIndex, "shadowMaps[" + index + "]"); // frag part
 
 		// Compute and upload light space matrix
 		glm::mat4 lightSpaceMatrix = ComputeLightSpaceMatrix(*shadow);
