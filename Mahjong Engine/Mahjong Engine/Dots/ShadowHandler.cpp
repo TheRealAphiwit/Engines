@@ -53,9 +53,9 @@ void ShadowHandler::ShadowPass()
 		shadowMap->Unbind();
 	}
 
-	// Restore default culling
 	glCullFace(GL_FRONT);
-	// glDisable(GL_CULL_FACE);
+	// glFrontFace(GL_CCW);
+	glDisable(GL_CULL_FACE);
 }
 
 // [DONE]

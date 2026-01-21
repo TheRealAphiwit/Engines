@@ -6,6 +6,17 @@
 #include <algorithm>
 #include "Mesh.h"
 
+struct VertexKey
+{
+	unsigned int vIdx, vtIdx, nIdx;
+
+	bool operator<(const VertexKey& other) const {
+		if (vIdx != other.vIdx) return vIdx < other.vIdx;
+		if (vtIdx != other.vtIdx) return vtIdx < other.vtIdx;
+		return nIdx < other.nIdx;
+	}
+};
+
 bool DotsRendering::LoadOBJ(const std::string& filename, ObjData& outData)
 {
 	std::ifstream file(filename);
@@ -13,6 +24,13 @@ bool DotsRendering::LoadOBJ(const std::string& filename, ObjData& outData)
 		std::cerr << "Failed to open OBJ file: " << filename << std::endl;
 		return false;
 	}
+
+	// Temporary storage for RAW file data - part of the update for objloader to be able to handle faces of .objs
+	std::vector<glm::vec3> tempVertices;
+	std::vector<glm::vec2> tempUVs;
+	std::vector<glm::vec3> tempNormals;
+
+	std::map<VertexKey, unsigned int> uniqueVertices;
 
 	std::string line;
 	while (std::getline(file, line))
@@ -25,50 +43,82 @@ bool DotsRendering::LoadOBJ(const std::string& filename, ObjData& outData)
 		{
 			glm::vec3 vertex;
 			ss >> vertex.x >> vertex.y >> vertex.z;
-			outData.vertices.push_back(vertex);
+			tempVertices.push_back(vertex);
+		}
+		else if (prefix == "vt") // Vertex texture
+		{
+			glm::vec2 uv;
+			ss >> uv.x >> uv.y;
+			tempUVs.push_back(uv);
 		}
 		else if (prefix == "vn") //Vertex normals
 		{
 			glm::vec3 normal;
 			ss >> normal.x >> normal.y >> normal.z;
-			outData.normals.push_back(normal);
-		}
-		else if (prefix == "vt") // Vertex texture
-		{
-			glm::vec2 textCoord;
-			ss >> textCoord.x >> textCoord.y;
-			outData.textCoords.push_back(textCoord);
+			tempNormals.push_back(normal);
 		}
 		else if (prefix == "f") // Face definitions
 		{
-			std::vector<unsigned int> vIndices, tIndices, nIndices;
-			std::string vertexData;
+			std::string vertexStr;
+			std::vector<VertexKey> faceVertices;
 
-			while (ss >> vertexData)
+			while (ss >> vertexStr)
 			{
-				std::replace(vertexData.begin(), vertexData.end(), '/', ' '); // Replace '/' with space
-				std::istringstream vss(vertexData);
-				unsigned int vIdx = 0, tIdx = 0, nIdx = 0;
+				std::replace(vertexStr.begin(), vertexStr.end(), '/', ' ');
+				std::istringstream vss(vertexStr);
+
+				unsigned int vIdx = 0, vtIdx = 0, nIdx = 0;
 				vss >> vIdx;
 
-				if (vss.peek() == ' ') vss.ignore(); // Skip space
-				if (vss >> tIdx) {}
-				else tIdx = 0;  // Optional texture coordinate
+				// Handle texture coords (might be missing)
 				if (vss.peek() == ' ') vss.ignore();
-				if (vss >> nIdx) {}
-				else nIdx = 0;  // Optional normal
+				if (vss.peek() != ' ' && vss.peek() != EOF) vss >> vtIdx;
 
-				vIndices.push_back(vIdx - 1); // Convert to 0-based indexing
-				if (tIdx > 0) tIndices.push_back(tIdx - 1);
-				if (nIdx > 0) nIndices.push_back(nIdx - 1);
+				// Handle normals (might be missing)
+				if (vss.peek() == ' ') vss.ignore();
+				if (vss.peek() != EOF) vss >> nIdx;
+
+				// Adjust to 0-based index
+				VertexKey key = { vIdx - 1, (vtIdx > 0 ? vtIdx - 1 : 0), (nIdx > 0 ? nIdx - 1 : 0) };
+				faceVertices.push_back(key);
 			}
 
-			// Triangulate if more than 3 vertices in a face
-			for (size_t i = 1; i + 1 < vIndices.size(); i++)
+			for (size_t i = 1; i < faceVertices.size() - 1; i++)
 			{
-				outData.indices.push_back(vIndices[0]);
-				outData.indices.push_back(vIndices[i]);
-				outData.indices.push_back(vIndices[i + 1]);
+				VertexKey keys[3] = { faceVertices[0], faceVertices[i], faceVertices[i + 1] };
+
+				for (int k = 0; k < 3; k++)
+				{
+					VertexKey currentKey = keys[k];
+
+					if (uniqueVertices.find(currentKey) == uniqueVertices.end())
+					{
+						unsigned int newIndex = static_cast<unsigned int>(outData.vertices.size());
+						uniqueVertices[currentKey] = newIndex;
+
+						// Position
+						outData.vertices.push_back(tempVertices[currentKey.vIdx]);
+
+						// Texture 
+						if (!tempUVs.empty() && currentKey.vtIdx < tempUVs.size())
+							outData.textCoords.push_back(tempUVs[currentKey.vtIdx]);
+						else
+							outData.textCoords.push_back(glm::vec2(0.0f, 0.0f));
+
+						// Normal 
+						if (!tempNormals.empty() && currentKey.nIdx < tempNormals.size())
+							outData.normals.push_back(tempNormals[currentKey.nIdx]);
+						else
+							outData.normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f)); // Default Up
+
+						outData.indices.push_back(newIndex);
+					}
+					else
+					{
+						// Reuse existing vertex
+						outData.indices.push_back(uniqueVertices[currentKey]);
+					}
+				}
 			}
 		}
 	}

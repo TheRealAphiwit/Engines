@@ -56,6 +56,7 @@ Mesh::Mesh(DotsRendering::ObjData objData)
 		vertexData.push_back(objData.vertices[i].y);
 		vertexData.push_back(objData.vertices[i].z);
 
+		// Can possibly remove if()
 		if (i < objData.textCoords.size())
 		{
 			vertexData.push_back(objData.textCoords[i].x);

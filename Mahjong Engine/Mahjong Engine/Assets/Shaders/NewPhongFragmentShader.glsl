@@ -57,7 +57,7 @@ float CalculateShadow(int index, vec3 normal, vec3 lightDir)
     float closestDepth = texture(shadowMaps[index], projCoords.xy).r;
     float currentDepth = projCoords.z;
 
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.005);
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
     return shadow;
