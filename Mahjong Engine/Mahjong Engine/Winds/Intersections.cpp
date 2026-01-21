@@ -58,8 +58,35 @@ namespace Winds
         if (dist2 < radiusSum * radiusSum)
         {
             float dist = glm::sqrt(dist2);
-            glm::vec3 normal = (dist > 0.0f) ? (pos2 - pos1) / dist : glm::vec3(1, 0, 0);
+            glm::vec3 normal = (dist > 0.0001f) ? (pos2 - pos1) / dist : glm::vec3(1, 0, 0);
             glm::vec3 contactPoint = pos1 + normal * aSphere1.Radius;
+
+            // Clipping fixes
+            float penetration = radiusSum - dist;
+            glm::vec3 correction = normal * penetration;
+
+            // Determine which spheres can move
+            bool s1Dynamic = !aSphere1.IsKinematic;
+            bool s2Dynamic = !aSphere2.IsKinematic;
+
+            if (s1Dynamic && s2Dynamic)
+            {
+                const_cast<SphereCollider*>(&aSphere1)->Position -= correction * 0.5f;
+                const_cast<SphereCollider*>(&aSphere2)->Position += correction * 0.5f;
+
+                const_cast<SphereCollider*>(&aSphere1)->Transform[3] = glm::vec4(aSphere1.Position, 1.0f);
+                const_cast<SphereCollider*>(&aSphere2)->Transform[3] = glm::vec4(aSphere2.Position, 1.0f);
+            }
+            else if (s1Dynamic)
+            {
+                const_cast<SphereCollider*>(&aSphere1)->Position -= correction;
+                const_cast<SphereCollider*>(&aSphere1)->Transform[3] = glm::vec4(aSphere1.Position, 1.0f);
+            }
+            else if (s2Dynamic)
+            {
+                const_cast<SphereCollider*>(&aSphere2)->Position += correction;
+                const_cast<SphereCollider*>(&aSphere2)->Transform[3] = glm::vec4(aSphere2.Position, 1.0f);
+            }
 
             returnCollision = { const_cast<SphereCollider*>(&aSphere1), const_cast<SphereCollider*>(&aSphere2), contactPoint, normal }; // un-const the spheres to be modified
         }

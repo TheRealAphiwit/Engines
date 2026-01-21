@@ -131,7 +131,7 @@ void Characters::GameObjectEntry::Update()
 		if (ImGui::Selectable("Box"))
 		{
 			std::string boxName = "Box";
-			myGameObject->SetCollider(new Winds::BoxCollider(colData.Center, glm::vec3(0.5, 0.5, 0.5)), boxName); // Hardcoded extents for demo
+			myGameObject->SetCollider(new Winds::BoxCollider(colData.Center, glm::vec3(1, 1, 1)), boxName); // Hardcoded extents for demo
 		}
 
 		// Demo #1

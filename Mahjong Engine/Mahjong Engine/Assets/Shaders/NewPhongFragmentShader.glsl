@@ -71,7 +71,7 @@ void main()
     vec3 result = vec3(0.0);
 
     // Ambient
-    vec3 ambient = texel.rgb * 0.1; // nerfing opacity will act as default shadow/unlit
+    vec3 ambient = texel.rgb * 0.5; // nerfing opacity will act as default shadow/unlit
     result += ambient;
 
     for (int i = 0; i < lightCount && i < MAX_LIGHTS; ++i)
