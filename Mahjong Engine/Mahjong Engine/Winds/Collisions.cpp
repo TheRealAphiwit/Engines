@@ -12,6 +12,7 @@ glm::mat3 Winds::ComputeMomentOfInertiaBox(float mass, glm::vec3 extents, glm::v
     inertiaTensor[2][2] = (1.0f / 12.0f) * mass * (w2 + h2);
 
     // Parallel Axis Theorem
+    /*
     glm::mat3 parallelAxis = mass * glm::mat3(
         aPosition.y * aPosition.y + aPosition.z * aPosition.z, -aPosition.x * aPosition.y, -aPosition.x * aPosition.z,
         -aPosition.x * aPosition.y, aPosition.x * aPosition.x + aPosition.z * aPosition.z, -aPosition.y * aPosition.z,
@@ -19,6 +20,7 @@ glm::mat3 Winds::ComputeMomentOfInertiaBox(float mass, glm::vec3 extents, glm::v
     );
 
     inertiaTensor += parallelAxis;
+    */
 
     return inertiaTensor;
 }

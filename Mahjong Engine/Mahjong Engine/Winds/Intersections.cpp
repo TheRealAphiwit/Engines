@@ -198,60 +198,43 @@ namespace Winds
     Collision PlaneBoxIntersect(const PlaneCollider& aPlane, const BoxCollider& aBox)
     {
         glm::vec3 boxCenter = glm::vec3(aBox.Transform[3]);
-        glm::mat3 boxRotation = glm::mat3(aBox.Transform);  // Extract the rotation matrix of the box
+        glm::mat3 boxRotation = glm::mat3(aBox.Transform);  
+        glm::vec3 halfExtents = aBox.Extents * 0.5f; // Can potentially remove 0.5
 
-        // Step 1: Get the axis-aligned half-extents of the box (using half the full extents)
-        glm::vec3 halfExtents = aBox.Extents * 0.5f;
-
-        // Step 2: Transform the box's center into the plane's coordinate system (by using inverse of box rotation)
         glm::vec3 boxToPlane = boxCenter - glm::vec3(aPlane.Position);
         glm::vec3 transformedCenter = glm::inverse(boxRotation) * boxToPlane;
 
-        // Step 3: Project the plane normal onto the box's local coordinate system to check for overlap
         glm::vec3 normal = glm::normalize(aPlane.Normal);
         float d = glm::dot(normal, aPlane.Position);
 
-        // Calculate the distance from the center of the box to the plane
         float distance = glm::dot(normal, transformedCenter) - d;
+        float r = glm::dot(halfExtents, glm::abs(boxRotation * normal)); // Radius of box along normal
+        float distToCenter = glm::dot(normal, boxCenter) - d;
 
-        // Step 4: Penetration depth check
-        float penetrationDepth = halfExtents.z - glm::abs(distance);
-        if (penetrationDepth > 0)  // Box is penetrating the plane
+        // Check intersection
+        if (glm::abs(distToCenter) > r)
         {
-            // Step 5: Get the box's local corners
-            glm::vec3 localCorners[8] = {
-                glm::vec3(-halfExtents.x, -halfExtents.y, -halfExtents.z),
-                glm::vec3(halfExtents.x, -halfExtents.y, -halfExtents.z),
-                glm::vec3(-halfExtents.x,  halfExtents.y, -halfExtents.z),
-                glm::vec3(halfExtents.x,  halfExtents.y, -halfExtents.z),
-                glm::vec3(-halfExtents.x, -halfExtents.y,  halfExtents.z),
-                glm::vec3(halfExtents.x, -halfExtents.y,  halfExtents.z),
-                glm::vec3(-halfExtents.x,  halfExtents.y,  halfExtents.z),
-                glm::vec3(halfExtents.x,  halfExtents.y,  halfExtents.z)
-            };
-
-            // Step 6: Rotate the corners back into world space
-            for (int i = 0; i < 8; ++i) {
-                localCorners[i] = boxRotation * localCorners[i];
-            }
-
-            // Step 7: Find the closest point to the plane and check for intersection
-            for (int i = 0; i < 8; ++i) {
-                float pointDistance = glm::dot(normal, localCorners[i]);
-                if (pointDistance < halfExtents.z)  // If any corner is closer than the box's extents, it's a collision
-                {
-                    glm::vec3 correction = normal * (halfExtents.z - pointDistance);
-                    glm::vec3 contactPoint = localCorners[i] + correction;
-
-                    // Apply contact point correction
-                    boxCenter += correction;  // Correct position to prevent clipping
-
-                    return { const_cast<PlaneCollider*>(&aPlane), const_cast<BoxCollider*>(&aBox), contactPoint, normal };
-                }
-            }
+            return { nullptr, nullptr, glm::vec3(0), glm::vec3(0) };
         }
 
-        return { nullptr, nullptr, glm::vec3(0), glm::vec3(0) };
+        float penetration = r - distToCenter;
+
+        // Only push if the box is not kinematic
+        if (!aBox.IsKinematic && penetration > 0.0f)
+        {
+            glm::vec3 correction = normal * penetration;
+
+            // Update the collider
+            const_cast<BoxCollider*>(&aBox)->Position += correction;
+            const_cast<BoxCollider*>(&aBox)->Transform[3] = glm::vec4(const_cast<BoxCollider*>(&aBox)->Position, 1.0f);
+
+            // Recalculate center for contact point logic
+            boxCenter += correction;
+        }
+
+        glm::vec3 contactPoint = boxCenter - normal * r;
+
+        return { const_cast<PlaneCollider*>(&aPlane), const_cast<BoxCollider*>(&aBox), contactPoint, normal };
     }
 
     Collision PlaneSphereIntersect(const PlaneCollider& aPlane, const SphereCollider& aSphere)
