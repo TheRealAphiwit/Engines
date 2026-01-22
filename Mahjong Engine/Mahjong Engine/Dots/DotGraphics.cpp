@@ -119,7 +119,7 @@ DotsRendering::DotsInitData DotsRendering::Initialize(int width, int height)
 	ResourceHandler::GetInstance().CreateMesh("Orb", "OrbMesh");
 
 	ResourceHandler::GetInstance().RegisterMesh(myCube, "Cube");
-	ResourceHandler::GetInstance().RegisterMesh(mySphere, "Sphere");
+	// ResourceHandler::GetInstance().RegisterMesh(mySphere, "Sphere");
 	ResourceHandler::GetInstance().RegisterMesh(OrbMesh, "OrbMesh");
 	ResourceHandler::GetInstance().RegisterMesh(mySquare, "Square");
 	ResourceHandler::GetInstance().RegisterMesh(myTriangle, "Triangle");
