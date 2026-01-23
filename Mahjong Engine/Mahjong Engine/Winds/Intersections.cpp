@@ -53,19 +53,28 @@ namespace Winds
         glm::vec3 pos1 = glm::vec3(aSphere1.Transform[3]);
         glm::vec3 pos2 = glm::vec3(aSphere2.Transform[3]);
         float dist2 = glm::distance2(pos1, pos2);
-        float radiusSum = aSphere1.Radius + aSphere2.Radius;
+        float scale1 = glm::max(glm::length(glm::vec3(aSphere1.Transform[0])),
+            glm::max(glm::length(glm::vec3(aSphere1.Transform[1])),
+                glm::length(glm::vec3(aSphere1.Transform[2]))));
+
+        float scale2 = glm::max(glm::length(glm::vec3(aSphere2.Transform[0])),
+            glm::max(glm::length(glm::vec3(aSphere2.Transform[1])),
+                glm::length(glm::vec3(aSphere2.Transform[2]))));
+
+        float r1 = aSphere1.Radius * scale1;
+        float r2 = aSphere2.Radius * scale2;
+        float radiusSum = r1 + r2;
 
         if (dist2 < radiusSum * radiusSum)
         {
             float dist = glm::sqrt(dist2);
             glm::vec3 normal = (dist > 0.0001f) ? (pos2 - pos1) / dist : glm::vec3(1, 0, 0);
-            glm::vec3 contactPoint = pos1 + normal * aSphere1.Radius;
 
-            // Clipping fixes
+            glm::vec3 contactPoint = pos1 + normal * r1;
+
             float penetration = radiusSum - dist;
             glm::vec3 correction = normal * penetration;
 
-            // Determine which spheres can move
             bool s1Dynamic = !aSphere1.IsKinematic;
             bool s2Dynamic = !aSphere2.IsKinematic;
 
@@ -88,7 +97,7 @@ namespace Winds
                 const_cast<SphereCollider*>(&aSphere2)->Transform[3] = glm::vec4(aSphere2.Position, 1.0f);
             }
 
-            returnCollision = { const_cast<SphereCollider*>(&aSphere1), const_cast<SphereCollider*>(&aSphere2), contactPoint, normal }; // un-const the spheres to be modified
+            returnCollision = { const_cast<SphereCollider*>(&aSphere1), const_cast<SphereCollider*>(&aSphere2), contactPoint, normal };
         }
 
         return returnCollision;
@@ -239,17 +248,24 @@ namespace Winds
 
     Collision PlaneSphereIntersect(const PlaneCollider& aPlane, const SphereCollider& aSphere)
     {
+        float scale = glm::max(glm::length(glm::vec3(aSphere.Transform[0])),
+            glm::max(glm::length(glm::vec3(aSphere.Transform[1])),
+                glm::length(glm::vec3(aSphere.Transform[2]))));
+        float effectiveRadius = aSphere.Radius * scale;
+
         glm::vec3 normal = glm::normalize(aPlane.Normal);
         float d = glm::dot(normal, aPlane.Position);
         float distance = glm::dot(normal, aSphere.Position) - d;
 
-        if (distance < aSphere.Radius)
+        if (distance < effectiveRadius)
         {
             glm::vec3 collisionPoint = aSphere.Position - normal * distance;
 
-            float penetrationDepth = aSphere.Radius - distance;
+            float penetrationDepth = effectiveRadius - distance;
             glm::vec3 correction = normal * penetrationDepth;
-            const_cast<SphereCollider*>(&aSphere)->Position += correction; // push the sphere out
+            const_cast<SphereCollider*>(&aSphere)->Position += correction;
+
+            const_cast<SphereCollider*>(&aSphere)->Transform[3] = glm::vec4(aSphere.Position, 1.0f);
 
             return { const_cast<PlaneCollider*>(&aPlane), const_cast<SphereCollider*>(&aSphere), collisionPoint, normal };
         }
