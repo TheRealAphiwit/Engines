@@ -124,7 +124,6 @@ void ResourceEditor::Update()
 			bool useMipmaps = tex->GetUseMipmaps();
 			if (ImGui::Checkbox("Use Mipmaps", &useMipmaps))
 			{
-				// [!] This causes link errors somehow
 				tex->SetUseMipmaps(useMipmaps);
 			}
 		}
